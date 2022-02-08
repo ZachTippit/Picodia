@@ -1,4 +1,5 @@
 #nav {
+    margin-top: 1rem;
     display: flex;
     border-bottom: 1px solid lightgray;
     width: 100%;
@@ -39,7 +40,7 @@
     background-color: #111;
     min-height: 100vh;
     max-width: 450px;
-    margin: auto;
+    margin: 1rem auto;
 }
 
     .close-btn-about { /* Used in each settings, about and stats*/
@@ -75,7 +76,7 @@
     z-index: 1;
     background-color: #111;
     min-height: 100vh;
-    margin: auto;
+    margin: 1rem auto;
 }
     .close-btn { /* Used in each settings, about and stats*/
         position: relative;
@@ -203,7 +204,7 @@
         }
 
 #game {
-    min-height: 78vh;
+    min-height: 70vh;
 }
 
 #footer {
