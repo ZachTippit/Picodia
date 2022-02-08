@@ -1,0 +1,239 @@
+#nav {
+    display: flex;
+    border-bottom: 1px solid lightgray;
+    width: 100%;
+    justify-content: space-between;
+}
+
+    #nav-about-btn {
+        align-self: center;
+        padding-left: 1rem;
+        width: 30px;
+    }
+
+    #title {
+        align-self: center;
+        letter-spacing: 5px;
+    }
+
+    #nav-right-btns{
+        display: flex;
+    }
+    
+        #nav-stats-btn{
+            align-self: center;
+            padding-right: 1.5rem;
+            width: 30px;
+        }
+
+        #nav-settings-btn{
+            align-self: center;
+            padding-right: 1rem;
+            width: 30px;
+        }
+
+#about {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    background-color: #111;
+    min-height: 100vh;
+    max-width: 450px;
+    margin: auto;
+}
+
+    .close-btn-about { /* Used in each settings, about and stats*/
+        position: relative;
+        float: right;
+        width: 12px;
+        margin-top: 1.5rem;
+    }
+
+    .section-header > h3 {
+        text-align: center;
+    }
+
+    .section-header > p {
+        font-size: 0.6rem;
+    }
+
+    .how-to-play {
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        padding: 1rem 0;
+    }
+
+    .how-to-play > p{
+        font-size: 0.6rem;
+    }
+
+#settings {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-color: #111;
+    min-height: 100vh;
+    margin: auto;
+}
+    .close-btn { /* Used in each settings, about and stats*/
+        position: relative;
+        float: right;
+        width: 12px;
+        margin-top: 0.5rem;
+    }
+
+    .setting {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px #aaa solid;
+        padding: 1rem 0;
+        width: 100%;
+    }
+
+    .section-txt > h5 {
+        color: #ccc;
+        font-size: bold;
+        margin: 0;
+        padding: 0.5rem 0;
+    }
+
+    .section-txt > p {
+        color: #aaa;
+        font-size: 0.6rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    #feedback-txt {
+        align-self: center;
+        font-size: 0.6rem;
+        justify-content: space-between;
+    }
+
+        .feedback-link, .feedback-link:link, .feedback-link:visited, .feedback-link:hover, .feedback-link:active {
+            text-decoration: none !important;
+            padding: 0.25rem;
+            color: #aaa;
+        }
+
+    #setting-footer{
+        display: flex;
+        justify-content: space-around;
+        position: absolute;
+        bottom: 0;
+        font-size: 0.4rem;
+        width: 300px;
+        left: 0;
+        right: 0;
+        margin: 2rem auto;
+    }
+
+#stats-cover {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(10, 10, 10, 0.5);
+}
+
+    .close-btn-stats { /* Used in each settings, about and stats*/
+        position: relative;
+        float: right;
+        width: 12px;
+        margin-top: 1.5rem;
+        margin-right: 0.5rem;
+    }
+
+    #stats-card-container {
+        display: grid;
+        height: 100vh;
+        max-width: 450px;
+        margin: auto;
+    }
+
+    #stats-card {
+        place-self: center;
+        min-height: 200px;
+        margin: auto;
+        background-color: #111;
+        border-radius: 4%;
+        border: 1px #222 solid
+        
+    }
+
+    #stat-holder{
+        width: 60%;
+        margin: auto;
+        padding: 1rem 0;
+    }
+
+    #stat-summary {
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .stat-block > .stat-num {
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .stat-block > .stat-label {
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            font-size: 0.5rem;
+        }
+    
+    .stat-time {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+        .stat-time > p {
+            font-size: 0.75rem;
+            margin: 0.5rem 0;
+        }
+
+        .life-stat {
+            width: 15px;
+        }
+
+#game {
+    min-height: 78vh;
+}
+
+#footer {
+    border-top: 1px solid lightgray;
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+    #lives {
+        align-self: center;
+    }
+
+    .life {
+        width: 30px;
+    }
+
+
+    /* Responsiveness */
+@media screen and (max-width: 600px) {
+    #settings, #about {
+        padding: 0.5rem;
+    }
+
+    #stats-card {
+        width: 85%;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    #stats-card {
+        width: 100%;
+    }
+}
