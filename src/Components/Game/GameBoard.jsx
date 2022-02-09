@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid } from '@mui/material'
 import '../styles.css';
 
-const GameBoard = ({gridSize, gameGrid}) => {
+import Cell from './Cell.jsx'
+
+const GameBoard = ({gridSize, gameGrid, isDarkMode}) => {
+
   return (
     <div id='game-board'>
         <Grid container item columns={gridSize} style={{width: '90%', margin: 'auto', marginBottom: '2rem'}}>
-            {gameGrid.map(cell => (
-                <Grid item xs={1} id={cell} key={cell} align='center' className='cell' onClick={() => {console.log(cell)}} >
-                    <p></p>
+            {gameGrid.map((cell, index) => (
+                <Grid item xs={1} key={index} align='center'>
+                    <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index}/>
                 </Grid>
             ))}
         </Grid>

@@ -2,7 +2,7 @@ import React from 'react';
 import './styles.css'
 import { default as Heart } from '../assets/heart.png'
 
-const Footer = ({seconds, minutes}) => {
+const Footer = ({seconds, minutes, lives, isStarted, startGame}) => {
 
   const pad = (val) => {
     let valString = val + '';
@@ -11,23 +11,30 @@ const Footer = ({seconds, minutes}) => {
 
   return (
     <div id={'footer'}>
+      {!isStarted ? 
         <div>
-          <p style={{textAlign: 'center', marginBottom: '0'}}>TIME</p>
-          <div style={{margin: 'auto', textAlign: 'center'}}>
-            <label style={{fontSize: '0.75rem'}}>{pad(minutes)}</label>
-            <label style={{fontSize: '0.75rem'}}>:</label>
-            <label style={{fontSize: '0.75rem'}}>{pad(seconds)}</label>
-          </div>
+          <button onClick={() => startGame()}>Start Game</button>
         </div>
-        <div>
-          <p style={{textAlign: 'center', marginBottom: '0'}}>LIVES</p>
-          <div id={'lives'}>
-            <img className={'life'} src={Heart} alt='Lives' />
-            <img className={'life'} src={Heart} alt='Lives' />
-            <img className={'life'} src={Heart} alt='Lives' />
+      :
+        <>
+          <div>
+            <p style={{textAlign: 'center', marginBottom: '0'}}>TIME</p>
+            <div style={{margin: 'auto', textAlign: 'center'}}>
+              <label style={{fontSize: '0.75rem'}}>{pad(minutes)}</label>
+              <label style={{fontSize: '0.75rem'}}>:</label>
+              <label style={{fontSize: '0.75rem'}}>{pad(seconds)}</label>
+            </div>
           </div>
-        </div>
-        
+          <div>
+            <p style={{textAlign: 'center', marginBottom: '0'}}>LIVES</p>
+            <div id={'lives'}>
+              <img className={'life'} src={Heart} alt='Lives' />
+              <img className={'life'} src={Heart} alt='Lives' />
+              <img className={'life'} src={Heart} alt='Lives' />
+            </div>
+          </div>
+        </>
+      }
     </div>
   )
 };

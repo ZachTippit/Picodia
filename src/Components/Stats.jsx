@@ -1,13 +1,14 @@
 import React from 'react';
 import {default as Close} from '../assets/close.png'
+import {default as CloseDark} from '../assets/close-dark.png'
 import { default as Heart } from '../assets/heart.png'
 
-const Stats = ({closeMenu, playerStats}) => {
+const Stats = ({closeMenu, playerStats, isDarkMode}) => {
   return (
     <div id={'stats-cover'}>
       <div id={'stats-card-container'}>
-        <div id={'stats-card'}>
-          <img className={'close-btn-stats'} src={Close} alt='Close settings window' onClick={() => closeMenu()}/>
+        <div id={'stats-card'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
+          <img className={'close-btn-stats'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu()}/>
           <h3 style={{textAlign: 'center'}}>STATISTICS</h3>
           <div id={'stat-holder'}>
             <div id={'stat-summary'}>

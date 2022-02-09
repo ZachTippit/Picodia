@@ -1,19 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles.css';
 import './slider.css';
 import {default as Close} from '../assets/close.png'
+import {default as CloseDark} from '../assets/close-dark.png'
 
-const Settings = ({closeMenu}) => {
+const Settings = ({closeMenu, switchDarkMode, isDarkMode}) => {
+
+  const [toggleDarkMode, setIsDarkMode] = useState(isDarkMode);
+
+  const switchesDarkMode = () => {
+    setIsDarkMode(!toggleDarkMode)
+    switchDarkMode();
+  }
+
+  useEffect(() => {
+    setIsDarkMode(isDarkMode);
+  }, [toggleDarkMode])
+
   return (
-    <div id={'settings'}>
+    <div id={'settings'} className={(toggleDarkMode ? 'dark-theme' : 'light-theme')}>
       <div style={{maxWidth: '450px', margin: 'auto'}}>
-        <img className={'close-btn'} src={Close} alt='Close settings window' onClick={() => closeMenu()}/>
+        <img className={'close-btn'} src={(toggleDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu()}/>
         <h3 style={{textAlign: 'center'}}>SETTINGS</h3>
         <div style={{width: '100%'}}>
           <div className={'setting'}>
             <div className={'section-txt'}>
               <h5>HARD MODE</h5>
-              <p>This is the text the will affect the setting</p>
+              <p>Lowers lives to 1! Don't make a mistake :)</p>
             </div>
             <label className="switch">
               <input type="checkbox" />
@@ -23,17 +36,17 @@ const Settings = ({closeMenu}) => {
           <div className={'setting'}>
             <div className={'section-txt'}>
               <h5>DARK THEME</h5>
-              <p>This is the text the will affect the setting</p>
+              <p>Toggle to turn dark mode on and off.</p>
             </div>
             <label className="switch">
-              <input type="checkbox" />
+              <input type="checkbox" onClick={() => switchesDarkMode()} defaultChecked={toggleDarkMode}/>
               <span className="slider round"></span>
             </label>
           </div>
           <div className={'setting'}>
             <div className={'section-txt'}>
-              <h5>COLOR BLIND MODE</h5>
-              <p>This is the text the will affect the setting</p>
+              <h5>ACCESSIBILITY MODE</h5>
+              <p>Removes click and drag functionality from both touch and mouse usage.</p>
             </div>
             <label className="switch">
               <input type="checkbox" />
@@ -43,7 +56,7 @@ const Settings = ({closeMenu}) => {
           <div className={'setting'}>
             <div className={'section-txt'}>
               <h5>FEEDBACK</h5>
-              <p>This is the text the will affect the setting</p>
+              <p>Please reach out with any questions, comments praise or concerns!</p>
             </div>
             <div id={'feedback-txt'}>
               <a href='mailto:zachary.tippit@gmail.com'><span className={'feedback-link'}>Email</span></a>
