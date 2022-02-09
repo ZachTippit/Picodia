@@ -316,33 +316,33 @@ html {
     }
 
     .cell {
-        transition: all 0.2s ease-in;
+        transition: all 0.1s ease-in;
         border: 1px #333 solid;
         height: 2rem;
     }
 
     .right {
-        transition: all 0.2s ease-in;
+        transition: all 0.1s ease-in;
         background-color: rgb(0,20,150);
     }
 
     .right:hover {
-        transition: all 0.2s ease-in;
+        transition: all 0.1s ease-in;
         background-color: rgba(0,20,150, 0.7) !important;
     }
 
     .wrong {
-        transition: all 0.2s ease-in;
+        transition: all 0.1s ease-in;
         background-color: rgb(120,0,20);
     }
 
     .wrong:hover {
-        transition: all 0.2s ease-in;
+        transition: all 0.1s ease-in;
         background-color: rgba(120,0,20, 0.7) !;
     }
 
     .dark:hover {
-        transition: all 0.2s ease-in;
+        transition: all 0.1s ease-in;
         background-color: rgba(20,20,20,0.2);
     }
 
