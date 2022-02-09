@@ -204,8 +204,37 @@
         }
 
 #game {
-    min-height: 65vh;
+    margin-top: 20%;
+    margin-bottom: 10%;
 }
+
+    .col-R {
+        
+    }
+
+    .clue-col {
+
+    }
+
+    .clue-row {
+        display: inline-block;
+    }
+
+    .col-clues-txt {
+        margin: 0.5rem 0;
+        text-align: center;
+        font-size: 0.75rem;
+    }
+
+    .cell {
+        border: 1px #333 solid;
+        height: 2rem;
+    }
+
+    .cell:hover {
+        background-color: rgba(240,240,240,0.2);
+    }
+
 
 #footer {
     border-top: 1px solid lightgray;
@@ -233,10 +262,19 @@
     #stats-card {
         width: 85%;
     }
+
+    #game {
+        margin-bottom: 30%;
+    }
 }
 
 @media screen and (min-width: 600px) {
     #stats-card {
         width: 100%;
+    }
+
+    #game {
+        min-height: 50vh;
+        margin-bottom: 30%;
     }
 }
