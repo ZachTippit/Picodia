@@ -4,14 +4,14 @@ import '../styles.css';
 
 import Cell from './Cell.jsx'
 
-const GameBoard = ({gridSize, gameGrid, isDarkMode}) => {
+const GameBoard = ({gridSize, gameGrid, isDarkMode, loseLife}) => {
 
   return (
     <div id='game-board'>
         <Grid container item columns={gridSize} style={{width: '90%', margin: 'auto', marginBottom: '2rem'}}>
             {gameGrid.map((cell, index) => (
                 <Grid item xs={1} key={index} align='center'>
-                    <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index}/>
+                    <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} loseLife={loseLife}/>
                 </Grid>
             ))}
         </Grid>

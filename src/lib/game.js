@@ -55,7 +55,7 @@ const colClues = (answer) => {
     return colClueArray;
 }
 
-const createGameObject = (answer) => {
+const gameArray = (answer) => {
     // Need value 
     const flatArr = [];
     answer.forEach(row => {
@@ -72,7 +72,34 @@ const createGameObject = (answer) => {
     return flatArr;
 }
 
-export { rowClues, colClues, createGameObject };
+const createGameObject = (answer) => {
+    const rowClue = rowClues(answer);
+    const colClue = colClues(answer);
+    const gameArr = gameArray(answer);
+    const gridSize = answer.length + 2;
+    const gameArrLength = gridSize*(gridSize-1)-1;
+    let gameObj = [];
+    let offsetter = 0;
+    console.log(gridSize);
+    [...Array(gameArrLength+1).keys()].map((item, index) => {
+        if(index === 0 || index === 1) {
+          gameObj.push('');
+        } else if(parseInt(index/gridSize) === 0){
+            gameObj.push(colClue[index-2])
+        } else if(index%gridSize === 0){
+            gameObj.push(rowClue[parseInt(index/gridSize)-1])
+        } else if(index%gridSize === 1){
+            gameObj.push('')
+            offsetter+=2;
+        } else {
+            gameObj.push(gameArr[index-(gridSize)-offsetter])
+        }
+    })
+    console.log(gameObj);
+    return gameObj;
+}
+
+export { rowClues, colClues, gameArray, createGameObject };
 
 // def col_clue_summer(answer):
 //     ans_col_index = []

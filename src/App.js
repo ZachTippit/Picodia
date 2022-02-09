@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { About, Footer, Game, Navbar, Settings, Stats } from './Components'
+import { About, Footer, Game, Navbar, Settings, Stats, GameOver } from './Components'
 import './Components/styles.css';
 
 const App = () => {
@@ -7,9 +7,7 @@ const App = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [path, setPath] = useState();
   const [isStarted, setIsStarted] = useState(false);
-  const [totalTime, setTotalTime] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
+  
   const [lives, setLives] = useState(3);
   const [stats, setStats] = useState({
     gamesPlayed: 3,
@@ -19,27 +17,19 @@ const App = () => {
   })
 
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   const isSeen = (path) => {
     setIsOpen(!isOpen);
     setPath(path)
-   
   }
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTotalTime(totalTime => totalTime + 1)
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [])
-
-  useEffect(() => {
-    setSeconds(totalTime%60)
-  }, [totalTime])
-
-  useEffect(() => {
-    setMinutes(parseInt(totalTime/60))
-  }, [seconds])
+  const loseLife = () => {
+    setLives(lives - 1);
+    if(lives === 0) {
+      setGameOver(true);
+    }
+  }
 
   useEffect(() => {
     setIsDarkMode(isDarkMode);
@@ -47,7 +37,6 @@ const App = () => {
   
   const startGame = () => {
     setIsStarted(true);
-    setTotalTime(0);
   }
 
   const switchDarkMode = () => {
@@ -72,8 +61,9 @@ const App = () => {
       <div id={'app'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
         <Navbar openMenu={isSeen} isDarkMode={isDarkMode}/>
         { isOpen && showWindow()}
-        <Game isDarkMode={isDarkMode} />
-        <Footer seconds={seconds} minutes={minutes} lives={lives} isStarted={isStarted} startGame={startGame}/>
+        { gameOver && <GameOver isDarkMode={isDarkMode} closeMenu={isSeen}/>}
+        <Game isDarkMode={isDarkMode} loseLife={loseLife}/>
+        <Footer lives={lives} isStarted={isStarted} startGame={startGame}/>
       </div>
     </div>
     

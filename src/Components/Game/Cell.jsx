@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useEffect } from 'react';
 import '../styles.css';
 
-const Cell = ({cell, isDarkMode, cellNum}) => {
+const Cell = ({cell, isDarkMode, cellNum, loseLife}) => {
     const [toggleClick, setIsClicked] = useState(false);
     const [correct, setCorrect] = useState(cell);
     const [right, setRight] = useState()
@@ -17,6 +17,12 @@ const Cell = ({cell, isDarkMode, cellNum}) => {
             cell ? setRight(true) : setRight(false)
         }
     }, [toggleClick])
+
+    useEffect(() => {
+      if(!right){
+        loseLife();
+      }
+    }, [right])
 
   return (
     <div className={'cell ' + (isDarkMode ? 'light ' : 'dark ') + (toggleClick && (right ? 'right' : 'wrong'))} onClick={() => setClicked()}>

@@ -1,13 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles.css'
 import { default as Heart } from '../assets/heart.png'
 
-const Footer = ({seconds, minutes, lives, isStarted, startGame}) => {
+const Footer = ({lives, isStarted, startGame}) => {
+
+  const [totalTime, setTotalTime] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTotalTime(totalTime => totalTime + 1)
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [])
+
+  useEffect(() => {
+    setSeconds(totalTime%60)
+  }, [totalTime])
+
+  useEffect(() => {
+    setMinutes(parseInt(totalTime/60))
+  }, [seconds])
+
+  useEffect(() => {
+    if(isStarted){
+      setTotalTime(0)
+    }
+  }, [isStarted])
 
   const pad = (val) => {
     let valString = val + '';
     return valString.length < 2 ? "0"+valString : valString;
   }
+
+  useEffect(() => {
+
+  }, [lives])
 
   return (
     <div id={'footer'}>
@@ -28,9 +57,9 @@ const Footer = ({seconds, minutes, lives, isStarted, startGame}) => {
           <div>
             <p style={{textAlign: 'center', marginBottom: '0'}}>LIVES</p>
             <div id={'lives'}>
-              <img className={'life'} src={Heart} alt='Lives' />
-              <img className={'life'} src={Heart} alt='Lives' />
-              <img className={'life'} src={Heart} alt='Lives' />
+              {[...Array(lives+1)].map(life => (
+                <img className={'life'} src={Heart} alt='Lives' key={life}/>
+              ))}
             </div>
           </div>
         </>
