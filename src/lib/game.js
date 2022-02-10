@@ -80,7 +80,6 @@ const createGameObject = (answer) => {
     const gameArrLength = gridSize*(gridSize-1)-1;
     let gameObj = [];
     let offsetter = 0;
-    console.log(gridSize);
     [...Array(gameArrLength+1).keys()].map((item, index) => {
         if(index === 0 || index === 1) {
           gameObj.push('');
@@ -95,56 +94,7 @@ const createGameObject = (answer) => {
             gameObj.push(gameArr[index-(gridSize)-offsetter])
         }
     })
-    console.log(gameObj);
     return gameObj;
 }
 
 export { rowClues, colClues, gameArray, createGameObject };
-
-// def col_clue_summer(answer):
-//     ans_col_index = []
-//     for col in range(0,len(answer)):
-//         consecutive = 0
-//         col_index = []
-//         for i,row in enumerate(answer):
-//             if row[col] == 1 and i+1 < len(answer):
-//                 consecutive += 1
-//             elif row[col] == 1 and i+1 == len(answer):
-//                 consecutive += 1
-//                 col_index.append(str(consecutive))
-//                 break
-//             elif row[col]==0 and consecutive==0:
-//                 pass
-//             else:
-//                 col_index.append(str(consecutive))
-//                 consecutive = 0
-//         if col_index == []:
-//             col_index = [' ']
-//         ans_col_index.append(col_index)
-//     return ans_col_index
-
-
-// def clue_summer(answer):
-//     # Row, if [index+1]==1, sum else, append & set zero
-    
-//     clue_row_index = row_clue_summer(answer)
-//     clue_col_index = col_clue_summer(answer)
-    
-//     return clue_row_index, clue_col_index 
-
-// def col_render(col_clues):
-//     max_clue_length = 0
-//     for clue in col_clues:
-//         if len(clue) > max_clue_length:
-//             max_clue_length = len(clue)       
-    
-//     for clue_row in range(0, max_clue_length):
-//         print('\t    ', end='')
-//         for col in range(0,len(answer)):
-//             if len(col_clues[col]) == 0:
-//                 print('   |',end = '')
-//             if clue_row < len(col_clues[col]):
-//                 print(f' {col_clues[col][clue_row-1]} |',end = '')
-//             else:
-//                 print('   |',end = '')
-//         print('')

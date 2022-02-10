@@ -294,11 +294,20 @@ html {
     margin-bottom: 10%;
 }
 
-    .col-R {
-        
+    .disable-select {
+        user-select: none; /* supported by Chrome and Opera */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
     }
 
-    .clue-col {
+    .start-game {
+
+        height: 50px;
+        width: 200px;
+        background-color: #040;
+        color: white;
 
     }
 
@@ -323,7 +332,7 @@ html {
 
     .right {
         transition: all 0.1s ease-in;
-        background-color: rgb(0,20,150);
+        background-color: rgb(0,20,150) !important;
     }
 
     .right:hover {
@@ -333,12 +342,16 @@ html {
 
     .wrong {
         transition: all 0.1s ease-in;
-        background-color: rgb(120,0,20);
+        background-color: rgb(120,0,20) !important;
     }
 
     .wrong:hover {
         transition: all 0.1s ease-in;
-        background-color: rgba(120,0,20, 0.7) !;
+        background-color: rgba(120,0,20, 0.7) !important;
+    }
+
+    .flagged {
+        background-color: #999;
     }
 
     .dark:hover {

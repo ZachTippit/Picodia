@@ -3,20 +3,24 @@ import { useEffect } from 'react';
 import '../styles.css';
 
 const Cell = ({cell, isDarkMode, cellNum, loseLife}) => {
-    const [toggleClick, setIsClicked] = useState(false);
+    const [guessed, setGuessed] = useState(false);
+    const [flagged, setFlagged] = useState(false);
     const [correct, setCorrect] = useState(cell);
     const [right, setRight] = useState()
 
-    const setClicked = () => {
-        console.log(cell, cellNum)
-        setIsClicked(!toggleClick)
+    const handleGuess = () => {
+        setGuessed(true)
+    }
+
+    const handleFlagged = () => {
+      setFlagged(!flagged);
     }
 
     useEffect(() => {
-        if(toggleClick){
+        if(guessed){
             cell ? setRight(true) : setRight(false)
         }
-    }, [toggleClick])
+    }, [guessed])
 
     useEffect(() => {
       if(!right){
@@ -25,7 +29,14 @@ const Cell = ({cell, isDarkMode, cellNum, loseLife}) => {
     }, [right])
 
   return (
-    <div className={'cell ' + (isDarkMode ? 'light ' : 'dark ') + (toggleClick && (right ? 'right' : 'wrong'))} onClick={() => setClicked()}>
+    <div 
+      className={'cell '
+                + (isDarkMode ? 'light ' : 'dark ') 
+                + (flagged ? 'flagged ' : '')
+                + (guessed && (right ? 'right' : 'wrong'))
+              }
+      onClick={() => handleGuess()} 
+      onDragEnter={() => handleGuess()} onContextMenu={(e) => { e.preventDefault(); handleFlagged()}}>
         
     </div>
   )

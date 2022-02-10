@@ -62,7 +62,7 @@ const App = () => {
         <Navbar openMenu={isSeen} isDarkMode={isDarkMode}/>
         { isOpen && showWindow()}
         { gameOver && <GameOver isDarkMode={isDarkMode} closeMenu={isSeen}/>}
-        <Game isDarkMode={isDarkMode} loseLife={loseLife}/>
+        <Game isDarkMode={isDarkMode} startGame={startGame} isStarted={isStarted} loseLife={loseLife}/>
         <Footer lives={lives} isStarted={isStarted} startGame={startGame}/>
       </div>
     </div>
