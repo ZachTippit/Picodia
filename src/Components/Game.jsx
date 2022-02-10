@@ -15,11 +15,11 @@ import {  createGameObject } from '../lib/game.js'
 const answer = [[1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0],
 [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0]];
 
-const Game = ({isDarkMode, isStarted, loseLife}) => {
+const Game = ({isDarkMode, isStarted, loseLife, handleGameOver}) => {
   
   return (
     <div id='game'>
-        <GameBoard gridSize={answer.length + 2} gameGrid={createGameObject(answer)} isDarkMode={isDarkMode} loseLife={loseLife} isStarted={isStarted}/>
+        <GameBoard gridSize={answer.length + 2} gameGrid={createGameObject(answer)} isDarkMode={isDarkMode} loseLife={loseLife} isStarted={isStarted} handleGameOver={handleGameOver}/>
     </div>
   )
 };

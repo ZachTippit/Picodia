@@ -5,7 +5,21 @@ import '../styles.css';
 import Clues from './Clues.jsx'
 import Cell from './Cell.jsx'
 
-const GameBoard = ({gridSize, gameGrid, isStarted, loseLife, isDarkMode}) => {
+const GameBoard = ({gridSize, gameGrid, isStarted, loseLife, isDarkMode, handleWin}) => {
+
+    const [correctSquares, setCorrectSquares] = useState(0)
+    const [winNum, setWinNum] = useState(5000)
+
+    const handleGuess = (isCorrect) => {
+        if(isCorrect){
+            setCorrectSquares(correctSquares + 1);
+            if(correctSquares === winNum){
+                handleWin(true);
+            }
+        } else {
+            loseLife();
+        }
+    }
 
   return (
     <div id='game-board'>
@@ -32,7 +46,7 @@ const GameBoard = ({gridSize, gameGrid, isStarted, loseLife, isDarkMode}) => {
                                     null   
                                 :   
                         // Aaaand the cells
-                                    <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} loseLife={loseLife} key={`cell@${index}`}/>
+                                    <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} handleCell={handleGuess} key={`cell@${index}`}/>
                                 }
                                 </>     
                                 }
@@ -47,4 +61,4 @@ const GameBoard = ({gridSize, gameGrid, isStarted, loseLife, isDarkMode}) => {
   )
 }
 
-export default GameBoard
+export default GameBoard;

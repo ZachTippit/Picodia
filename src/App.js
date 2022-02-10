@@ -15,7 +15,6 @@ const App = () => {
     currentStreak: 3,
     bestStreak: 3
   })
-
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [gameOver, setGameOver] = useState(false);
 
@@ -34,12 +33,19 @@ const App = () => {
   useEffect(() => {
     setIsDarkMode(isDarkMode);
   }, [isDarkMode])
+
+  useEffect(() => {
+    lives === 0 && setGameOver(true)
+  }, [lives])
   
+  useEffect(() => {
+  }, [gameOver])
+
   const startGame = () => {
     setIsStarted(true);
   }
 
-  const handleGameOver = () => {
+  const handleGameOver = (win) => {
     //Update stats & send new stats to cookies
     //Set disabled?
   }
@@ -67,7 +73,7 @@ const App = () => {
         <Navbar openMenu={isSeen} isDarkMode={isDarkMode}/>
         { isOpen && showWindow()}
         { gameOver && <GameOver isDarkMode={isDarkMode} closeMenu={isSeen}/>}
-        <Game isDarkMode={isDarkMode} startGame={startGame} isStarted={isStarted} loseLife={loseLife}/>
+        <Game isDarkMode={isDarkMode} startGame={startGame} isStarted={isStarted} loseLife={loseLife} handleGameOver={handleGameOver}/>
         <Footer lives={lives} isStarted={isStarted} startGame={startGame}/>
       </div>
     </div>

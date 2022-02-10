@@ -34,10 +34,6 @@ const Footer = ({lives, isStarted, startGame}) => {
     return valString.length < 2 ? "0"+valString : valString;
   }
 
-  useEffect(() => {
-
-  }, [lives])
-
   return (
     <div id={'footer'}>
       {!isStarted ? 
@@ -57,8 +53,12 @@ const Footer = ({lives, isStarted, startGame}) => {
           <div>
             <p style={{textAlign: 'center', marginBottom: '0'}}>LIVES</p>
             <div id={'lives'}>
-              {[...Array(lives+1)].map(life => (
-                <img className={'life'} src={Heart} alt='Lives' key={life}/>
+              {[...Array(lives)].map(life => (
+                <>
+                  <img className={'life'} src={Heart} alt='Lives' key={life}/>
+                </>
+                
+                
               ))}
             </div>
           </div>

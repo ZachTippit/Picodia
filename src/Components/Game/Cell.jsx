@@ -3,10 +3,9 @@ import '../styles.css';
 
 import { Grid } from '@mui/material'
 
-const Cell = ({cell, isDarkMode, loseLife}) => {
+const Cell = ({cell, isDarkMode, handleCell}) => {
     const [guessed, setGuessed] = useState(false);
     const [flagged, setFlagged] = useState(false);
-    const [right, setRight] = useState()
 
     const handleGuess = () => {
         setGuessed(true)
@@ -18,25 +17,20 @@ const Cell = ({cell, isDarkMode, loseLife}) => {
 
     useEffect(() => {
         if(guessed){
-            cell ? setRight(true) : setRight(false)
+            cell ? handleCell(true) : handleCell(false)
         }
     }, [guessed, cell])
-
-    useEffect(() => {
-      if(!right){
-        loseLife();
-      }
-    }, [right])
 
   return (
     <Grid item xs={1} 
       className={'cell '
                 + (isDarkMode ? 'light ' : 'dark ') 
                 + (flagged ? 'flagged ' : '')
-                + (guessed && (right ? 'right' : 'wrong'))
+                + (guessed && (cell ? 'right' : 'wrong'))
               }
-      onClick={() => handleGuess()} 
-      onDragEnter={() => handleGuess()} onContextMenu={(e) => { e.preventDefault(); handleFlagged()}}>
+      onMouseUp={() => handleGuess()} onDragLeave={() => handleGuess()}
+      onDragEnter={() => handleGuess()} onContextMenu={(e) => { e.preventDefault(); handleFlagged()}}
+      onTouchStart={() => handleGuess()} onTouchMove={() => handleGuess()}>
     </Grid>
   )
 }
