@@ -1,24 +1,19 @@
 import React, { useState } from 'react'
-import { Grid } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
+import '../styles.css'
 
 
-const RowClues = ({gridSize, rowClues}) => {
+const RowClues = ({cell, index}) => {
   return (
-    <div style={{marginTop: '5vh'}}>
-        <Grid container direction='column' columns={gridSize} style={{width: '90%', margin: 'auto'}}>
-            {rowClues.map((rowClue, index) => (
-                <Grid item xs={1} id={index} key={index} className='clue-row'>
-                    <Grid container columns={5} spacing={3} direction='row' justifyContent='flex-end'>
-                        {rowClue.map((clue, index) => (
-                            <Grid item xs={1} key={index}>
-                                <p style={{margin: '0.5rem', textAlign: 'left', fontSize: '.75rem'}}>{clue}</p>
-                            </Grid>
-                        ))}
-                    </Grid>
+    <Grid item xs={2} className={'disable-select'} key={`row-clue@${index}`}>
+        <Grid container direction='row' columnSpacing={1} justifyContent='flex-end' alignItems='center' wrap="nowrap" sx={{pr: 2}} style={{height: '100%', marginRight: '0.5rem'}}>
+            {cell.map((clue, index3) => (
+                <Grid item key={`row-clue-item@${index3}`} className='clue-row'>
+                    <Typography className='row-clues-txt disable-select'>{clue}</Typography>
                 </Grid>
             ))}
         </Grid>
-    </div>
+    </Grid>
   )
 }
 

@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import { Grid } from '@mui/material'
+import React from 'react';
+// import {useEffect, useState} from 'react';
+// import { Grid } from '@mui/material'
 import './styles.css';
 
 import GameHeader from './Game/GameHeader.jsx'
@@ -14,18 +15,11 @@ import {  createGameObject } from '../lib/game.js'
 const answer = [[1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0],
 [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0]];
 
-const Game = ({isDarkMode, startGame, isStarted, loseLife}) => {
+const Game = ({isDarkMode, isStarted, loseLife}) => {
   
   return (
     <div id='game'>
-      <GameHeader />
-      {!isStarted ? 
-        <PreGame startGame={startGame}/>
-        :
-        <GameBoard gridSize={answer.length + 2} gameGrid={createGameObject(answer)} isDarkMode={isDarkMode} loseLife={loseLife}/>
-      }
-      
-      
+        <GameBoard gridSize={answer.length + 2} gameGrid={createGameObject(answer)} isDarkMode={isDarkMode} loseLife={loseLife} isStarted={isStarted}/>
     </div>
   )
 };

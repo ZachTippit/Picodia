@@ -39,6 +39,11 @@ const App = () => {
     setIsStarted(true);
   }
 
+  const handleGameOver = () => {
+    //Update stats & send new stats to cookies
+    //Set disabled?
+  }
+
   const switchDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   }

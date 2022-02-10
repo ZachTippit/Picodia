@@ -42,7 +42,7 @@ const Footer = ({lives, isStarted, startGame}) => {
     <div id={'footer'}>
       {!isStarted ? 
         <div>
-          <button onClick={() => startGame()}>Start Game</button>
+          <button className='start-button' onClick={() => startGame()}>Start Game</button>
         </div>
       :
         <>

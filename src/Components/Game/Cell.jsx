@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import '../styles.css';
 
-const Cell = ({cell, isDarkMode, cellNum, loseLife}) => {
+import { Grid } from '@mui/material'
+
+const Cell = ({cell, isDarkMode, loseLife}) => {
     const [guessed, setGuessed] = useState(false);
     const [flagged, setFlagged] = useState(false);
-    const [correct, setCorrect] = useState(cell);
     const [right, setRight] = useState()
 
     const handleGuess = () => {
@@ -20,7 +20,7 @@ const Cell = ({cell, isDarkMode, cellNum, loseLife}) => {
         if(guessed){
             cell ? setRight(true) : setRight(false)
         }
-    }, [guessed])
+    }, [guessed, cell])
 
     useEffect(() => {
       if(!right){
@@ -29,7 +29,7 @@ const Cell = ({cell, isDarkMode, cellNum, loseLife}) => {
     }, [right])
 
   return (
-    <div 
+    <Grid item xs={1} 
       className={'cell '
                 + (isDarkMode ? 'light ' : 'dark ') 
                 + (flagged ? 'flagged ' : '')
@@ -37,8 +37,7 @@ const Cell = ({cell, isDarkMode, cellNum, loseLife}) => {
               }
       onClick={() => handleGuess()} 
       onDragEnter={() => handleGuess()} onContextMenu={(e) => { e.preventDefault(); handleFlagged()}}>
-        
-    </div>
+    </Grid>
   )
 }
 
