@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Grid } from '@mui/material'
 
-const test = [1,1,1,1,1];
-
 const ExampleRow = ({exClue, exArray, nextStart, onToNext, order}) => {
     const [nextAnim, setNextAnim] = useState();
 

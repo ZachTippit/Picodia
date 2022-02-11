@@ -1,10 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Divider, Grid } from '@mui/material';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { default as Heart } from '../assets/heart.png'
+import { default as EmptyHeart } from '../assets/empty-heart.png'
 
-const Stats = ({closeMenu, playerStats, isDarkMode, closing, gameOver, didWin, copyToClipboard}) => {
+
+const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyToClipboard}) => {
+
+  useEffect(() => {
+    console.log(cookies);
+  }, [cookies])
+
+  const averageOfArray = (timeArray) => {
+    const avgTime = timeArray.reduce((curr, next) => curr + next) / timeArray.length;
+    const minutes = pad(parseInt(avgTime/60));
+    const seconds = pad(avgTime%60);
+    return minutes, seconds;
+  }
+
+  const pad = (val) => {
+    let valString = val + '';
+    return valString.length < 2 ? "0"+valString : valString;
+  }
+
   return (
     <div className={'full-screen-cover fade-in-fwd ' + (closing && 'fade-out-bck')}>
       <div className={'full-screen-container'}>
@@ -14,23 +33,23 @@ const Stats = ({closeMenu, playerStats, isDarkMode, closing, gameOver, didWin, c
           <div id={'stat-holder'}>
             <div id={'stat-summary'}>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{playerStats.gamesPlayed}</p>
+                <p className={'stat-num'}>{cookies.totalGames}</p>
                 <p className={'stat-label'}>Played</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{playerStats.winPercent}</p>
+                <p className={'stat-num'}>{(isNaN(cookies.wonGames/cookies.totalGames * 100) ? 0 : cookies.wonGames/cookies.totalGames * 100)}</p>
                 <p className={'stat-label'}>Win %</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{playerStats.currentStreak}</p>
+                <p className={'stat-num'}>{cookies.currentStreak}</p>
                 <p className={'stat-label'}>Current Streak</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{playerStats.bestStreak}</p>
+                <p className={'stat-num'}>{cookies.maxStreak}</p>
                 <p className={'stat-label'}>Max Streak</p>
               </div>
             </div> 
-            <h5 style={{textAlign: 'center'}}>Average Times</h5>
+            <h5 style={{textAlign: 'center'}}>Game Distribution</h5>
             <div>
               <div className={'stat-time'}>
                 <p>Lives Left</p>
@@ -58,6 +77,12 @@ const Stats = ({closeMenu, playerStats, isDarkMode, closing, gameOver, didWin, c
                 </div>
                 <p>5:14</p>
               </div> 
+              <div className={'stat-time'}>
+                <div>
+                  <img className={'life-stat'} src={EmptyHeart} alt='Lives' />
+                </div>
+                <p>5:51</p>
+              </div>
             </div>
           </div>
           {gameOver &&

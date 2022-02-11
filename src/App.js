@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { About, Footer, Game, Navbar, Settings, Stats, ClipboardPing } from './Components'
+import { useCookies } from 'react-cookie'
 import './Components/styles.css';
 
 const App = () => {
@@ -14,17 +15,53 @@ const App = () => {
   const [hardMode, setHardMode] = useState(false);
   const [maxLives, setMaxLives] = useState(3);
   const [lives, setLives] = useState(maxLives);
-  const [stats, setStats] = useState({
-    gamesPlayed: 3,
-    winPercent: 0.5,
-    currentStreak: 3,
-    bestStreak: 3
-  })
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [didWin, setDidWin] = useState();
   const [gameOver, setGameOver] = useState(false);
   const [ping, setPing] = useState(false);
   const [copyAlert, setCopyAlert] = useState(false)
+  const [cookies, setCookies] = useCookies()
+
+  useEffect(() => {
+    if(cookies.playedPicodia === undefined){
+      setCookies('totalGames', 0);
+      setCookies('wonGames', 0);
+      setCookies('lostGames', 0)
+      setCookies('currentStreak', 0);
+      setCookies('maxStreak', 0);
+      setCookies('3LifeWins', 0)
+      setCookies('3LifeTimes', [])
+      setCookies('2LifeWins', 0)
+      setCookies('2LifeTimes', [])
+      setCookies('1LifeWins', 0)
+      setCookies('1LifeTimes', [])
+      setCookies('lossTimes', [])
+      setCookies('playedPicodia', true)
+      setCookies('playedToday', false)
+    }
+  }, [])
+
+  const handleGameOver = (win, numLives, timeTaken) => {
+    setGameOver(true);
+    setDidWin(true);
+    setCookies('playedToday', true);
+    if(win){
+      setCookies('totalGames', cookies.totalGames + 1);
+      setCookies('wonGames', cookies.wonGames + 1);
+      setCookies('currentStreak', cookies.currentStreak + 1);
+      cookies.currentStreak > cookies.maxStreak && setCookies('maxStreak', cookies.maxStreak + 1);
+
+      setCookies(`${numLives}LifeWins`, cookies[`${numLives}LifeWins`])
+     // winHandler(numLives, timeTaken);
+    } else {
+      setCookies('lostGames', cookies.lostGames + 1);
+      setCookies('lossTimes', cookies.lossTimes.push(timeTaken));
+    }
+  }
+
+  const handleGameTimeCookie = (numLives, timeTaken) => { 
+
+  }
 
   const copyToClipboard = () => {
     const pad = (val) => {
@@ -56,7 +93,7 @@ const App = () => {
   const loseLife = () => {
     setLives(lives - 1);
     if(lives === 0) {
-      setGameOver(true);
+      handleGameOver(false, 0, totalTime)
     }
   }
 
@@ -79,7 +116,7 @@ const App = () => {
   useEffect(() => {
     if(lives===0) { 
       setGameOver(true); 
-      setDidWin(false); 
+      setDidWin(false);
     }
   }, [lives])
   
@@ -107,6 +144,8 @@ const App = () => {
   useEffect(() => {
     if(isStarted && !gameOver){
       setTotalTime(0)
+    } else if (cookies.playedToday){
+      console.log('You\'ve played today already! Check in tomorrow, champ ;)')
     }
   }, [isStarted])
 
@@ -141,7 +180,7 @@ const App = () => {
       case 'about':
         return <About closeMenu={isSeen} isDarkMode={isDarkMode} closing={closing}/>
       case 'stats':
-        return <Stats closeMenu={isSeen} playerStats={stats} isDarkMode={isDarkMode} closing={closing}/>
+        return <Stats closeMenu={isSeen}isDarkMode={isDarkMode} closing={closing} cookies={cookies}/>
       case 'settings':
         return <Settings closeMenu={isSeen} hardMode={hardMode} switchHardMode={switchHardMode} switchDarkMode={switchDarkMode} isDarkMode={isDarkMode} closing={closing}/>
       default:
@@ -155,7 +194,7 @@ const App = () => {
         <Navbar openMenu={isSeen} isDarkMode={isDarkMode}/>
         { copyAlert && <ClipboardPing /> }
         { isOpen && showWindow()}
-        { gameOver && <Stats isDarkMode={isDarkMode} closeMenu={isSeen} playerStats={stats} gameOver={gameOver} didWin={didWin} copyToClipboard={copyToClipboard}/>}
+        { gameOver && <Stats isDarkMode={isDarkMode} closeMenu={isSeen} gameOver={gameOver} didWin={didWin} copyToClipboard={copyToClipboard} cookies={cookies}/>}
         <Game isDarkMode={isDarkMode} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} handleWin={handleWin}/>
         <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} minutes={minutes} seconds={seconds} ping={ping}/>
       </div>

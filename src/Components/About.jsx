@@ -30,22 +30,23 @@ const About = ({closeMenu, isDarkMode, closing}) => {
     <div id={'about'} className={'fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ') + (closing && 'fade-out-bottom')}>
       <img className={'close-btn-about'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu('')}/>
       <div className={'section-header'}>
-        <h3 className={'section-title'}>WELCOME TO PICODIA</h3>
+        <h3 className={'section-title'}>PICODIA RULES</h3>
         <p>Solve the <b>Nonogram</b> with less than 3 mistakes.</p>
-        <p><b>Click/Tap</b> to fill a cell. <b>Right Click</b> (change inputs on mobile) to annotate.</p>
+        <p><b>Click/Tap</b> to fill a cell. <b>Right Click</b> (coming soon to mobile) to annotate.</p>
         <p>Share your results to see how you stack up!</p>
       </div>
       <div className={'how-to-play'}>
-        <h5><b>HOW TO PLAY</b></h5>
-        <p>Each row and column contains the hint for that row or column. The number is how many consecutive blocks there are.</p>
+        <h4 style={{margin: '0.75rem 0'}}><b>HOW TO PLAY</b></h4>
+        <p style={{marginTop: '0'}}>Each row and column contains the hint for that row or column. The number is how many consecutive blocks there are.</p>
         <ExampleRow exClue={"5"} exArray={[1,1,1,1,1]} nextStart={nextAnim} order={0} onToNext={onToNext}/>
-        <p>If there is more than one number, there must be an empty block between them.</p>
+        <p>If there is more than one number in the clue, there must be an empty block between them.</p>
         <ExampleRow exClue={"2 " + " " + " 2"} exArray={[1,1,'',1,1]} nextStart={nextAnim} order={1} onToNext={onToNext}/>
-        <p>Careful! Even if the numbers are consecutive, you must use the other clues to determine where it goes.</p>
+        <p><b>Careful!</b> Even if the numbers are consecutive, you must use the other clues to determine where it goes.</p>
         <ExampleRow exClue={"4"} exArray={[1,1,1,1,'']} nextStart={nextAnim} order={2} onToNext={onToNext}/>
+        <p style={{width: '100%', textAlign: 'center'}}>or?</p>
         <ExampleRow exClue={"4"} exArray={['',1,1,1,1]} nextStart={nextAnim} order={2} onToNext={onToNext}/>
         <p>You only get once chance a day, so play carefully ;) Don't lose all of your lives!</p>
-        <LoseExampleRow exClue={"1"} exArray={[0,0,0,'','']} nextStart={nextAnim} order={3} onToNext={onToNext}/>
+        <LoseExampleRow exClue={"3"} exArray={[1,'',0,0,0]} nextStart={nextAnim} order={3} onToNext={onToNext}/>
       </div>
       <div>
         <p style={{textAlign: 'center'}}><b>A new puzzle will be available each day!</b></p>
