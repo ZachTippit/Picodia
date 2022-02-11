@@ -23,7 +23,7 @@ const ExampleRow = ({exClue, exArray, nextStart, onToNext, order}) => {
     }, [nextAnim])
 
   return (
-    <Grid container columns={13} width='70%' margin='1rem 0' marginLeft='2rem'>
+    <Grid container columns={13} width='70%' marginLeft='2rem' className='ex-grid'>
         <Grid item xs={3} alignSelf={'center'}>
             <p style={{margin: 0, textAlign: 'right', paddingRight: '0.5rem'}}>{exClue}</p>
         </Grid>
