@@ -441,6 +441,10 @@ html {
         width: 85%;
     }
 
+    #game {
+        margin-top: 10%;
+    }
+
     #footer {
         position: absolute;
         bottom: 0;

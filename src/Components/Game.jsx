@@ -27,7 +27,7 @@ const Game = ({isStarted, loseLife, isDarkMode, startGame, handleWin}) => {
     }
 
     useEffect(() => {
-        console.log(correctSquares, winNum);
+        // console.log(correctSquares, winNum);
         if(correctSquares === winNum){
             handleWin(true);
         }
