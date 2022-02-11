@@ -4,12 +4,15 @@ import '../styles.css';
 
 import { Grid } from '@mui/material'
 
+const config = {delta: 1}
+
 const Cell = ({cell, isDarkMode, handleCell}) => {
     const [guessed, setGuessed] = useState(false);
     const [flagged, setFlagged] = useState(false);
 
     const swipeCheck = useSwipeable({
-      onSwiping: (eventData => {handleGuess(); console.log(eventData);})
+      onSwiping: (eventData => {handleGuess(); console.log(eventData);}),
+      config
     })
  
     const handleGuess = () => {

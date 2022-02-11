@@ -1,4 +1,5 @@
 export { default as About } from './About'
+export { default as ClipboardPing } from './ClipboardPing'
 export { default as Footer } from './Footer'
 export { default as Game } from './Game'
 export { default as GameOver } from './GameOver'

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { About, Footer, Game, Navbar, Settings, Stats, GameOver } from './Components'
+import { About, Footer, Game, Navbar, Settings, Stats, ClipboardPing } from './Components'
 import './Components/styles.css';
 
 const App = () => {
@@ -23,6 +23,8 @@ const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [didWin, setDidWin] = useState();
   const [gameOver, setGameOver] = useState(false);
+  const [ping, setPing] = useState(false);
+  const [copyAlert, setCopyAlert] = useState(false)
 
   const copyToClipboard = () => {
     const pad = (val) => {
@@ -33,7 +35,11 @@ const App = () => {
     const prefaceText = (didWin ? 'Completed in ' : 'Lost at ')
     const copyText = `Picodia #1 -- ${prefaceText} ${pad(minutes)}:${pad(seconds)} -- ${hearts} Remaining`
     navigator.clipboard.writeText(copyText);
-    alert("Copied the text: " + copyText);
+    // alert(copyText);
+    setCopyAlert(true)
+    setTimeout(() => {
+      setCopyAlert(false)
+    }, 4000)
   }
 
   const isSeen = (path) => {
@@ -121,6 +127,15 @@ const App = () => {
     setIsDarkMode(!isDarkMode);
   }
 
+  const pingStartBtn = () => {
+    if(!isStarted){
+      setPing(true)
+    }
+    setTimeout(() => {
+      setPing(false)
+    }, 1000);
+  }
+
   const showWindow = () => {
     switch(path){
       case 'about':
@@ -138,10 +153,11 @@ const App = () => {
     <div id={'cover-screen'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
       <div id={'app'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
         <Navbar openMenu={isSeen} isDarkMode={isDarkMode}/>
+        { copyAlert && <ClipboardPing /> }
         { isOpen && showWindow()}
         { gameOver && <Stats isDarkMode={isDarkMode} closeMenu={isSeen} playerStats={stats} gameOver={gameOver} didWin={didWin} copyToClipboard={copyToClipboard}/>}
-        <Game isDarkMode={isDarkMode} startGame={startGame} isStarted={isStarted} loseLife={loseLife} handleWin={handleWin}/>
-        <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} minutes={minutes} seconds={seconds}/>
+        <Game isDarkMode={isDarkMode} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} handleWin={handleWin}/>
+        <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} minutes={minutes} seconds={seconds} ping={ping}/>
       </div>
     </div>
     

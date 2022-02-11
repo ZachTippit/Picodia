@@ -146,7 +146,7 @@ html {
     }
 
     .section-header > p {
-        font-size: 0.6rem;
+        font-size: 0.75rem;
     }
 
     .how-to-play {
@@ -307,7 +307,7 @@ html {
     }
 
 #game {
-    margin-top: 20%;
+    transform: translateX(-40px)
 }
 
     .disable-select {
@@ -366,43 +366,39 @@ html {
         background-color: rgb(0,20,150) !important;
     }
 
-    .right:hover {
-        transition: all 0.1s ease-in;
-        background-color: rgba(0,20,150, 0.7) !important;
-    }
-
     .wrong {
         transition: all 0.1s ease-in;
         background-color: rgb(120,0,20) !important;
-    }
-
-    .wrong:hover {
-        transition: all 0.1s ease-in;
-        background-color: rgba(120,0,20, 0.7) !important;
-    }
+    }  
 
     .flagged {
         background-color: #999;
     }
 
-    .dark:hover {
-        transition: all 0.1s ease-in;
-        background-color: rgba(20,20,20,0.2);
-    }
-
-    .light:hover {
-        transition: all 0.2s ease-in;
-        background-color: rgba(240,240,240, 0.2);
-    }
-
     .hidden { 
         opacity: 0;
-        transition: 0.5s;
+        transition: all 0.5s;
     }
 
     .shown { 
         opacity: 1;
-        transition: 3s;
+        transition: all 3s;
+    }
+
+    #clip-ping {
+        width: 200px;
+        padding: 1rem;
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+        top: 10%;
+        background-color: white;
+        color: black;
+        border-radius: 4%;
+        z-index: 3;
     }
 
 
@@ -423,7 +419,9 @@ html {
         width: 30px;
     }
 
-    
+    #maxLives {
+        text-align: center;
+    }
 
 
                                                     /* Responsiveness */
@@ -431,10 +429,28 @@ html {
                                             /*  */
                                     /*  */
                             /*  */
+@media (hover: hover) {
+    .dark:hover {
+        transition: all 0.1s ease-in;
+        background-color: rgba(20,20,20,0.2);
+    }
+    .light:hover {
+        transition: all 0.2s ease-in;
+        background-color: rgba(240,240,240, 0.2);
+    }
+    .right:hover {
+        transition: all 0.1s ease-in;
+        background-color: rgba(0,20,150, 0.7) !important;
+    }
+    .wrong:hover {
+        transition: all 0.1s ease-in;
+        background-color: rgba(120,0,20, 0.7) !important;
+    }
+}
 
 @media screen and (max-width: 600px) {
     #settings, #about {
-        padding: 0.5rem;
+        padding: 1.5rem;
     }
 
     #stats-card {
@@ -443,15 +459,12 @@ html {
 
     #game {
         width: 100%;
-        margin: auto;
-        margin-top: 5%;
     }
 
     #footer {
-        padding-top: 0;
+        margin-top: 0.25rem;
         position: absolute;
         bottom: 0;
-        margin-bottom: 0.25rem;
 
     }
     #footer > p {
@@ -459,17 +472,17 @@ html {
     }
 }
 
-@media screen and (min-height: 700px) {
+@media screen and (min-height: 800px) {
     #game {
         margin-top: 22.5%;
     }
-    #footer {
+    /* #footer {
         padding-top: 0;
         position: absolute;
         bottom: 0;
         margin-bottom: 0.25rem;
 
-    }
+    } */
 }
 
 @media screen and (min-width: 600px) {
@@ -478,8 +491,15 @@ html {
     }
 
     #game {
-        min-height: 30vh;
+        height: 50vh;
+        margin-top: 22.5%;
         margin-bottom: 25%;
+    }
+
+    #footer {
+        padding: 2rem 0;
+        bottom: 0;
+        margin-bottom: 0.25rem;
     }
 }
 
@@ -726,5 +746,167 @@ html {
               transform: translate(0);
     }
   }
+
+.fade-in-col {
+	-webkit-animation: fade-in-col 2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    animation: fade-in-col 2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+    /**
+    * ----------------------------------------
+    * animation fade-in-top
+    * ----------------------------------------
+    */
+    @-webkit-keyframes fade-in-col {
+        0% {
+        opacity: 0;
+        }
+        100% {
+        opacity: 1;
+        }
+    }
+    @keyframes fade-in-col {
+        0% {
+        opacity: 0;
+        }
+        100% {
+        opacity: 1;
+        }
+    }
   
+
+.fade-in-row {
+	-webkit-animation: fade-in-row 2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	animation: fade-in-row 2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+  
+    /**
+    * ----------------------------------------
+    * animation fade-in-left
+    * ----------------------------------------
+    */
+    @-webkit-keyframes fade-in-row {
+        0% {
+        -webkit-transform: translateX(-20px);
+                transform: translateX(-20px);
+        opacity: 0;
+        }
+        100% {
+        -webkit-transform: translateX(0);
+                transform: translateX(0);
+        opacity: 1;
+        }
+    }
+    @keyframes fade-in-row {
+        0% {
+        -webkit-transform: translateX(-20px);
+                transform: translateX(-20px);
+        opacity: 0;
+        }
+        100% {
+        -webkit-transform: translateX(0);
+                transform: translateX(0);
+        opacity: 1;
+        }
+    }
+  
+.move-on-start {
+    -webkit-animation: move-on-start 1s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    animation: move-on-start 1s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+    /**
+    * ----------------------------------------
+    * animation fade-in-top
+    * ----------------------------------------
+    */
+    @-webkit-keyframes move-on-start {
+        0% {
+            -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+            -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+        }
+        100% {
+            -webkit-transform: translateY(20px);
+            transform: translateY(20px);
+            -webkit-transform: translateX(40px);
+            transform: translateX(40px);
+        }
+    }
+    @keyframes move-on-start {
+        0% {
+            -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+            -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+        }
+        100% {
+            -webkit-transform: translateY(20px);
+            transform: translateY(20px);
+            -webkit-transform: translateX(40px);
+            transform: translateX(40px);
+        }
+    }
+
+.clip-anim-in {
+    -webkit-animation: clip-anim-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+            animation: clip-anim-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+/**
+ * ----------------------------------------
+ * animation fade-in
+ * ----------------------------------------
+ */
+ @-webkit-keyframes clip-anim-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes clip-anim-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+.clip-anim-out {
+    -webkit-animation: clip-anim-out 0.6s ease-out both;
+    animation: clip-anim-out 0.6s ease-out both;
+}
+
+/* ----------------------------------------------
+ * Generated by Animista on 2022-2-11 9:32:2
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation fade-out
+ * ----------------------------------------
+ */
+ @-webkit-keyframes clip-anim-out {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes clip-anim-out {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
   

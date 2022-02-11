@@ -13,7 +13,7 @@ const answer = [[1,1,0,1,1,0,1,1], [1,0,1,0,0,1,0,1], [1,1,0,1,1,0,1,1], [0,0,0,
 const gridSize = answer.length + 2;
 const gameGrid = createGameObject(answer);
 
-const Game = ({isStarted, loseLife, isDarkMode, startGame, handleWin}) => {
+const Game = ({isStarted, loseLife, isDarkMode, pingStartBtn, handleWin}) => {
 
     const [correctSquares, setCorrectSquares] = useState(0)
     const [winNum, setWinNum] = useState(answer.flat().reduce((curr, next) => curr + next))
@@ -34,9 +34,9 @@ const Game = ({isStarted, loseLife, isDarkMode, startGame, handleWin}) => {
     }, [correctSquares])
 
   return (
-    <div id='game'>
-        <div id='game-board' onClick={() => startGame()}>
-            <Grid container columns={gridSize} style={{width: '90%', margin: 'auto', marginBottom: '2rem'}}>
+    <div id='game' onClick={() => pingStartBtn()}>
+        <div id='game-board' className={(!isStarted && 'disable-select')}>
+            <Grid container columns={gridSize} style={{width: '90%', margin: 'auto', marginBottom: '2rem'}} className={(isStarted && ' move-on-start')}>
                 {gameGrid.map((cell, index) => (
                     <>
                         { index === 0 || index === 1 ?

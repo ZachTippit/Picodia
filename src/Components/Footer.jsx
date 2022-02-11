@@ -3,18 +3,24 @@ import './styles.css'
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
 
-const Footer = ({lives, maxLives, isStarted, startGame, minutes, seconds}) => {
+const Footer = ({lives, maxLives, isStarted, startGame, minutes, seconds, ping}) => {
+
+  const [pingStart, setPingStart] = useState(true);
 
   const pad = (val) => {
     let valString = val + '';
     return valString.length < 2 ? "0"+valString : valString;
   }
 
+  useEffect(() => {
+    setPingStart(ping)
+  }, [ping])
+
   return (
     <div id={'footer'}>
       {!isStarted ? 
         <div>
-          <button className='start-button pulsate-fwd' onClick={() => startGame()}>Start Game</button>
+          <button className={'start-button ' + (pingStart && 'pulsate-fwd')} onClick={() => startGame()} onAnimationEnd={() => {setPingStart(false)}}>Start Game</button>
         </div>
       :
         <>
