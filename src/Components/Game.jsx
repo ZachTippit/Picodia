@@ -20,17 +20,17 @@ const Game = ({isStarted, loseLife, isDarkMode, startGame, handleWin}) => {
     const handleGuess = (isCorrect) => {
         if(isCorrect){
             setCorrectSquares(correctSquares + 1);
-            if(correctSquares === winNum){
-                handleWin(true);
-            }
         } else {
             loseLife();
         }
     }
 
     useEffect(() => {
-        // console.log(winNum)
-    }, [])
+        console.log(correctSquares, winNum);
+        if(correctSquares === winNum){
+            handleWin(true);
+        }
+    }, [correctSquares])
 
   return (
     <div id='game'>

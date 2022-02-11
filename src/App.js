@@ -24,12 +24,13 @@ const App = () => {
   const [didWin, setDidWin] = useState();
   const [gameOver, setGameOver] = useState(false);
 
-  const copyToClipboard = (minutes, seconds, lives) => {
+  const copyToClipboard = () => {
     const pad = (val) => {
       let valString = val + '';
       return valString.length < 2 ? "0"+valString : valString;
     }
-    const copyText = `Picodia #1 -- ${pad(minutes)}:${pad(seconds)} -- ${lives} Lives Remaining`
+    const prefaceText = (didWin ? 'Completed in ' : 'Lost at ')
+    const copyText = `Picodia #1 -- ${prefaceText} ${pad(minutes)}:${pad(seconds)} -- ${lives} Lives Remaining`
     navigator.clipboard.writeText(copyText);
     alert("Copied the text: " + copyText);
   }
@@ -106,6 +107,11 @@ const App = () => {
     setIsStarted(true);
   }
 
+  const handleWin = () => {
+    setGameOver(true);
+    setDidWin(true);
+  }
+
   const switchHardMode = () => {
     setHardMode(!hardMode);
   }
@@ -132,8 +138,8 @@ const App = () => {
       <div id={'app'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
         <Navbar openMenu={isSeen} isDarkMode={isDarkMode}/>
         { isOpen && showWindow()}
-        { gameOver && <Stats isDarkMode={isDarkMode} closeMenu={isSeen} playerStats={stats} gameOver={gameOver} didWin={didWin} copyToClipboard={copyToClipboard} minutes={minutes} seconds={seconds} lives={lives}/>}
-        <Game isDarkMode={isDarkMode} startGame={startGame} isStarted={isStarted} loseLife={loseLife}/>
+        { gameOver && <Stats isDarkMode={isDarkMode} closeMenu={isSeen} playerStats={stats} gameOver={gameOver} didWin={didWin} copyToClipboard={copyToClipboard}/>}
+        <Game isDarkMode={isDarkMode} startGame={startGame} isStarted={isStarted} loseLife={loseLife} handleWin={handleWin}/>
         <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} minutes={minutes} seconds={seconds}/>
       </div>
     </div>

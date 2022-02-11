@@ -4,7 +4,7 @@ import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { default as Heart } from '../assets/heart.png'
 
-const Stats = ({closeMenu, playerStats, isDarkMode, closing, gameOver, didWin, copyToClipboard, minutes, seconds, lives}) => {
+const Stats = ({closeMenu, playerStats, isDarkMode, closing, gameOver, didWin, copyToClipboard}) => {
   return (
     <div className={'full-screen-cover fade-in-fwd ' + (closing && 'fade-out-bck')}>
       <div className={'full-screen-container'}>
@@ -75,7 +75,7 @@ const Stats = ({closeMenu, playerStats, isDarkMode, closing, gameOver, didWin, c
                   </Grid>
                   <Divider orientation="vertical" flexItem/>
                   <Grid item xs>
-                    <button className='share-btn' onClick={() => copyToClipboard(minutes, seconds, lives)}>Share results</button>
+                    <button className='share-btn' onClick={() => copyToClipboard()}>Share results</button>
                   </Grid>
                 </Grid>  
               </div>             
