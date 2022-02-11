@@ -442,12 +442,33 @@ html {
     }
 
     #game {
-        margin-top: 10%;
+        width: 100%;
+        margin: auto;
+        margin-top: 5%;
     }
 
     #footer {
+        padding-top: 0;
         position: absolute;
         bottom: 0;
+        margin-bottom: 0.25rem;
+
+    }
+    #footer > p {
+        margin-top: 0;
+    }
+}
+
+@media screen and (min-height: 700px) {
+    #game {
+        margin-top: 22.5%;
+    }
+    #footer {
+        padding-top: 0;
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 0.25rem;
+
     }
 }
 
@@ -458,7 +479,7 @@ html {
 
     #game {
         min-height: 30vh;
-        margin-bottom: 30%;
+        margin-bottom: 25%;
     }
 }
 
