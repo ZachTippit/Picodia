@@ -1,33 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './styles.css'
 import { default as Heart } from '../assets/heart.png'
+import { default as EmptyHeart } from '../assets/empty-heart.png'
 
-const Footer = ({lives, isStarted, startGame}) => {
-
-  const [totalTime, setTotalTime] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTotalTime(totalTime => totalTime + 1)
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [])
-
-  useEffect(() => {
-    setSeconds(totalTime%60)
-  }, [totalTime])
-
-  useEffect(() => {
-    setMinutes(parseInt(totalTime/60))
-  }, [seconds])
-
-  useEffect(() => {
-    if(isStarted){
-      setTotalTime(0)
-    }
-  }, [isStarted])
+const Footer = ({lives, maxLives, isStarted, startGame, minutes, seconds}) => {
 
   const pad = (val) => {
     let valString = val + '';
@@ -38,11 +14,11 @@ const Footer = ({lives, isStarted, startGame}) => {
     <div id={'footer'}>
       {!isStarted ? 
         <div>
-          <button className='start-button' onClick={() => startGame()}>Start Game</button>
+          <button className='start-button pulsate-fwd' onClick={() => startGame()}>Start Game</button>
         </div>
       :
         <>
-          <div>
+          <div className='fade-in-fwd'>
             <p style={{textAlign: 'center', marginBottom: '0'}}>TIME</p>
             <div style={{margin: 'auto', textAlign: 'center'}}>
               <label style={{fontSize: '0.75rem'}}>{pad(minutes)}</label>
@@ -52,10 +28,15 @@ const Footer = ({lives, isStarted, startGame}) => {
           </div>
           <div>
             <p style={{textAlign: 'center', marginBottom: '0'}}>LIVES</p>
-            <div id={'lives'}>
-              {[...Array(lives)].map(life => (
+            <div id={'maxLives'}>
+              {[...Array(maxLives)].map((life, index) => (
                 <>
-                  <img className={'life'} src={Heart} alt='Lives' key={life}/>
+                  {
+                      index >= lives ?
+                        <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life}/> :
+                        <img className={'life'} src={Heart} alt='Lives' key={life}/> 
+                  }
+                  
                 </>
                 
                 

@@ -3,10 +3,10 @@ import './styles.css';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 
-const About = ({closeMenu, isDarkMode}) => {
+const About = ({closeMenu, isDarkMode, closing}) => {
   return (
-    <div id={'about'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
-      <img className={'close-btn-about'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu()}/>
+    <div id={'about'} className={'fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ') + (closing && 'fade-out-bottom')}>
+      <img className={'close-btn-about'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu('')}/>
       <div className={'section-header'}>
         <h3 className={'section-title'}>HOW TO PLAY</h3>
         <p>Try to solve the number puzzle with less than 3 mistakes.</p>
