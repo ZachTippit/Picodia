@@ -29,8 +29,9 @@ const App = () => {
       let valString = val + '';
       return valString.length < 2 ? "0"+valString : valString;
     }
+    const hearts = (didWin ? '❤️'.repeat(lives) : '0 Lives')
     const prefaceText = (didWin ? 'Completed in ' : 'Lost at ')
-    const copyText = `Picodia #1 -- ${prefaceText} ${pad(minutes)}:${pad(seconds)} -- ${lives} Lives Remaining`
+    const copyText = `Picodia #1 -- ${prefaceText} ${pad(minutes)}:${pad(seconds)} -- ${hearts} Remaining`
     navigator.clipboard.writeText(copyText);
     alert("Copied the text: " + copyText);
   }
