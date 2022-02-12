@@ -256,7 +256,7 @@ html {
     }
 
     #stat-holder{
-        width: 60%;
+        width: 70%;
         margin: auto;
         padding: 1rem 0;
     }
@@ -280,8 +280,7 @@ html {
         }
     
     .stat-time {
-        display: flex;
-        justify-content: space-between;
+        text-align: center;
     }
     
         .stat-time > p {
@@ -290,6 +289,10 @@ html {
         }
 
         .life-stat {
+            text-align: center;
+        }
+
+        .life-stat > img {
             width: 15px;
         }
 

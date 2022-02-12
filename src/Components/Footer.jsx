@@ -39,13 +39,10 @@ const Footer = ({lives, maxLives, isStarted, startGame, minutes, seconds, ping})
                 <>
                   {
                       index >= lives ?
-                        <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life}/> :
-                        <img className={'life'} src={Heart} alt='Lives' key={life}/> 
-                  }
-                  
-                </>
-                
-                
+                        <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life} key={`no-heart${index}`}/> :
+                        <img className={'life'} src={Heart} alt='Lives' key={life} key={`heart${index}`}/> 
+                  } 
+                </> 
               ))}
             </div>
           </div>

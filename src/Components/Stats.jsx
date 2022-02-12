@@ -12,11 +12,10 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
     console.log(cookies);
   }, [cookies])
 
-  const averageOfArray = (timeArray) => {
-    const avgTime = timeArray.reduce((curr, next) => curr + next) / timeArray.length;
-    const minutes = pad(parseInt(avgTime/60));
-    const seconds = pad(avgTime%60);
-    return minutes, seconds;
+  const timeParser = (avgTime) => {
+    const minutes = parseInt(avgTime/60);
+    const seconds = pad(parseInt(avgTime%60));
+    return `${minutes}:${seconds}`;
   }
 
   const pad = (val) => {
@@ -37,7 +36,7 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
                 <p className={'stat-label'}>Played</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{(isNaN(cookies.wonGames/cookies.totalGames * 100) ? 0 : cookies.wonGames/cookies.totalGames * 100)}</p>
+                <p className={'stat-num'}>{(isNaN(cookies.wonGames/cookies.totalGames * 100) ? 0 : `${(cookies.wonGames/cookies.totalGames * 100).toFixed(1)}%`)}</p>
                 <p className={'stat-label'}>Win %</p>
               </div>
               <div className={'stat-block'}>
@@ -51,40 +50,34 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
             </div> 
             <h5 style={{textAlign: 'center'}}>Game Distribution</h5>
             <div>
-              <div className={'stat-time'}>
-                <p>Lives Left</p>
-                <p>...............</p>
-                <p>Time Elapsed</p>
-              </div>
-              <div className={'stat-time'}>
-                <div>
-                  <img className={'life-stat'} src={Heart} alt='Lives' />
-                  <img className={'life-stat'} src={Heart} alt='Lives' />
-                  <img className={'life-stat'} src={Heart} alt='Lives' />
-                </div>
-                <p>5:51</p>
-              </div>
-              <div className={'stat-time'}>
-                <div>
-                  <img className={'life-stat'} src={Heart} alt='Lives' />
-                  <img className={'life-stat'} src={Heart} alt='Lives' />
-                </div>
-                <p>4:21</p>
-              </div>
-              <div className={'stat-time'}>
-                <div>
-                  <img className={'life-stat'} src={Heart} alt='Lives' />
-                </div>
-                <p>5:14</p>
-              </div> 
-              <div className={'stat-time'}>
-                <div>
-                  <img className={'life-stat'} src={EmptyHeart} alt='Lives' />
-                </div>
-                <p>5:51</p>
-              </div>
-            </div>
-          </div>
+            <Grid container justifyContent='center' alignItems='space-between'>
+              <Grid item xs={4} className={'stat-time'}><p><b>Lives Left</b></p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p><b>Games Finished</b></p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p><b>Avg Game Time</b></p></Grid>
+              <Grid item xs={4} alignSelf='center' className={'life-stat'}>
+                <img src={Heart} alt='Lives' />
+                <img src={Heart} alt='Lives' />
+                <img src={Heart} alt='Lives' />
+              </Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{cookies['3LifeWins']}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['3LifeAvgTime'])}</p></Grid>
+              <Grid item xs={4} className={'life-stat'}>
+                <img src={Heart} alt='Lives' />
+                <img src={Heart} alt='Lives' />
+              </Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{cookies['2LifeWins']}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['2LifeAvgTime'])}</p></Grid>
+              <Grid item xs={4} className={'life-stat'}>
+                <img src={Heart} alt='Lives' />
+              </Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{cookies['1LifeWins']}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['1LifeAvgTime'])}</p></Grid>
+              <Grid item xs={4} className={'life-stat'}>
+                <img src={EmptyHeart} alt='Lives' />
+              </Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{cookies.lostGames}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies.avgLossTime)}</p></Grid>
+            </Grid>
           {gameOver &&
               <>
               <Divider sx={{width: '80%', m: 'auto', my: 2}}/>
@@ -93,15 +86,16 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
                 <p>{(didWin ? 
                   'You solved the puzzle. Share with your results to see who can beat you!' 
                   : 'This was a tough one! Share with your friends and see how they do.')}</p>
-                <Grid container direction='row'>
+                <Grid container>
+                  <Grid item xs>
+                    <button className='share-btn' onClick={() => copyToClipboard()}>Share results</button>
+                    <Divider width='50%' style={{margin: 'auto'}}/>
+                  </Grid>
+                 
                   <Grid item xs>
                     <p><b>Next Game</b></p>
                     <p>TICK TOCK</p>
-                  </Grid>
-                  <Divider orientation="vertical" flexItem/>
-                  <Grid item xs>
-                    <button className='share-btn' onClick={() => copyToClipboard()}>Share results</button>
-                  </Grid>
+                  </Grid>  
                 </Grid>  
               </div>             
             </>
@@ -109,6 +103,8 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
         </div>
       </div>
     </div>
+  </div>
+  </div>
   )
 };
 

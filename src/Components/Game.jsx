@@ -6,8 +6,12 @@ import Clues from './Game/Clues.jsx'
 import Cell from './Game/Cell.jsx'
 import './styles.css';
 import { createGameObject } from '../lib/game.js';
-const answer = [[1,1,0,1,1,0,1,1], [1,0,1,0,0,1,0,1], [1,1,0,1,1,0,1,1], [0,0,0,0,0,0,0,0], 
-                [0,1,0,0,0,0,1,0], [0,0,1,1,1,1,0,0], [1,0,0,0,0,0,0,1], [1,1,0,1,1,0,1,1]]
+
+// const answer = [[1,1,0,1,1,0,1,1], [1,0,1,0,0,1,0,1], [1,1,0,1,1,0,1,1], [0,0,0,0,0,0,0,0], 
+//                 [0,1,0,0,0,0,1,0], [0,0,1,1,1,1,0,0], [1,0,0,0,0,0,0,1], [1,1,0,1,1,0,1,1]]
+
+const answer = [[1,0,0,0,0,0,0,1], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], 
+[0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,1]]
 // const answer = [[1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0],
 // [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0]];
 const gridSize = answer.length + 2;
@@ -35,8 +39,8 @@ const Game = ({isStarted, loseLife, isDarkMode, pingStartBtn, handleWin}) => {
 
   return (
     <div id='game' onClick={() => pingStartBtn()}>
-        <div id='game-board' className={(!isStarted && 'disable-select')}>
-            <Grid container columns={gridSize} style={{width: '90%', margin: 'auto', marginBottom: '2rem'}} className={(isStarted && ' move-on-start')}>
+        <div id='game-board' className={!isStarted ? 'disable-select' : undefined}>
+            <Grid container columns={gridSize} style={{width: '90%', margin: 'auto', marginBottom: '2rem'}} className={isStarted ? ' move-on-start' : undefined}>
                 {gameGrid.map((cell, index) => (
                     <>
                         { index === 0 || index === 1 ?
@@ -46,17 +50,18 @@ const Game = ({isStarted, loseLife, isDarkMode, pingStartBtn, handleWin}) => {
                             // Column Clues (if index is in the first row)
                             <>
                                 { (parseInt(index/gridSize)===0)  ? 
-                                <Clues cell={cell} index={index} rowOrCol={'column'} key={index} isStarted={isStarted}/>
+                                <Clues cell={cell} index={index} rowOrCol={'column'} key={`clues-col-${index}`} isStarted={isStarted}/>
                                 : 
                             // Row Clues (in index is on far left side after the first row)  
                                 <>
                                     { index%gridSize === 0 ? 
-                                    <Clues cell={cell} index={index} rowOrCol={'row'} key={index} isStarted={isStarted} />
+                                    <Clues cell={cell} index={index} rowOrCol={'row'} key={`clues-row-${index}`} isStarted={isStarted} />
                                     :
                             // Space creator for above.
                                     <>
                                     {index%gridSize === 1  ? 
-                                        null   
+                                        <div key={`empty${index}`}>
+                                        </div>   
                                     :   
                             // Aaaand the cells
                                         <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} handleCell={handleGuess} key={`cell@${index}`}/>
