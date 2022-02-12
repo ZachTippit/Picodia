@@ -91,7 +91,6 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
                     <button className='share-btn' onClick={() => copyToClipboard()}>Share results</button>
                     <Divider width='50%' style={{margin: 'auto'}}/>
                   </Grid>
-                 
                   <Grid item xs>
                     <p><b>Next Game</b></p>
                     <p>TICK TOCK</p>
