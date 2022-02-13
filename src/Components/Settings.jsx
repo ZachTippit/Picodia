@@ -4,7 +4,7 @@ import './slider.css';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 
-const Settings = ({closeMenu, hardMode, switchHardMode, switchDarkMode, isDarkMode, closing}) => {
+const Settings = ({closeMenu, hardMode, switchHardMode, switchDarkMode, isDarkMode, closing, version}) => {
 
   const [toggleDarkMode, setIsDarkMode] = useState(isDarkMode);
 
@@ -69,7 +69,10 @@ const Settings = ({closeMenu, hardMode, switchHardMode, switchDarkMode, isDarkMo
         </div>
         <div>
           <p><a href='www.zachtippit.com'>More projects at zachtippit.com</a></p>
-        </div>          
+        </div>     
+        <div>
+          <p>Picodia #{version}</p>
+        </div>     
       </div>     
     </div> 
   )

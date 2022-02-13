@@ -164,7 +164,7 @@ html {
     left: 0;
     right: 0;
     z-index: 1;
-    min-height: 100vh;
+    min-height: 100%;
     padding: 2rem 0;
 }
     .close-btn { /* Used in each settings, about and stats*/
@@ -212,11 +212,13 @@ html {
         justify-content: space-around;
         position: absolute;
         bottom: 0;
-        font-size: 0.4rem;
+        font-size: 0.5rem;
         width: 300px;
         left: 0;
         right: 0;
-        margin: 2rem auto;
+        margin: auto;
+        z-index: 2;
+        min-height: 15%;
     }
 
 .full-screen-cover {
@@ -256,15 +258,19 @@ html {
     }
 
     #stat-holder{
-        width: 70%;
+        width: 80%;
         margin: auto;
-        padding: 1rem 0;
     }
 
     #stat-summary {
         display: flex;
         justify-content: space-between;
+        margin: 1rem 0;
     }
+        #game-dist-header {
+            margin: 1.25rem 0 0.25rem 0;
+            text-align: center;
+        }
 
         .stat-block > .stat-num {
             text-align: center;
@@ -464,7 +470,7 @@ html {
     }
 
     #game {
-        width: 100%;
+        width: 95%;
     }
 
     #footer {
@@ -478,9 +484,17 @@ html {
     }
 }
 
+@media screen and (max-width: 361px) {
+    #game{
+        width: 98%;
+        margin: auto;
+        margin-top: 10%;
+    }
+}
+
 @media screen and (min-height: 800px) {
     #game {
-        margin-top: 22.5%;
+        margin-top: 20%;
     }
 
     #about {
@@ -509,9 +523,12 @@ html {
     }
 
     #game {
-        height: 50vh;
+        height: 40vh; 
+        margin: auto;
         margin-top: 22.5%;
         margin-bottom: 25%;
+        width: 90%;
+       
     }
 
     #footer {
@@ -835,7 +852,7 @@ html {
 
     /**
     * ----------------------------------------
-    * animation fade-in-top
+    * animation fade-in-top, fade-in-right
     * ----------------------------------------
     */
     @-webkit-keyframes move-on-start {

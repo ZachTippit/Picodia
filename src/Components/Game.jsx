@@ -5,7 +5,7 @@ import { Grid } from '@mui/material'
 import Clues from './Game/Clues.jsx'
 import Cell from './Game/Cell.jsx'
 import './styles.css';
-import { createGameObject } from '../lib/game.js';
+import { createGameObject, maxRowClueLength, maxColClueLength } from '../lib/game.js';
 
 // const answer = [[1,1,0,1,1,0,1,1], [1,0,1,0,0,1,0,1], [1,1,0,1,1,0,1,1], [0,0,0,0,0,0,0,0], 
 //                 [0,1,0,0,0,0,1,0], [0,0,1,1,1,1,0,0], [1,0,0,0,0,0,0,1], [1,1,0,1,1,0,1,1]]
@@ -14,13 +14,17 @@ const answer = [[1,1,0,0,0,0,1,1], [1,0,1,0,0,1,0,1], [0,1,1,1,1,1,1,0], [0,1,1,
 [0,1,1,1,1,1,1,0], [1,0,1,1,1,1,0,1], [1,0,0,1,1,0,0,1], [1,1,1,0,0,1,1,1]]
 // const answer = [[1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0],
 // [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0]];
-const gridSize = answer.length + 2;
-const gameGrid = createGameObject(answer);
 
-const Game = ({isStarted, loseLife, isDarkMode, pingStartBtn, handleWin}) => {
+
+const Game = ({isStarted, loseLife, puzzle, isDarkMode, pingStartBtn, handleWin}) => {
 
     const [correctSquares, setCorrectSquares] = useState(0)
-    const [winNum, setWinNum] = useState(answer.flat().reduce((curr, next) => curr + next))
+    const [winNum, setWinNum] = useState(5000)
+    const [gridSize, setGridSize] = useState(10)
+    const [gameGrid, setGameGrid] = useState(createGameObject(answer))
+    // const [maxClueRowLength, setMaxClueRowLength] = useState(maxRowClueLength(answer))
+    // const [maxClueColLength, setMaxClueColLength] = useState(maxColClueLength(answer))
+    const [isPuzzleSet, setIsPuzzleSet] = useState(false)
 
     const handleGuess = (isCorrect) => {
         if(isCorrect){
@@ -31,16 +35,27 @@ const Game = ({isStarted, loseLife, isDarkMode, pingStartBtn, handleWin}) => {
     }
 
     useEffect(() => {
-        // console.log(correctSquares, winNum);
         if(correctSquares === winNum){
             handleWin(true);
         }
     }, [correctSquares])
 
+    useEffect(() => {
+        if(puzzle.length > 2){
+            // console.log(JSON.parse(puzzle))
+            setGridSize(JSON.parse(puzzle).length + 2)
+            setGameGrid(createGameObject(JSON.parse(puzzle)))
+            setWinNum(JSON.parse(puzzle).flat().reduce((curr, next) => curr + next))
+            // setMaxClueRowLength(maxRowClueLength(JSON.parse(puzzle)))
+            // setMaxClueColLength(maxColClueLength(JSON.parse(puzzle)))
+            setIsPuzzleSet(true)
+        }
+    }, [puzzle])
+
   return (
     <div id='game' onClick={() => pingStartBtn()}>
         <div id='game-board' className={!isStarted ? 'disable-select' : undefined}>
-            <Grid container columns={gridSize} style={{width: '90%', margin: 'auto', marginBottom: '2rem'}} className={isStarted ? ' move-on-start' : undefined}>
+            <Grid container columns={gridSize} className={isStarted ? ' move-on-start' : undefined}>
                 {gameGrid.map((cell, index) => (
                     <>
                         { index === 0 || index === 1 ?

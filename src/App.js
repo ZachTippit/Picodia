@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import { About, Footer, Game, Navbar, Settings, Stats, ClipboardPing } from './Components'
 import { useCookies } from 'react-cookie'
+
 import './Components/styles.css';
 
 const App = () => {
 
-  const [totalTime, setTotalTime] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
+  const [puzzleReference, setPuzzleRef] = useState([]);
+  const [dailyPuzzle, setDailyPuzzle] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [path, setPath] = useState();
   const [closing, setClosing] = useState(false);
@@ -19,21 +19,29 @@ const App = () => {
   const [didWin, setDidWin] = useState();
   const [gameOver, setGameOver] = useState(false);
   const [ping, setPing] = useState(false);
+  
   const [copyAlert, setCopyAlert] = useState(false)
   const [cookies, setCookie, removeCookie] = useCookies()
-
+  const [gameOverTime, setGameOverTime] = useState([0,0,0])
 
   const cookieRemover = () => {
-    // removeCookie('totalGames');       // Total games played
-    // removeCookie('wonGames');         // Games won
-    // removeCookie('lostGames')         // Games lost
-    // removeCookie('currentStreak');    // Current win streak
-    // removeCookie('maxStreak');        // Longest win streak
-    // // removeCookie('lifeWins')          // Wins in each life (or loss, [0])
-    // // removeCookie('avgTimes')          // Avg times in each life
-    // removeCookie('playedPicodia')     // Played Picodia before?  
-    // removeCookie('playedToday')       // Played Picodia today?
-    removeCookie('0LifeAvgTime')                 // Weird cookie thang
+    removeCookie('totalGames');       // Total games played
+    removeCookie('wonGames');         // Games won
+    removeCookie('lostGames')         // Games lost
+    removeCookie('currentStreak');    // Current win streak
+    removeCookie('maxStreak');        // Longest win streak
+    removeCookie('playedPicodia')     // Played Picodia before?  
+    removeCookie('playedToday')       // Played Picodia today?
+    removeCookie('undefinedLifeAvgTime')                 // Weird cookie thang
+    removeCookie('0LifeWins', 0);
+    removeCookie('0LifeAvgTime', 0);
+    removeCookie('avgLossTime', 0);
+    removeCookie('1LifeWins', 0);
+    removeCookie('1LifeAvgTime', 0);
+    removeCookie('2LifeWins', 0);
+    removeCookie('2LifeAvgTime', 0);
+    removeCookie('3LifeWins', 0);
+    removeCookie('3LifeAvgTime', 0);
   }
 
   const cookieInit = () => {
@@ -42,12 +50,11 @@ const App = () => {
     setCookie('lostGames', 0)        // Games lost
     setCookie('currentStreak', 0);   // Current win streak
     setCookie('maxStreak', 0);       // Longest win streak
-    // setCookie('lifeWins', [0,0,0,0]) // Wins in each life (or loss, [0])
-    // setCookie('avgTimes', [0,0,0,0]) // Avg times in each life
     setCookie('playedPicodia', true) // Played Picodia before?  
     setCookie('playedToday', false)  // Played Picodia today?
     setCookie('lostGames', 0)
     setCookie('avgLossTime', 0);
+    setCookie('0LifeWins', 0);
     setCookie('1LifeWins', 0);
     setCookie('1LifeAvgTime', 0);
     setCookie('2LifeWins', 0);
@@ -56,35 +63,11 @@ const App = () => {
     setCookie('3LifeAvgTime', 0);
   }
 
-  useEffect(() => console.log('Cookies changed: ', cookies), [cookies])
-
-  useEffect(() => {
-    if(hardMode){
-      if(isStarted){
-        setLives(1);
-        setMaxLives(1);
-      } else {
-        setLives(1);
-        setMaxLives(1);
-      }
-    }
-  }, [hardMode])
-
-  useEffect(() => { setIsDarkMode(isDarkMode); }, [isDarkMode])
-
-  useEffect(() => { lives===0 && handleGameOver(false, 0, totalTime)}, [lives])
-
-  useEffect(() => !gameOver && setSeconds(totalTime%60), [totalTime])
-
-  useEffect(() => !gameOver && setMinutes(parseInt(totalTime/60)), [seconds])
-
-  useEffect(() => {(isStarted && !gameOver) && setTotalTime(0)}, [isStarted])
-
+  // Handles removing/initializing cookies
   useEffect(() => {
     // Removes all cookies created by initializer
-    cookieRemover();
-    
-
+    // cookieRemover();
+  
     // Initializes Cookies for the first time
     if(cookies.playedPicodia === undefined){
       cookieInit();
@@ -92,27 +75,53 @@ const App = () => {
                 /////// Future plan! Included user's guessed array for the day
                 console.log('You\'ve played today but at least we read cookies!')
     }
-    // console.log(cookies)
-
-    if(!gameOver){
-      const interval = setInterval(() => {
-        setTotalTime(totalTime => totalTime + 1)
-      }, 1000);
-      return () => clearInterval(interval);
-    }
+    console.log(cookies)
   }, [])
 
+  // Gets puzzle reference for puzzle fetcher
+  useEffect(() => {
+    const getPuzzleRef = async () => {
+      const puzzleRef = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_SPREADSHEET_ID}/values/Sheet1!A2?key=${process.env.REACT_APP_SHEETS_API_KEY}`).then((response) => response.json())
+      setPuzzleRef(puzzleRef.values[0][0])
+    }
+    getPuzzleRef();
+  }, [])
 
-  const handleGameOver = (win, numLives, timeTaken) => {
-    console.log('dooties')
-      // Pops up game over window
+  // Uses google sheets index to pick puzzle (this will create an API limit bottleneck in the future)
+  useEffect(() => {
+    const getPuzzle = async () => {
+      const puzzleResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_SPREADSHEET_ID}/values/Sheet1!B${puzzleReference}?key=${process.env.REACT_APP_SHEETS_API_KEY}`).then((response) => response.json())
+      setDailyPuzzle(puzzleResponse.values[0][0]);
+    }
+    getPuzzle();
+  }, [puzzleReference])
+
+  // Turns on hard mode (reduces to 1 life)
+  useEffect(() => {
+    if(hardMode){
+      setLives(1);
+      setMaxLives(1);
+    }
+  }, [hardMode])
+
+  useEffect(() => { setIsDarkMode(isDarkMode); }, [isDarkMode])
+
+  useEffect(() => { lives===0 && setGameOver(true) }, [lives])
+
+  useEffect(() => { 
+    if(gameOver && !cookies.playedToday){ lives > 0 ? handleGameOver(true, lives) : handleGameOver(false, lives)  } 
+   }, [gameOverTime])
+
+
+
+  const handleGameOver = (win, numLives) => {
       // SETS COOKIES FOR:
         // You've played today
     setCookie('playedToday', true);
         // ++ Total games played
     setCookie('totalGames', parseInt(cookies.totalGames) + 1);
     //     // Refreshes avg time per life (and loss)
-    setCookie(`${numLives}LifeAvgTime`, ((parseInt(cookies[`${numLives}LifeWins`]) * parseInt(cookies[`${numLives}LifeAvgTime`]) + timeTaken )/(parseInt(cookies[`${numLives}LifeWins`]) + 1)))
+    setCookie(`${numLives}LifeAvgTime`, ((parseInt(cookies[`${numLives}LifeWins`]) * parseInt(cookies[`${numLives}LifeAvgTime`]) + gameOverTime[0] )/(parseInt(cookies[`${numLives}LifeWins`]) + 1)))
     if(win){  
       // ON WIN
         // ++ won games
@@ -128,28 +137,24 @@ const App = () => {
       setCookie('lostGames', parseInt(cookies.lostGames) + 1);
       setCookie('currentStreak', 0);      
     }
-    setGameOver(true);
     // Sets win status for game logic
     setDidWin(win);
   }
 
-  const handleGameTimeCookies = (winsInCategory, avgTimeInCategory, timeTaken) => { 
-    return (winsInCategory * avgTimeInCategory + timeTaken)/(winsInCategory + 1);
+  const handleGameOverTime = (totalTime, minutes, seconds) => {
+    console.log(totalTime, minutes, seconds)
+    setGameOverTime([totalTime, minutes, seconds]);
   }
 
   const startGame = () => { setIsStarted(true); }
 
   const handleWin = () => {
-    console.log('Win! ', lives, ' lives left. Total time taken: ', totalTime)
-    handleGameOver(true, lives, totalTime)
+    setGameOver(true);
+    handleGameOver(true, lives)
   }
 
   const loseLife = () => {
     setLives(lives - 1);
-    if(lives === 0) {
-      console.log('uh oh!')
-      
-    }
   }
 
   const switchHardMode = () => {
@@ -176,7 +181,7 @@ const App = () => {
     }
     const hearts = (didWin ? '❤️'.repeat(lives) : '0 Lives')
     const prefaceText = (didWin ? 'Completed in ' : 'Lost at ')
-    const copyText = `Picodia #1 -- ${prefaceText} ${pad(minutes)}:${pad(seconds)} -- ${hearts} Remaining`
+    const copyText = `Picodia #1 -- ${prefaceText} ${pad(gameOverTime[1])}:${pad(gameOverTime[2])} -- ${hearts} Remaining`
     navigator.clipboard.writeText(copyText);
     // alert(copyText);
     setCopyAlert(true)
@@ -203,7 +208,7 @@ const App = () => {
       case 'stats':
         return <Stats closeMenu={isSeen}isDarkMode={isDarkMode} closing={closing} cookies={cookies}/>
       case 'settings':
-        return <Settings closeMenu={isSeen} hardMode={hardMode} switchHardMode={switchHardMode} switchDarkMode={switchDarkMode} isDarkMode={isDarkMode} closing={closing}/>
+        return <Settings closeMenu={isSeen} hardMode={hardMode} switchHardMode={switchHardMode} switchDarkMode={switchDarkMode} isDarkMode={isDarkMode} closing={closing} version={puzzleReference}/>
       default:
         return;
     }
@@ -216,8 +221,8 @@ const App = () => {
         { copyAlert && <ClipboardPing /> }
         { isOpen && showWindow()}
         { gameOver && <Stats isDarkMode={isDarkMode} closeMenu={isSeen} gameOver={gameOver} didWin={didWin} copyToClipboard={copyToClipboard} cookies={cookies}/>}
-        <Game isDarkMode={isDarkMode} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} handleWin={handleWin}/>
-        <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} minutes={minutes} seconds={seconds} ping={ping}/>
+        <Game isDarkMode={isDarkMode} puzzle={dailyPuzzle} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} handleWin={handleWin}/>
+        <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} ping={ping} gameOver={gameOver} handleGameOverTime={handleGameOverTime}/>
       </div>
     </div>
   );

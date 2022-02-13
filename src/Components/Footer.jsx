@@ -3,9 +3,12 @@ import './styles.css'
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
 
-const Footer = ({lives, maxLives, isStarted, startGame, minutes, seconds, ping}) => {
+const Footer = ({lives, maxLives, isStarted, startGame, ping, gameOver, handleGameOverTime}) => {
 
   const [pingStart, setPingStart] = useState(true);
+  const [totalTime, setTotalTime] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(0);
 
   const pad = (val) => {
     let valString = val + '';
@@ -13,8 +16,23 @@ const Footer = ({lives, maxLives, isStarted, startGame, minutes, seconds, ping})
   }
 
   useEffect(() => {
-    setPingStart(ping)
-  }, [ping])
+    if(!gameOver){
+      const interval = setInterval(() => {
+        setTotalTime(totalTime => totalTime + 1)
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [])
+
+  useEffect(() => !gameOver && setSeconds(totalTime%60), [totalTime])
+
+  useEffect(() => !gameOver && setMinutes(parseInt(totalTime/60)), [seconds])
+
+  useEffect(() => {(isStarted && !gameOver) && setTotalTime(0)}, [isStarted])
+
+  useEffect(() => gameOver && handleGameOverTime(totalTime, minutes, seconds), [gameOver])
+
+  useEffect(() => { setPingStart(ping) }, [ping])
 
   return (
     <div id={'footer'}>

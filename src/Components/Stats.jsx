@@ -48,8 +48,6 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
                 <p className={'stat-label'}>Max Streak</p>
               </div>
             </div> 
-            <h5 style={{textAlign: 'center'}}>Game Distribution</h5>
-            <div>
             <Grid container justifyContent='center' alignItems='space-between'>
               <Grid item xs={4} className={'stat-time'}><p><b>Lives Left</b></p></Grid>
               <Grid item xs={4} className={'stat-time'}><p><b>Games Finished</b></p></Grid>
@@ -80,7 +78,7 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
             </Grid>
           {gameOver &&
               <>
-              <Divider sx={{width: '80%', m: 'auto', my: 2}}/>
+              <Divider sx={{width: '80%', m: 'auto'}}/>
               <div className='end-game-txt'>
                 <p style={{textAlign: 'center'}}><b>{(didWin ? 'Nice!' : 'Bummer :(')}</b></p>
                 <p>{(didWin ? 
@@ -99,7 +97,6 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
               </div>             
             </>
           }
-        </div>
       </div>
     </div>
   </div>
