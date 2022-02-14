@@ -337,7 +337,17 @@ html {
         z-index: 0;
         height: 50px;
         width: 200px;
-        background-color: #040;
+        background-color: #060;
+        font-weight: bold;
+        color: white;
+        transition: all 1s;
+    }
+
+    .start-button:hover {
+        z-index: 0;
+        height: 50px;
+        width: 220px;
+        background-color: #060;
         color: white;
         transition: all 3s;
     }
@@ -373,6 +383,13 @@ html {
         background: inherit;
         transition: all 0.1s ease-in;
         height: 2rem;
+    }
+
+    .ex-cell{
+        background: inherit;
+        transition: all 0.1s ease-in;
+        height: 2rem;
+        border: #888 1px solid !important;
     }
 
     .right {
@@ -435,15 +452,15 @@ html {
     }
 
     .win-ping{
-        background-color: rgba(100,220,100,0.5);
+        background-color: rgba(100,220,100,0.8);
     }
 
     .lose-ping{
-        background-color: rgba(220,100,100,0.5);
+        background-color: rgba(220,100,100,0.85);
     }
 
     .copy-ping{
-        background-color: rgba(100,100,220,0.5);
+        background-color: rgba(100,100,220,0.8);
     }
 
 

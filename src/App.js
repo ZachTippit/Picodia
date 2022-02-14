@@ -98,7 +98,7 @@ const App = () => {
 
       // SAVES CURRENT DAY'S GAME
       // console.log(timeTaken)
-      console.log(timeTaken)
+      // console.log(timeTaken)
     
     setCookie('prevLives', numLives)
     setCookie('prevOutcome', win)
@@ -247,8 +247,8 @@ const App = () => {
       return valString.length < 2 ? "0"+valString : valString;
     }
     const hearts = (didWin ? '❤️'.repeat(lives) : '0 Lives')
-    const prefaceText = (didWin ? 'Completed in ' : 'Lost at ')
-    const copyText = `Picodia #1 -- ${prefaceText} ${pad(parseInt(gameOverTime/60))}:${pad(gameOverTime%60)} -- ${hearts} Remaining. Can you beat that? Play at picodia.netlify.app!`
+    const prefaceText = (didWin ? 'Completed in' : 'Lost at')
+    const copyText = `Picodia #1 -- ${prefaceText} ${pad(parseInt(gameOverTime/60))}:${pad(gameOverTime%60)} -- ${hearts} remaining. Can you beat that? Play at picodia.netlify.app!`
     navigator.clipboard.writeText(copyText);
     // alert(copyText);
     setAlert(true)

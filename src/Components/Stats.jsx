@@ -8,9 +8,9 @@ import { default as EmptyHeart } from '../assets/empty-heart.png'
 
 const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyToClipboard}) => {
 
-  useEffect(() => {
-    console.log(cookies);
-  }, [cookies])
+  // useEffect(() => {
+  //   console.log(cookies);
+  // }, [cookies])
 
   const timeParser = (avgTime) => {
     const minutes = parseInt(avgTime/60);
@@ -95,7 +95,7 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
                     <Divider width='50%' style={{margin: 'auto'}}/>
                   </Grid>
                   <Grid item xs={12}>
-                    <p style={{fontSize: '0.9rem'}}><b>Check in tomorrow for another game!</b></p>
+                    <p style={{fontSize: '0.75rem', textAlign: 'center'}}><b>Check in tomorrow for another game!</b></p>
                   </Grid>  
                 </Grid>  
               </div>             

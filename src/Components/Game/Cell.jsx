@@ -11,10 +11,10 @@ const Cell = ({cell, cellNum, isDarkMode, handleCell, didWin, nextAnim, order}) 
     const [flagged, setFlagged] = useState(false);
     const [winAnimation, setWinAnimation] = useState(false);
 
-    const swipeCheck = useSwipeable({
-      onSwiping: (eventData => {handleGuess(); console.log(eventData);}),
-      config
-    })
+    // const swipeCheck = useSwipeable({
+    //   onSwiping: (eventData => {handleGuess(); console.log(eventData);}),
+    //   config
+    // })
  
     const handleGuess = () => {
         setGuessed(true)
@@ -58,7 +58,7 @@ const Cell = ({cell, cellNum, isDarkMode, handleCell, didWin, nextAnim, order}) 
       onDragLeave={(e) => handleClick(e)}
       onContextMenu={(e) => { e.preventDefault(); handleFlagged()}}
       onTouchStart={() => handleGuess()} onTouchMove={() => handleGuess()}
-      {...swipeCheck}
+      // {...swipeCheck}
       >
     </Grid>
   )
