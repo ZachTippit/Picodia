@@ -310,7 +310,9 @@ html {
     .share-btn {
         height: 50px;
         width: 150px;
-        margin: 1.5rem;
+        margin: 1rem auto;
+        display: block;
+        text-align: center;
         background-color: #55c;
         border-radius: 4px;
         box-shadow: none;
@@ -370,7 +372,6 @@ html {
     .cell {
         background: inherit;
         transition: all 0.1s ease-in;
-        border: 1px #333 solid;
         height: 2rem;
     }
 
@@ -388,6 +389,7 @@ html {
         background-color: #999;
     }
 
+
     .hidden { 
         opacity: 0;
         transition: all 0.5s;
@@ -398,12 +400,23 @@ html {
         transition: all 3s;
     }
 
+    .light-{
+        border: #ccc 1px solid;
+    }
+
+    .dark-{
+        border: #444 1px solid;
+    }
+
+
     .light-right{
+        transition: all 0.1s ease-in;
         background-color: #fff !important;
     }
 
     .dark-right{
-        background-color: #111 !important;
+        transition: all 0.1s ease-in;
+        background-color: #222 !important;
     }
 
     #clip-ping {
@@ -462,11 +475,11 @@ html {
                                     /*  */
                             /*  */
 @media (hover: hover) {
-    .dark:hover {
+    .dark-:hover {
         transition: all 0.1s ease-in;
         background-color: rgba(20,20,20,0.2);
     }
-    .light:hover {
+    .light-:hover {
         transition: all 0.2s ease-in;
         background-color: rgba(240,240,240, 0.2);
     }

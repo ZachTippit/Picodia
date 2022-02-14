@@ -90,12 +90,12 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
                   : 'This was a tough one! Share with your friends and see how they do.')}</p> */}
                 <Grid container>
                   <Grid item xs={12}>
-                    <p><b>Compare with others!</b></p>
+                    <p style={{textAlign: 'center'}}><b>Compare with others!</b></p>
                     <button className='share-btn' onClick={() => copyToClipboard()}>Share results</button>
                     <Divider width='50%' style={{margin: 'auto'}}/>
                   </Grid>
                   <Grid item xs={12}>
-                    <p><b>Check in tomorrow for another game!</b></p>
+                    <p style={{fontSize: '0.9rem'}}><b>Check in tomorrow for another game!</b></p>
                   </Grid>  
                 </Grid>  
               </div>             
