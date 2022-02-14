@@ -51,47 +51,51 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
             <Grid container justifyContent='center' alignItems='space-between'>
               <Grid item xs={4} className={'stat-time'}><p><b>Lives Left</b></p></Grid>
               <Grid item xs={4} className={'stat-time'}><p><b>Games Finished</b></p></Grid>
-              <Grid item xs={4} className={'stat-time'}><p><b>Avg Game Time</b></p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p><b>Avg Game</b></p></Grid>
               <Grid item xs={4} alignSelf='center' className={'life-stat'}>
                 <img src={Heart} alt='Lives' />
                 <img src={Heart} alt='Lives' />
                 <img src={Heart} alt='Lives' />
               </Grid>
               <Grid item xs={4} className={'stat-time'}><p>{cookies['3LifeWins']}</p></Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['3LifeAvgTime'])}</p></Grid>
+              {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['3LifeAvgTime'])}</p></Grid> */}
+              <Grid item xs={4} className={'stat-time'}><p>Coming soon :)</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
                 <img src={Heart} alt='Lives' />
                 <img src={Heart} alt='Lives' />
               </Grid>
               <Grid item xs={4} className={'stat-time'}><p>{cookies['2LifeWins']}</p></Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['2LifeAvgTime'])}</p></Grid>
+              {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['2LifeAvgTime'])}</p></Grid> */}
+              <Grid item xs={4} className={'stat-time'}><p>...</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
                 <img src={Heart} alt='Lives' />
               </Grid>
               <Grid item xs={4} className={'stat-time'}><p>{cookies['1LifeWins']}</p></Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['1LifeAvgTime'])}</p></Grid>
+              {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['1LifeAvgTime'])}</p></Grid> */}
+              <Grid item xs={4} className={'stat-time'}><p>...</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
                 <img src={EmptyHeart} alt='Lives' />
               </Grid>
               <Grid item xs={4} className={'stat-time'}><p>{cookies.lostGames}</p></Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies.avgLossTime)}</p></Grid>
+              {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies.avgLossTime)}</p></Grid> */}
+              <Grid item xs={4} className={'stat-time'}><p>...</p></Grid>
             </Grid>
           {gameOver &&
               <>
-              <Divider sx={{width: '80%', m: 'auto'}}/>
+              <Divider sx={{width: '80%', m: 'auto', my: 2}}/>
               <div className='end-game-txt'>
-                <p style={{textAlign: 'center'}}><b>{(didWin ? 'Nice!' : 'Bummer :(')}</b></p>
+                {/* <p style={{textAlign: 'center'}}><b>{(didWin ? 'Nice!' : 'Bummer :(')}</b></p>
                 <p>{(didWin ? 
                   'You solved the puzzle. Share with your results to see who can beat you!' 
-                  : 'This was a tough one! Share with your friends and see how they do.')}</p>
+                  : 'This was a tough one! Share with your friends and see how they do.')}</p> */}
                 <Grid container>
-                  <Grid item xs>
+                  <Grid item xs={12}>
+                    <p><b>Compare with others!</b></p>
                     <button className='share-btn' onClick={() => copyToClipboard()}>Share results</button>
                     <Divider width='50%' style={{margin: 'auto'}}/>
                   </Grid>
-                  <Grid item xs>
-                    <p><b>Next Game</b></p>
-                    <p>TICK TOCK</p>
+                  <Grid item xs={12}>
+                    <p><b>Check in tomorrow for another game!</b></p>
                   </Grid>  
                 </Grid>  
               </div>             

@@ -364,6 +364,7 @@ html {
     }
 
     .cell {
+        background: inherit;
         transition: all 0.1s ease-in;
         border: 1px #333 solid;
         height: 2rem;
@@ -371,12 +372,12 @@ html {
 
     .right {
         transition: all 0.1s ease-in;
-        background-color: rgb(0,20,150) !important;
+        background-color: #111 !important;
     }
 
     .wrong {
         transition: all 0.1s ease-in;
-        background-color: rgb(120,0,20) !important;
+        background-color: rgb(150,0,20) !important;
     }  
 
     .flagged {
@@ -572,6 +573,45 @@ html {
         50% {
         -webkit-transform: scale(1.1);
                 transform: scale(1.1);
+        }
+        100% {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+        }
+    }
+
+.win-animation {
+    -webkit-animation: win-animation 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+            animation: win-animation 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+}
+
+    /**
+    * ----------------------------------------
+    * animation win-animation
+    * ----------------------------------------
+    */
+    @-webkit-keyframes win-animation {
+        0% {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+        }
+        50% {
+        -webkit-transform: scale(2);
+                transform: scale(2);
+        }
+        100% {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+        }
+    }
+    @keyframes win-animation {
+        0% {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+        }
+        50% {
+        -webkit-transform: scale(2);
+                transform: scale(2);
         }
         100% {
         -webkit-transform: scale(1);

@@ -6,9 +6,10 @@ import { Grid } from '@mui/material'
 
 const config = {delta: 1}
 
-const Cell = ({cell, isDarkMode, handleCell}) => {
+const Cell = ({cell, cellNum, isDarkMode, handleCell, didWin, nextAnim, order}) => {
     const [guessed, setGuessed] = useState(false);
     const [flagged, setFlagged] = useState(false);
+    const [winAnimation, setWinAnimation] = useState(false);
 
     const swipeCheck = useSwipeable({
       onSwiping: (eventData => {handleGuess(); console.log(eventData);}),
@@ -34,16 +35,24 @@ const Cell = ({cell, isDarkMode, handleCell}) => {
 
     useEffect(() => {
         if(guessed){
-            cell ? handleCell(true) : handleCell(false)
+            cell ? handleCell(true, cellNum) : handleCell(false, cellNum)
         }
     }, [guessed, cell])
+
+    useEffect(() => {
+      if(nextAnim === order && didWin){
+        setWinAnimation(true);
+      }
+
+    }, [nextAnim])
 
   return (
     <Grid item xs={1} 
       className={'cell '
                 + (isDarkMode ? 'light ' : 'dark ') 
                 + (flagged ? 'flagged ' : '')
-                + (guessed && (cell ? 'right pulsate-fwd' : 'wrong pulsate-fwd'))
+                + (guessed && (cell ? 'right pulsate-fwd ' : 'wrong pulsate-fwd '))
+                + (winAnimation ? ' win-animation': '')
               }
       onMouseUp={(e) => handleClick(e)} onDragEnter={(e) => handleClick(e)}
       onDragLeave={(e) => handleClick(e)}

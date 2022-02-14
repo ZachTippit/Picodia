@@ -5,33 +5,45 @@ import { Grid } from '@mui/material'
 import Clues from './Game/Clues.jsx'
 import Cell from './Game/Cell.jsx'
 import './styles.css';
-import { createGameObject, maxRowClueLength, maxColClueLength } from '../lib/game.js';
-
-// const answer = [[1,1,0,1,1,0,1,1], [1,0,1,0,0,1,0,1], [1,1,0,1,1,0,1,1], [0,0,0,0,0,0,0,0], 
-//                 [0,1,0,0,0,0,1,0], [0,0,1,1,1,1,0,0], [1,0,0,0,0,0,0,1], [1,1,0,1,1,0,1,1]]
-
-const answer = [[1,1,0,0,0,0,1,1], [1,0,1,0,0,1,0,1], [0,1,1,1,1,1,1,0], [0,1,1,1,1,1,1,0], 
-[0,1,1,1,1,1,1,0], [1,0,1,1,1,1,0,1], [1,0,0,1,1,0,0,1], [1,1,1,0,0,1,1,1]]
-// const answer = [[1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0],
-// [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0], [1,0,1,0,1,0,1,0]];
+import { createGameObject } from '../lib/game.js';
 
 
-const Game = ({isStarted, loseLife, puzzle, isDarkMode, pingStartBtn, handleWin}) => {
+const answer = [[1,0,0,0,0,0,0,1], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,1]];
+// const answer = [[1,1,0,0,0,0,1,1], [1,0,1,0,0,1,0,1], [0,1,1,1,1,1,1,0], [0,1,1,1,1,1,1,0], 
+// [0,1,1,1,1,1,1,0], [1,0,1,1,1,1,0,1], [1,0,0,1,1,0,0,1], [1,1,1,0,0,1,1,1]]
+
+const blank = [['','','','','','','',''], ['','','','','','','',''], ['','','','','','','',''], ['','','','','','','',''], ['','','','','','','',''], ['','','','','','','',''], ['','','','','','','',''], ['','','','','','','','']]
+
+const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, handleWin, didWin, handlePrevGameArray}) => {
 
     const [correctSquares, setCorrectSquares] = useState(0)
-    const [winNum, setWinNum] = useState(5000)
+    const [winNum, setWinNum] = useState(4)
     const [gridSize, setGridSize] = useState(10)
     const [gameGrid, setGameGrid] = useState(createGameObject(answer))
-    // const [maxClueRowLength, setMaxClueRowLength] = useState(maxRowClueLength(answer))
-    // const [maxClueColLength, setMaxClueColLength] = useState(maxColClueLength(answer))
     const [isPuzzleSet, setIsPuzzleSet] = useState(false)
+    const [nextAnim, setNextAnim] = useState(0);
+    const [answerArray, setAnswerArray] = useState(blank)
 
-    const handleGuess = (isCorrect) => {
+    useEffect(() => {
+        if((didWin) && (nextAnim < gameGrid.length)){
+            setTimeout(() => {
+                setNextAnim(nextAnim + 1)
+            }, 50)
+        }
+    }, [didWin, nextAnim])
+
+    const handleGuess = (isCorrect, cellNum) => {
+        let ansArr = [...answerArray];
         if(isCorrect){
             setCorrectSquares(correctSquares + 1);
+            ansArr[parseInt(cellNum/gridSize) - 1][cellNum%gridSize - 2] = 1;
+            setAnswerArray(answerArray)
         } else {
+            setAnswerArray(answerArray[parseInt(cellNum/gridSize) - 1][cellNum%gridSize - 2])
+            ansArr[parseInt(cellNum/gridSize) - 1][cellNum%gridSize - 2] = 0;
             loseLife();
         }
+        setAnswerArray(ansArr);
     }
 
     useEffect(() => {
@@ -41,20 +53,23 @@ const Game = ({isStarted, loseLife, puzzle, isDarkMode, pingStartBtn, handleWin}
     }, [correctSquares])
 
     useEffect(() => {
+        
         if(puzzle.length > 2){
-            // console.log(JSON.parse(puzzle))
+            console.log(puzzle)
             setGridSize(JSON.parse(puzzle).length + 2)
             setGameGrid(createGameObject(JSON.parse(puzzle)))
             setWinNum(JSON.parse(puzzle).flat().reduce((curr, next) => curr + next))
-            // setMaxClueRowLength(maxRowClueLength(JSON.parse(puzzle)))
-            // setMaxClueColLength(maxColClueLength(JSON.parse(puzzle)))
             setIsPuzzleSet(true)
         }
     }, [puzzle])
 
+    useEffect(() => {
+        handlePrevGameArray(answerArray);
+    }, [didWin])
+
   return (
     <div id='game' onClick={() => pingStartBtn()}>
-        <div id='game-board' className={!isStarted ? 'disable-select' : undefined}>
+        <div id='game-board' className={(!isStarted | gameOver ) ? 'disable-select' : undefined}>
             <Grid container columns={gridSize} className={isStarted ? ' move-on-start' : undefined}>
                 {gameGrid.map((cell, index) => (
                     <>
@@ -79,7 +94,7 @@ const Game = ({isStarted, loseLife, puzzle, isDarkMode, pingStartBtn, handleWin}
                                         </div>   
                                     :   
                             // Aaaand the cells
-                                        <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} handleCell={handleGuess} key={`cell@${index}`}/>
+                                        <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} handleCell={handleGuess} key={`cell@${index}`} nextAnim={nextAnim} didWin={didWin} order={index}/>
                                     }
                                     </>     
                                     }

@@ -3,7 +3,7 @@ import './styles.css'
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
 
-const Footer = ({lives, maxLives, isStarted, startGame, ping, gameOver, handleGameOverTime}) => {
+const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameOver, handleGameOverTime, prevTime}) => {
 
   const [pingStart, setPingStart] = useState(true);
   const [totalTime, setTotalTime] = useState(0);
@@ -34,9 +34,12 @@ const Footer = ({lives, maxLives, isStarted, startGame, ping, gameOver, handleGa
 
   useEffect(() => { setPingStart(ping) }, [ping])
 
+
+//  && !playedToday -- checks against if played today
+
   return (
     <div id={'footer'}>
-      {!isStarted ? 
+      {(!isStarted && !playedToday) ? 
         <div>
           <button className={'start-button ' + (pingStart && 'pulsate-fwd')} onClick={() => startGame()} onAnimationEnd={() => {setPingStart(false)}}>Start Game</button>
         </div>
@@ -45,22 +48,20 @@ const Footer = ({lives, maxLives, isStarted, startGame, ping, gameOver, handleGa
           <div className='fade-in-fwd'>
             <p style={{textAlign: 'center', marginBottom: '0'}}>TIME</p>
             <div style={{margin: 'auto', textAlign: 'center'}}>
-              <label style={{fontSize: '0.75rem'}}>{pad(minutes)}</label>
+              <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? parseInt(prevTime/60) : minutes)}</label>
               <label style={{fontSize: '0.75rem'}}>:</label>
-              <label style={{fontSize: '0.75rem'}}>{pad(seconds)}</label>
+              <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? prevTime%60 : seconds)}</label>
             </div>
           </div>
           <div>
             <p style={{textAlign: 'center', marginBottom: '0'}}>LIVES</p>
             <div id={'maxLives'}>
               {[...Array(maxLives)].map((life, index) => (
-                <>
-                  {
-                      index >= lives ?
-                        <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life} key={`no-heart${index}`}/> :
-                        <img className={'life'} src={Heart} alt='Lives' key={life} key={`heart${index}`}/> 
-                  } 
-                </> 
+                <>{
+                  index >= lives ?
+                    <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life} key={`no-heart${index}`}/> :
+                    <img className={'life'} src={Heart} alt='Lives' key={life} key={`heart${index}`}/> 
+                }</> 
               ))}
             </div>
           </div>
