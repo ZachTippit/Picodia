@@ -90,7 +90,7 @@ const App = () => {
                 /////// Future plan! Included user's guessed array for the day
                 console.log('You\'ve played today but at least we read cookies!')
     }
-    console.log('Initial cookie load: ', cookies)
+    // console.log('Initial cookie load: ', cookies)
   }, [])
 
   const handleGameOver = (win, numLives, timeTaken) => {
@@ -285,8 +285,8 @@ const App = () => {
     <div id={'cover-screen'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
       <div id={'app'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
         <Navbar openMenu={isSeen} isDarkMode={isDarkMode}/>
-        { goAlert && <Ping note={gameOverNote}/> }
-        { alert && <Ping note={'Copied to clipboard!'}/> }
+        { goAlert && <Ping note={gameOverNote} didWin={didWin} isCopy={false}/> }
+        { alert && <Ping note={'Copied to clipboard!'} isCopy={true}/> }
         { isOpen && showWindow()}
           <Game isDarkMode={isDarkMode} puzzle={dailyPuzzle} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} gameOver={gameOver} handleWin={handleWin} didWin={didWin} handlePrevGameArray={handlePrevGameArray}/>
         <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} ping={ping} 

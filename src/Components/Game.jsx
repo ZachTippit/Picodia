@@ -55,7 +55,7 @@ const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, 
     useEffect(() => {
         
         if(puzzle.length > 2){
-            console.log(puzzle)
+            // console.log(puzzle)
             setGridSize(JSON.parse(puzzle).length + 2)
             setGameGrid(createGameObject(JSON.parse(puzzle)))
             setWinNum(JSON.parse(puzzle).flat().reduce((curr, next) => curr + next))

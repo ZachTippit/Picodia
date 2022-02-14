@@ -49,9 +49,9 @@ const Cell = ({cell, cellNum, isDarkMode, handleCell, didWin, nextAnim, order}) 
   return (
     <Grid item xs={1} 
       className={'cell '
-                + (isDarkMode ? 'light ' : 'dark ') 
+                + (isDarkMode ? 'light-' : 'dark-') 
+                + (guessed && (cell ? 'right pulsate-fwd ' : ' wrong pulsate-fwd '))
                 + (flagged ? 'flagged ' : '')
-                + (guessed && (cell ? 'right pulsate-fwd ' : 'wrong pulsate-fwd '))
                 + (winAnimation ? ' win-animation': '')
               }
       onMouseUp={(e) => handleClick(e)} onDragEnter={(e) => handleClick(e)}

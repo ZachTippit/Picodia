@@ -25,7 +25,7 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
 
   return (
     <div className={'full-screen-cover fade-in-fwd ' + (closing && 'fade-out-bck')}>
-      <div className={'full-screen-container'}>
+      <div className={'full-screen-container'} onClick={() => closeMenu()}>
         <div className={'card fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ')}>
           <img className={'close-btn-stats'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu()}/>
           <h3 style={{textAlign: 'center'}}>STATISTICS</h3>

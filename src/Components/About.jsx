@@ -38,16 +38,16 @@ const About = ({closeMenu, isDarkMode, closing}) => {
       <div className={'how-to-play'}>
         <h4 style={{margin: '0.75rem 0'}}><b>HOW TO PLAY</b></h4>
         <p style={{marginTop: '0'}}>Each row and column contains the hint for that row or column. The number is how many consecutive blocks there are.</p>
-        <ExampleRow exClue={"5"} exArray={[1,1,1,1,1]} nextStart={nextAnim} order={0} onToNext={onToNext}/>
+        <ExampleRow exClue={"5"} exArray={[1,1,1,1,1]} nextStart={nextAnim} order={0} onToNext={onToNext} isDarkMode={isDarkMode}/>
         <p><b>Careful!</b> Even if the numbers are consecutive, you must use the other clues to determine where it goes.</p>
-        <ExampleRow exClue={"4"} exArray={[1,1,1,1,'']} nextStart={nextAnim} order={1} onToNext={onToNext}/>
+        <ExampleRow exClue={"4"} exArray={[1,1,1,1,'']} nextStart={nextAnim} order={1} onToNext={onToNext} isDarkMode={isDarkMode}/>
         {/* <p style={{width: '100%', textAlign: 'center'}}>or?</p> */}
-        <ExampleRow exClue={"4"} exArray={['',1,1,1,1]} nextStart={nextAnim} order={1} onToNext={onToNext}/>
+        <ExampleRow exClue={"4"} exArray={['',1,1,1,1]} nextStart={nextAnim} order={1} onToNext={onToNext} isDarkMode={isDarkMode}/>
         <p>If there is more than one number in the clue, there must be at least one empty block between them (but there could be more).</p>
-        <ExampleRow exClue={"2 " + " " + " 1"} exArray={[1,1,'',1,'']} nextStart={nextAnim} order={2} onToNext={onToNext}/>
-        <ExampleRow exClue={"2 " + " " + " 1"} exArray={[1,1,'','',1]} nextStart={nextAnim} order={2} onToNext={onToNext}/>
+        <ExampleRow exClue={"2 " + " " + " 1"} exArray={[1,1,'',1,'']} nextStart={nextAnim} order={2} onToNext={onToNext} isDarkMode={isDarkMode}/>
+        <ExampleRow exClue={"2 " + " " + " 1"} exArray={[1,1,'','',1]} nextStart={nextAnim} order={2} onToNext={onToNext} isDarkMode={isDarkMode}/>
         <p><b>You only get one chance a day, so play carefully ;)</b> Don't lose all of your lives!</p>
-        <LoseExampleRow exClue={"3"} exArray={[1,'',0,0,0]} nextStart={nextAnim} order={3} onToNext={onToNext}/>
+        <LoseExampleRow exClue={"3"} exArray={[1,'',0,0,0]} nextStart={nextAnim} order={3} onToNext={onToNext} isDarkMode={isDarkMode}/>
       </div>
       <div>
         <p style={{textAlign: 'center'}}><b>A new puzzle will be available each day!</b></p>

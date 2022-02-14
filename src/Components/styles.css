@@ -311,7 +311,11 @@ html {
         height: 50px;
         width: 150px;
         margin: 1.5rem;
-
+        background-color: #55c;
+        border-radius: 4px;
+        box-shadow: none;
+        font-weight: bold;
+        color: white;
     }
 
 #game {
@@ -394,6 +398,14 @@ html {
         transition: all 3s;
     }
 
+    .light-right{
+        background-color: #fff !important;
+    }
+
+    .dark-right{
+        background-color: #111 !important;
+    }
+
     #clip-ping {
         width: 200px;
         padding: 1rem;
@@ -404,10 +416,21 @@ html {
         right: 0;
         text-align: center;
         top: 10%;
-        background-color: white;
         color: black;
         border-radius: 4%;
         z-index: 3;
+    }
+
+    .win-ping{
+        background-color: rgba(100,220,100,0.5);
+    }
+
+    .lose-ping{
+        background-color: rgba(220,100,100,0.5);
+    }
+
+    .copy-ping{
+        background-color: rgba(100,100,220,0.5);
     }
 
 
