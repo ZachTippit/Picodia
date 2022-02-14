@@ -1,8 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import { About, Footer, Game, Navbar, Settings, Stats, Ping } from './Components'
 import { useCookies } from 'react-cookie'
-
+import ReactGA from 'react-ga';
 import './Components/styles.css';
+
+ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
+
+
 
 const App = () => {
 
@@ -82,7 +86,7 @@ const App = () => {
   useEffect(() => {
     // Removes all cookies created by initializer
     // cookieRemover();
-  
+    ReactGA.pageview(window.location.pathname);
     //////// Initializes Cookies for the first time
     if(cookies.playedPicodia === undefined){
       cookieInit();
