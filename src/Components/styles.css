@@ -132,7 +132,8 @@ html {
     max-width: 450px;
     margin: auto;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
     .close-btn-about { /* Used in each settings, about and stats*/

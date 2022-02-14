@@ -27,7 +27,7 @@ const About = ({closeMenu, isDarkMode, closing}) => {
   }, [nextAnim])
 
   return (
-    <div id={'about'} className={'fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ') + (closing && 'fade-out-bottom')} style={{overflowY: 'scroll'}}>
+    <div id={'about'} className={'fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ') + (closing && 'fade-out-bottom')}>
       <img className={'close-btn-about'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu('')}/>
       <div className={'section-header'}>
         <h3 className={'section-title'}>PICODIA RULES</h3>
@@ -39,7 +39,7 @@ const About = ({closeMenu, isDarkMode, closing}) => {
         <h4 style={{margin: '0.75rem 0'}}><b>HOW TO PLAY</b></h4>
         <p style={{marginTop: '0'}}>Each row and column contains the hint for that row or column. The number is how many consecutive blocks there are.</p>
         <ExampleRow exClue={"5"} exArray={[1,1,1,1,1]} nextStart={nextAnim} order={0} onToNext={onToNext} isDarkMode={isDarkMode}/>
-        <p style={{marginTop: '0'}}>Some clues are obvious and can be figured out from context (ex: 5 blocks long and a space between each number...)</p>
+        <p>Some clues are obvious and can be figured out from context (ex: 5 blocks long and a space between each number...)</p>
         <ExampleRow exClue={"2 2"} exArray={[1,1,'',1,1]} nextStart={nextAnim} order={1} onToNext={onToNext} isDarkMode={isDarkMode}/>
         <p><b>Careful!</b> Even if the numbers are consecutive, you must use the other clues to determine where it goes.</p>
         <ExampleRow exClue={"4"} exArray={[1,1,1,1,'']} nextStart={nextAnim} order={2} onToNext={onToNext} isDarkMode={isDarkMode}/>
