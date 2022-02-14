@@ -82,28 +82,20 @@ const App = () => {
     setCookie('prevGameArray', [])
   }
 
-  // Handles removing/initializing cookies
+  // App initializer
   useEffect(() => {
-    // Removes all cookies created by initializer
-    // cookieRemover();
+
+    //// Google Analytics initializer on window
     ReactGA.pageview(window.location.pathname);
-    //////// Initializes Cookies for the first time
-    if(cookies.playedPicodia === undefined){
-      cookieInit();
-    } else if(cookies.playedToday === true){
-                /////// Future plan! Included user's guessed array for the day
-                console.log('You\'ve played today but at least we read cookies!')
-    }
+    console.log(cookies);
+    //// Cookie handlers
+    // cookieRemover();
+    cookies.playedPicodia === undefined && cookieInit();
     // console.log('Initial cookie load: ', cookies)
   }, [])
 
-  const handleGameOver = (win, numLives, timeTaken) => {
-      // SETS COOKIES FOR:
-
-      // SAVES CURRENT DAY'S GAME
-      // console.log(timeTaken)
-      // console.log(timeTaken)
-    
+  const handleGameOver = (win, numLives) => {
+      // SAVES CURRENT DAY'S GAME    
     setCookie('prevLives', numLives)
     setCookie('prevOutcome', win)
     setCookie('prevGameArray', prevGameArray)
@@ -146,12 +138,6 @@ const App = () => {
     }, 2000)
   }
 
-  useEffect(() => {
-    if(gameOver){
-      // console.log(cookies.prevOutcome, cookies.prevLives, cookies.prevTime, cookies.prevGameArray )
-    }
-  }, [cookies])
-
   const handleGameOverTime = (totalTime, minutes, seconds) => {
     setCookie('prevTime', totalTime)
     setGameOverTime(totalTime);
@@ -183,7 +169,18 @@ const App = () => {
       const puzzleResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_SPREADSHEET_ID}/values/Sheet1!B${puzzleReference}?key=${process.env.REACT_APP_SHEETS_API_KEY}`).then((response) => response.json())
       setDailyPuzzle(puzzleResponse.values[0][0]);
     }
-    getPuzzle();
+
+    if(puzzleReference !== 0){
+      if(!isStarted && puzzleReference == cookies.playedToday){
+        console.log(cookies.prevGameArray)
+        setPlayedToday(true);
+        setPrevGameArray(cookies.prevGameArray)
+      } else {
+        getPuzzle();
+      }    
+    }
+
+    // getPuzzle();
   }, [puzzleReference])
 
   // HARD MODE: Turns on hard mode (reduces to 1 life), can't turn off mid-game.
@@ -289,10 +286,11 @@ const App = () => {
     <div id={'cover-screen'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
       <div id={'app'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
         <Navbar openMenu={isSeen} isDarkMode={isDarkMode}/>
+        { playedToday && <Ping note={'You have already played today! Check back tomorrow'} playedToday={true} /> }
         { goAlert && <Ping note={gameOverNote} didWin={didWin} isCopy={false}/> }
         { alert && <Ping note={'Copied to clipboard!'} isCopy={true}/> }
         { isOpen && showWindow()}
-          <Game isDarkMode={isDarkMode} puzzle={dailyPuzzle} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} gameOver={gameOver} handleWin={handleWin} didWin={didWin} handlePrevGameArray={handlePrevGameArray}/>
+          <Game isDarkMode={isDarkMode} puzzle={dailyPuzzle} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} gameOver={gameOver} handleWin={handleWin} didWin={didWin} handlePrevGameArray={handlePrevGameArray} prevGameArray={prevGameArray} playedToday={playedToday}/>
         <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} ping={ping} 
                 gameOver={gameOver} handleGameOverTime={handleGameOverTime} playedToday={playedToday} prevTime={cookies.prevTime} prevLives={cookies.prevLives} />
       </div>

@@ -3,7 +3,7 @@ import './styles.css'
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
 
-const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameOver, handleGameOverTime, prevTime}) => {
+const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameOver, handleGameOverTime, prevTime, prevLives}) => {
 
   const [pingStart, setPingStart] = useState(true);
   const [totalTime, setTotalTime] = useState(0);
@@ -34,6 +34,10 @@ const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameO
 
   useEffect(() => { setPingStart(ping) }, [ping])
 
+  useEffect(() => {
+    console.log(playedToday, prevTime, prevLives);
+  }, [])
+
 
 //  && !playedToday -- checks against if played today
 
@@ -58,9 +62,18 @@ const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameO
             <div id={'maxLives'}>
               {[...Array(maxLives)].map((life, index) => (
                 <>{
-                  index >= lives ?
-                    <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life} key={`no-heart${index}`}/> :
-                    <img className={'life'} src={Heart} alt='Lives' key={life} key={`heart${index}`}/> 
+                  playedToday ?
+                    <>{
+                      index >= prevLives ?
+                        <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life} key={`no-heart${index}`}/> :
+                        <img className={'life'} src={Heart} alt='Lives' key={life} key={`heart${index}`}/> 
+                    }</>
+                    :
+                    <>{
+                      index >= lives ?
+                      <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life} key={`no-heart${index}`}/> :
+                      <img className={'life'} src={Heart} alt='Lives' key={life} key={`heart${index}`}/> 
+                    }</>
                 }</> 
               ))}
             </div>

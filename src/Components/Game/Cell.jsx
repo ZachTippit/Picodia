@@ -6,8 +6,8 @@ import { Grid } from '@mui/material'
 
 const config = {delta: 1}
 
-const Cell = ({cell, cellNum, isDarkMode, handleCell, didWin, nextAnim, order}) => {
-    const [guessed, setGuessed] = useState(false);
+const Cell = ({cell, cellNum, isDarkMode, handleCell, didWin, nextAnim, order, playedToday}) => {
+    const [guessed, setGuessed] = useState(playedToday);
     const [flagged, setFlagged] = useState(false);
     const [winAnimation, setWinAnimation] = useState(false);
 
@@ -46,11 +46,18 @@ const Cell = ({cell, cellNum, isDarkMode, handleCell, didWin, nextAnim, order}) 
 
     }, [nextAnim])
 
+    useEffect(() => {
+      if(playedToday){
+        setGuessed(playedToday);
+      }
+    }, [playedToday])
+
   return (
     <Grid item xs={1} 
       className={'cell '
                 + (isDarkMode ? 'light-' : 'dark-') 
-                + (guessed ? (cell ? 'right pulsate-fwd ' : ' wrong pulsate-fwd ') : ' ')
+                + (playedToday ? ((cell === 1 ? 'right pulsate-fwd ' : cell === 0 ? ' wrong pulsate-fwd ' : ' flagged pulsate-fwd ')) : 
+                  (guessed ? (cell ? 'right pulsate-fwd ' : ' wrong pulsate-fwd ') : ' '))
                 + (flagged ? ' flagged ' : ' ')
                 + (winAnimation ? ' win-animation': '')
               }

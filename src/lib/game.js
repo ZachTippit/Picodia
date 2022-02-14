@@ -42,8 +42,11 @@ const colClues = (answer) => {
                 return;
             } else if ((row[col] === 0) && (consecutive === 0)){
                 // Pass
-            } else {
+            } else if (consecutive !==0) {
+                console.log(consecutive)
                 colIndex.push(consecutive.toString())
+                consecutive = 0;
+            } else {
                 consecutive = 0;
             }
             if (colIndex === []) {
@@ -64,9 +67,11 @@ const gameArray = (answer) => {
     answer.forEach(row => {
         row.forEach(cell => {
             if (cell===1){
-                flatArr.push(true);
-            } else {
-                flatArr.push(false);
+                flatArr.push(1);
+            } else if (cell===2){
+                flatArr.push(2);
+            } else if (cell === 0){
+                flatArr.push(0);
             }
 
         })

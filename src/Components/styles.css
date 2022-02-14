@@ -462,6 +462,10 @@ html {
     .copy-ping{
         background-color: rgba(100,100,220,0.8);
     }
+    
+    .played-ping{
+        background-color: #999;
+    }
 
 
 #footer {

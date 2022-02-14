@@ -12,9 +12,9 @@ const answer = [[1,0,0,0,0,0,0,1], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,
 // const answer = [[1,1,0,0,0,0,1,1], [1,0,1,0,0,1,0,1], [0,1,1,1,1,1,1,0], [0,1,1,1,1,1,1,0], 
 // [0,1,1,1,1,1,1,0], [1,0,1,1,1,1,0,1], [1,0,0,1,1,0,0,1], [1,1,1,0,0,1,1,1]]
 
-const blank = [['','','','','','','',''], ['','','','','','','',''], ['','','','','','','',''], ['','','','','','','',''], ['','','','','','','',''], ['','','','','','','',''], ['','','','','','','',''], ['','','','','','','','']]
+const blank = [[2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2]]
 
-const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, handleWin, didWin, handlePrevGameArray}) => {
+const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, handleWin, didWin, handlePrevGameArray, prevGameArray, playedToday}) => {
 
     const [correctSquares, setCorrectSquares] = useState(0)
     const [winNum, setWinNum] = useState(4)
@@ -53,19 +53,32 @@ const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, 
     }, [correctSquares])
 
     useEffect(() => {
-        
-        if(puzzle.length > 2){
-            // console.log(puzzle)
-            setGridSize(JSON.parse(puzzle).length + 2)
-            setGameGrid(createGameObject(JSON.parse(puzzle)))
-            setWinNum(JSON.parse(puzzle).flat().reduce((curr, next) => curr + next))
-            setIsPuzzleSet(true)
+        if(!playedToday){
+            console.log(puzzle)
+            if(puzzle.length > 2){
+                // console.log(puzzle)
+                setGridSize(JSON.parse(puzzle).length + 2)
+                setGameGrid(createGameObject(JSON.parse(puzzle)))
+                setWinNum(JSON.parse(puzzle).flat().reduce((curr, next) => curr + next))
+                setIsPuzzleSet(true)
+            }
         }
     }, [puzzle])
 
     useEffect(() => {
         handlePrevGameArray(answerArray);
     }, [didWin])
+
+    useEffect(() => {
+        if(playedToday){
+            console.log(prevGameArray);
+            setGameGrid(createGameObject(prevGameArray))
+        }
+    }, [playedToday])
+
+    useEffect(() => {
+            console.log(gameGrid);
+    }, [gameGrid])
 
   return (
     <div id='game' onClick={() => pingStartBtn()}>
@@ -94,7 +107,7 @@ const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, 
                                         </div>   
                                     :   
                             // Aaaand the cells
-                                        <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} handleCell={handleGuess} key={`cell@${index}`} nextAnim={nextAnim} didWin={didWin} order={index}/>
+                                        <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} handleCell={handleGuess} key={`cell@${index}`} nextAnim={nextAnim} didWin={didWin} order={index} playedToday={playedToday}/>
                                     }
                                     </>     
                                     }
