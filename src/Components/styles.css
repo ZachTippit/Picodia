@@ -93,6 +93,7 @@ html {
     border-bottom: 1px solid lightgray;
     width: 100%;
     justify-content: space-between;
+    overflow-y: none;
 }
 
     #nav-about-btn {
@@ -167,6 +168,7 @@ html {
     z-index: 1;
     min-height: 100%;
     padding: 2rem 0;
+    overflow-y: none;
 }
     .close-btn { /* Used in each settings, about and stats*/
         position: absolute;
@@ -230,6 +232,7 @@ html {
     bottom: 0;
     background-color: rgba(10, 10, 10, 0.5);
     z-index: 2;
+    overflow-y: none;
 }
 
     .close-btn-stats { /* Used in each settings, about and stats*/
@@ -322,7 +325,8 @@ html {
     }
 
 #game {
-    transform: translateX(-40px)
+    transform: translateX(-40px);
+    overflow-y: none;
 }
 
     .disable-select {
@@ -479,6 +483,7 @@ html {
     margin-bottom: 2rem;
     padding-top: 1rem;
     transition: all 3s;
+    overflow-y: none;
 }
     #lives {
         align-self: center;

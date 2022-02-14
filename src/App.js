@@ -290,7 +290,7 @@ const App = () => {
         { goAlert && <Ping note={gameOverNote} didWin={didWin} isCopy={false}/> }
         { alert && <Ping note={'Copied to clipboard!'} isCopy={true}/> }
         { isOpen && showWindow()}
-          <Game isDarkMode={isDarkMode} puzzle={dailyPuzzle} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} gameOver={gameOver} handleWin={handleWin} didWin={didWin} handlePrevGameArray={handlePrevGameArray} prevGameArray={prevGameArray} playedToday={playedToday}/>
+        <Game isDarkMode={isDarkMode} puzzle={dailyPuzzle} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} gameOver={gameOver} handleWin={handleWin} didWin={didWin} handlePrevGameArray={handlePrevGameArray} prevGameArray={prevGameArray} playedToday={playedToday}/>
         <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} ping={ping} 
                 gameOver={gameOver} handleGameOverTime={handleGameOverTime} playedToday={playedToday} prevTime={cookies.prevTime} prevLives={cookies.prevLives} />
       </div>
