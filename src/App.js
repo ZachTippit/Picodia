@@ -90,7 +90,7 @@ const App = () => {
 
     //// Google Analytics initializer on window
     ReactGA.pageview(window.location.pathname);
-    console.log(cookies);
+    // console.log(cookies);
     //// Cookie handlers
     // cookieRemover();
     cookies.playedPicodia === undefined && cookieInit();

@@ -34,9 +34,9 @@ const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameO
 
   useEffect(() => { setPingStart(ping) }, [ping])
 
-  useEffect(() => {
-    console.log(playedToday, prevTime, prevLives);
-  }, [])
+  // useEffect(() => {
+  //   console.log(playedToday, prevTime, prevLives);
+  // }, [])
 
 
 //  && !playedToday -- checks against if played today

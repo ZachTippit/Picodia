@@ -54,7 +54,7 @@ const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, 
 
     useEffect(() => {
         if(!playedToday){
-            console.log(puzzle)
+            // console.log(puzzle)
             if(puzzle.length > 2){
                 // console.log(puzzle)
                 setGridSize(JSON.parse(puzzle).length + 2)
@@ -76,9 +76,9 @@ const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, 
         }
     }, [playedToday])
 
-    useEffect(() => {
-            console.log(gameGrid);
-    }, [gameGrid])
+    // useEffect(() => {
+    //         console.log(gameGrid);
+    // }, [gameGrid])
 
   return (
     <div id='game' onClick={() => pingStartBtn()}>
