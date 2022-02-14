@@ -31,7 +31,7 @@ const About = ({closeMenu, isDarkMode, closing}) => {
       <img className={'close-btn-about'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu('')}/>
       <div className={'section-header'}>
         <h3 className={'section-title'}>PICODIA RULES</h3>
-        <p>Solve the <b>Nonogram</b> with less than 3 mistakes.</p>
+        <p>Solve the <b>Nonogram</b> with less than 3 mistakes. You win if you fill out the puzzle correctly!</p>
         <p><b>Click/Tap</b> to fill a cell. <b>Right Click</b> (coming soon to mobile) to annotate.</p>
         <p>Share your results to see how you stack up!</p>
       </div>
