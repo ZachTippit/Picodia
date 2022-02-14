@@ -43,7 +43,6 @@ const colClues = (answer) => {
             } else if ((row[col] === 0) && (consecutive === 0)){
                 // Pass
             } else if (consecutive !==0) {
-                console.log(consecutive)
                 colIndex.push(consecutive.toString())
                 consecutive = 0;
             } else {

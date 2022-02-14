@@ -25,6 +25,9 @@ const App = () => {
   const [gameOver, setGameOver] = useState(false);
   const [ping, setPing] = useState(false);
   const [prevGameArray, setPrevGameArray] = useState([]);
+  const [prevLives, setPrevLives] = useState()
+  const [prevOutcome, setPrevOutcome] = useState()
+  const [prevTime, setPrevTime] = useState()
   
   const [alert, setAlert] = useState(false)
   const [goAlert, setGOAlert] = useState(false)
@@ -95,7 +98,7 @@ const App = () => {
   }, [])
 
   const handleGameOver = (win, numLives) => {
-      // SAVES CURRENT DAY'S GAME    
+      // SAVES CURRENT DAY'S GAME
     setCookie('prevLives', numLives)
     setCookie('prevOutcome', win)
     setCookie('prevGameArray', prevGameArray)
@@ -175,6 +178,9 @@ const App = () => {
         console.log(cookies.prevGameArray)
         setPlayedToday(true);
         setPrevGameArray(cookies.prevGameArray)
+        setPrevLives(cookies.prevLives)
+        setPrevTime(cookies.prevTime)
+        setPrevOutcome(cookies.prevOutcome)
       } else {
         getPuzzle();
       }    
@@ -193,23 +199,16 @@ const App = () => {
     } else {
       setLives(3);
       setMaxLives(3);
-    }
-    
-    
+    }  
   }, [hardMode])
 
   // DARK MODE: Toggles dark mode.
   useEffect(() => { setIsDarkMode(isDarkMode); }, [isDarkMode])
 
   // LIVES: Checks for running out of lives.
-  useEffect(() => { lives===0 && setGameOver(true) }, [lives])
+  useEffect(() => { if(lives===0){ setDidWin(false); setGameOver(true)}}, [lives])
 
   useEffect(() => { 
-    //On Game Over...
-    // Update cookies -- saving daily game state
-    // Trigger win animation
-    // Pop up win/lose dialog ("nice!" like the copy to clipboard.)
-    // Pop up stats
     if(gameOver){
       handleGameOver(didWin, lives, gameOverTime)
     }  
@@ -247,9 +246,10 @@ const App = () => {
       let valString = val + '';
       return valString.length < 2 ? "0"+valString : valString;
     }
-    const hearts = (didWin ? '❤️'.repeat(lives) : '0 Lives')
-    const prefaceText = (didWin ? 'Completed in' : 'Lost at')
-    const copyText = `Picodia #1 -- ${prefaceText} ${pad(parseInt(gameOverTime/60))}:${pad(gameOverTime%60)} -- ${hearts} remaining. Can you beat that? Play at picodia.netlify.app!`
+    const hearts = (playedToday ? (prevOutcome ? '❤️'.repeat(prevLives) : '0 Lives') : (didWin ? '❤️'.repeat(lives) : '0 Lives'))
+    const prefaceText = (playedToday ? (prevOutcome ? 'Completed in' : 'Lost at') : (didWin ? 'Completed in' : 'Lost at'))
+    const gameTime = (playedToday ? prevTime : gameOverTime)
+    const copyText = `Picodia #${puzzleReference} -- ${prefaceText} ${pad(parseInt(gameTime/60))}:${pad(gameTime%60)} -- ${hearts} remaining. Can you beat that? Play at picodia.app!`
     navigator.clipboard.writeText(copyText);
     // alert(copyText);
     setAlert(true)
@@ -274,7 +274,7 @@ const App = () => {
       case 'about':
         return <About closeMenu={isSeen} isDarkMode={isDarkMode} closing={closing}/>
       case 'stats':
-        return <Stats closeMenu={isSeen}isDarkMode={isDarkMode} closing={closing} gameOver={gameOver} didWin={didWin} cookies={cookies} copyToClipboard={copyToClipboard}/>
+        return <Stats closeMenu={isSeen} isDarkMode={isDarkMode} closing={closing} gameOver={gameOver} didWin={didWin} cookies={cookies} copyToClipboard={copyToClipboard} playedToday={playedToday}/>
       case 'settings':
         return <Settings closeMenu={isSeen} hardMode={hardMode} switchHardMode={switchHardMode} switchDarkMode={switchDarkMode} isDarkMode={isDarkMode} closing={closing} version={puzzleReference}/>
       default:

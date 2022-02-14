@@ -6,7 +6,7 @@ import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
 
 
-const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyToClipboard}) => {
+const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, playedToday, copyToClipboard}) => {
 
   // useEffect(() => {
   //   console.log(cookies);
@@ -80,7 +80,7 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, didWin, copyT
               {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies.avgLossTime)}</p></Grid> */}
               <Grid item xs={4} className={'stat-time'}><p>...</p></Grid>
             </Grid>
-          {gameOver &&
+          {(gameOver || playedToday) &&
               <>
               <Divider sx={{width: '80%', m: 'auto', my: 2}}/>
               <div className='end-game-txt'>
