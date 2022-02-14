@@ -367,7 +367,7 @@ html {
         margin: auto;
         margin-right: 0.25rem;
         text-align: center;
-        font-size: 0.75rem !important;
+        font-size: 0.75rem;
         align-self: center;
     }
 
@@ -375,7 +375,7 @@ html {
         margin: auto;
         margin-right: 0.25rem;
         text-align: center;
-        font-size: 0.75rem !important;
+        font-size: 0.75rem;
         transition: 0.5s;
     }
 
@@ -540,9 +540,16 @@ html {
 
 @media screen and (max-width: 361px) {
     #game{
-        width: 98%;
+        width: 97%;
         margin: auto;
         margin-top: 10%;
+    }
+
+    .clue-row > p{
+        font-size: 0.65rem !important;
+    }
+    .clue-column > p{
+        font-size: 0.65rem !important;
     }
 }
 
