@@ -26,9 +26,7 @@ const ExampleRow = ({exClue, exArray, nextStart, onToNext, order, isDarkMode}) =
             <p style={{margin: 0, textAlign: 'right', paddingRight: '0.5rem'}}>{exClue}</p>
         </Grid>
         {exArray.map((cell, index) => (
-            <Grid item xs={2} className={'ex-cell ' + (isDarkMode ? 'light-' : 'dark-') + (cell===1 ? 'right ' : cell===0 ? ' wrong ' : ' flagged ') + ((nextAnim===index) && ' pulsate-fwd ') } onAnimationEnd={() => {setNextAnim(nextAnim + 1)}}>
-                
-            </Grid>
+            <Grid item xs={2} className={'ex-cell ' + (isDarkMode ? 'light-' : 'dark-') + ((nextAnim>=index) ? (cell===1 ? 'right pulsate-fwd' : cell===0 ? ' wrong pulsate-fwd' : ' flagged pulsate-fwd') : ' ') } onAnimationEnd={() => {setNextAnim(nextAnim + 1)}} />
         ))}
     </Grid>
   )

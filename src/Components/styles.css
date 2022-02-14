@@ -131,6 +131,8 @@ html {
     min-height: 100vh;
     max-width: 450px;
     margin: auto;
+    height: 100%;
+    overflow-y: scroll;
 }
 
     .close-btn-about { /* Used in each settings, about and stats*/
@@ -147,6 +149,7 @@ html {
 
     .section-header > p {
         font-size: 0.75rem;
+        padding: 0 0.4rem;
     }
 
     .how-to-play {
@@ -545,6 +548,21 @@ html {
 }
 
 @media screen and (max-width: 361px) {
+    #game{
+        width: 97%;
+        margin: auto;
+        margin-top: 10%;
+    }
+
+    .clue-row > p{
+        font-size: 0.65rem !important;
+    }
+    .clue-column > p{
+        font-size: 0.65rem !important;
+    }
+}
+
+@media screen and (max-height: 361px) {
     #game{
         width: 97%;
         margin: auto;
