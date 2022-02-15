@@ -4,10 +4,6 @@ import { useCookies } from 'react-cookie'
 import ReactGA from 'react-ga';
 import './Components/styles.css';
 
-ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
-
-
-
 const App = () => {
 
   const [puzzleReference, setPuzzleRef] = useState(0);
@@ -90,6 +86,7 @@ const App = () => {
   useEffect(() => {
 
     //// Google Analytics initializer on window
+    ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
     ReactGA.set({ page: window.location.pathname });
     ReactGA.pageview(window.location.pathname);
     // console.log(cookies);
