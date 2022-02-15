@@ -22,22 +22,22 @@ const Settings = ({closeMenu, hardMode, switchHardMode, switchDarkMode, isDarkMo
       <img className={'close-btn'} src={(toggleDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu()}/>
       <h2 style={{textAlign: 'center', fontSize: '1.25rem'}}>SETTINGS</h2>
       <div style={{width: '100%'}}>
-        <div className={'setting'}>
+        <div className={'setting '}>
           <div className={'section-txt'}>
             <h3>HARD MODE</h3>
             <p>Lowers lives to 1! Don't make a mistake :)</p>
           </div>
-          <label className="switch">
+          <label className=" switch">
             <input type="checkbox" defaultChecked={hardMode} onClick={() => switchHardMode()}/>
             <span className="slider round"></span>
           </label>
         </div>
-        <div className={'setting'}>
+        <div className={'setting '}>
           <div className={'section-txt'}>
             <h3>DARK THEME</h3>
             <p>Toggle to turn dark mode on and off.</p>
           </div>
-          <label className="switch">
+          <label className=" switch">
             <input type="checkbox" onClick={() => switchesDarkMode()} defaultChecked={toggleDarkMode}/>
             <span className="slider round"></span>
           </label>
@@ -52,7 +52,7 @@ const Settings = ({closeMenu, hardMode, switchHardMode, switchDarkMode, isDarkMo
             <span className="slider round"></span>
           </label>
         </div> */}
-        <div className={'setting'}>
+        <div className={'setting '}>
           <div className={'section-txt'}>
             <h3>FEEDBACK</h3>
             <p>Please reach out with any questions, comments praise or concerns!</p>

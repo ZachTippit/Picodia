@@ -16,7 +16,7 @@ const ExampleRow = ({exClue, exArray, nextStart, onToNext, order, isDarkMode}) =
         if(nextAnim === exArray.length){
             setTimeout(() => {
                 onToNext();
-            }, 1000)
+            }, 500)
         }
     }, [nextAnim])
 
@@ -26,7 +26,7 @@ const ExampleRow = ({exClue, exArray, nextStart, onToNext, order, isDarkMode}) =
             <p style={{margin: 0, textAlign: 'right', paddingRight: '0.5rem'}}>{exClue}</p>
         </Grid>
         {exArray.map((cell, index) => (
-            <Grid item xs={2} className={'ex-cell ' + (isDarkMode ? 'light-' : 'dark-') + ((nextAnim>=index) ? (cell===1 ? 'right pulsate-fwd' : cell===0 ? ' wrong pulsate-fwd' : ' flagged pulsate-fwd') : ' ') } onAnimationEnd={() => {setNextAnim(nextAnim + 1)}} />
+            <Grid item xs className={'ex-cell ' + (isDarkMode ? 'light-' : 'dark-') + ((nextAnim>=index) ? (cell===1 ? 'right pulsate-fwd' : cell===0 ? ' wrong pulsate-fwd' : ' pulsate-fwd') : ' ') } onAnimationEnd={() => {setNextAnim(nextAnim + 1)}} />
         ))}
     </Grid>
   )

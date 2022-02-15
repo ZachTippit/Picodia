@@ -134,8 +134,8 @@ html {
     -webkit-overflow-scrolling: touch !important;
 }
 
-    .section-title{
-
+    .ex-grid3-3 > div{
+        margin: 0 !important;
     }
 
     .close-btn-about { /* Used in each settings, about and stats*/
@@ -196,7 +196,7 @@ html {
         font-weight: bold;
         margin: 0;
         padding: 0.5rem 0;
-        font-size: 1.25rem;
+        font-size: 1rem;
     }
 
     .section-txt > p {
@@ -611,8 +611,12 @@ html {
         padding: 1rem;
     }
 
+    .how-to-play > p {
+        margin: 0.75rem 0;
+    }
+
     .ex-grid{
-        margin: 1rem 0;
+        /* margin: 1rem 0; */
     }
     /* #footer {
         padding-top: 0;
