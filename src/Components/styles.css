@@ -134,6 +134,10 @@ html {
     -webkit-overflow-scrolling: touch !important;
 }
 
+    .section-title{
+
+    }
+
     .close-btn-about { /* Used in each settings, about and stats*/
         position: absolute;
         right: 0;
@@ -142,7 +146,7 @@ html {
         margin-right: 2rem;
     }
 
-    .section-header > h3 {
+    .section-header > h2 {
         text-align: center;
     }
 
@@ -170,6 +174,8 @@ html {
     padding: 2rem 0;
     overflow-y: none;
 }
+
+
     .close-btn { /* Used in each settings, about and stats*/
         position: absolute;
         right: 0;
@@ -186,10 +192,11 @@ html {
         width: 100%;
     }
 
-    .section-txt > h5 {
-        font-size: bold;
+    .section-txt > h3 {
+        font-weight: bold;
         margin: 0;
         padding: 0.5rem 0;
+        font-size: 1.25rem;
     }
 
     .section-txt > p {
@@ -457,6 +464,7 @@ html {
         width: 200px;
         padding: 1rem;
         position: absolute;
+        margin-top: 3.5rem;
         margin-left: auto;
         margin-right: auto;
         left: 0;

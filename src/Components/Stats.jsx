@@ -28,23 +28,23 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, playedToday, 
       <div className={'full-screen-container'} onClick={() => closeMenu()}>
         <div className={'card fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ')}>
           <img className={'close-btn-stats'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu()}/>
-          <h3 style={{textAlign: 'center'}}>STATISTICS</h3>
+          <h2 style={{textAlign: 'center', fontSize: '1.25rem'}}>STATISTICS</h2>
           <div id={'stat-holder'}>
             <div id={'stat-summary'}>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{cookies.totalGames}</p>
+                <p className={'stat-num'}>{cookies.totalGames | 0}</p>
                 <p className={'stat-label'}>Played</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{(isNaN(cookies.wonGames/cookies.totalGames * 100) ? 0 : `${(cookies.wonGames/cookies.totalGames * 100).toFixed(1)}%`)}</p>
+                <p className={'stat-num'}>{(isNaN(cookies.wonGames/cookies.totalGames * 100) ? 0 : `${(cookies.wonGames/cookies.totalGames * 100).toFixed(1)}%`) | '00.0%'}</p>
                 <p className={'stat-label'}>Win %</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{cookies.currentStreak}</p>
+                <p className={'stat-num'}>{cookies.currentStreak | 0}</p>
                 <p className={'stat-label'}>Current Streak</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{cookies.maxStreak}</p>
+                <p className={'stat-num'}>{cookies.maxStreak | 0}</p>
                 <p className={'stat-label'}>Max Streak</p>
               </div>
             </div> 
@@ -57,26 +57,26 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, playedToday, 
                 <img src={Heart} alt='Lives' />
                 <img src={Heart} alt='Lives' />
               </Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{cookies['3LifeWins']}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{cookies['3LifeWins'] | 0}</p></Grid>
               {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['3LifeAvgTime'])}</p></Grid> */}
               <Grid item xs={4} className={'stat-time'}><p>Coming soon :)</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
                 <img src={Heart} alt='Lives' />
                 <img src={Heart} alt='Lives' />
               </Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{cookies['2LifeWins']}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{cookies['2LifeWins'] | 0}</p></Grid>
               {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['2LifeAvgTime'])}</p></Grid> */}
               <Grid item xs={4} className={'stat-time'}><p>...</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
                 <img src={Heart} alt='Lives' />
               </Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{cookies['1LifeWins']}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{cookies['1LifeWins'] | 0}</p></Grid>
               {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['1LifeAvgTime'])}</p></Grid> */}
               <Grid item xs={4} className={'stat-time'}><p>...</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
                 <img src={EmptyHeart} alt='Lives' />
               </Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{cookies.lostGames}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{cookies.lostGames | 0}</p></Grid>
               {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies.avgLossTime)}</p></Grid> */}
               <Grid item xs={4} className={'stat-time'}><p>...</p></Grid>
             </Grid>

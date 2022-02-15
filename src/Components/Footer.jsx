@@ -49,16 +49,8 @@ const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameO
         </div>
       :
         <>
-          <div className='fade-in-fwd'>
-            <p style={{textAlign: 'center', marginBottom: '0'}}>TIME</p>
-            <div style={{margin: 'auto', textAlign: 'center'}}>
-              <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? parseInt(prevTime/60) : minutes)}</label>
-              <label style={{fontSize: '0.75rem'}}>:</label>
-              <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? prevTime%60 : seconds)}</label>
-            </div>
-          </div>
           <div>
-            <p style={{textAlign: 'center', marginBottom: '0'}}>LIVES</p>
+            <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>LIVES</p>
             <div id={'maxLives'}>
               {[...Array(maxLives)].map((life, index) => (
                 <>{
@@ -76,6 +68,14 @@ const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameO
                     }</>
                 }</> 
               ))}
+            </div>
+          </div>
+          <div className='fade-in-fwd'>
+            <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>TIME</p>
+            <div style={{margin: 'auto', textAlign: 'center'}}>
+              <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? parseInt(prevTime/60) : minutes)}</label>
+              <label style={{fontSize: '0.75rem'}}>:</label>
+              <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? prevTime%60 : seconds)}</label>
             </div>
           </div>
         </>

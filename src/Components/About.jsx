@@ -30,13 +30,13 @@ const About = ({closeMenu, isDarkMode, closing}) => {
     <div id={'about'} className={'fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ') + (closing && 'fade-out-bottom')}>
       <img className={'close-btn-about'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu('')}/>
       <div className={'section-header'}>
-        <h3 className={'section-title'}>PICODIA RULES</h3>
+        <h2 style={{fontSize: '1.25rem'}}>PICODIA RULES</h2>
         <p>Solve the <b>Nonogram</b> with less than 3 mistakes. You win if you complete puzzle correctly by filling in all of the correct cells.</p>
         <p><b>Click/Tap</b> to fill a cell. <b>Right Click</b> (coming soon to mobile) to annotate.</p>
         <p>Share your results to see how you stack up!</p>
       </div>
       <div className={'how-to-play'}>
-        <h4 style={{margin: '0.75rem 0'}}><b>HOW TO PLAY</b></h4>
+        <h2 style={{margin: '0.75rem 0', fontSize: '1.25rem'}}><b>HOW TO PLAY</b></h2>
         <p style={{marginTop: '0'}}>Each row and column contains the hint for that row or column. The number is how many consecutive blocks there are.</p>
         <ExampleRow exClue={"5"} exArray={[1,1,1,1,1]} nextStart={nextAnim} order={0} onToNext={onToNext} isDarkMode={isDarkMode}/>
         <p>Some clues are obvious and can be figured out from context (ex: 5 blocks long and a space between each number...)</p>

@@ -20,11 +20,11 @@ const Settings = ({closeMenu, hardMode, switchHardMode, switchDarkMode, isDarkMo
   return (
     <div id={'settings'} className={'fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ') + (closing && 'fade-out-bottom')} style={{maxWidth: '450px', margin: 'auto'}}>
       <img className={'close-btn'} src={(toggleDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu()}/>
-      <h3 style={{textAlign: 'center'}}>SETTINGS</h3>
+      <h2 style={{textAlign: 'center', fontSize: '1.25rem'}}>SETTINGS</h2>
       <div style={{width: '100%'}}>
         <div className={'setting'}>
           <div className={'section-txt'}>
-            <h5>HARD MODE</h5>
+            <h3>HARD MODE</h3>
             <p>Lowers lives to 1! Don't make a mistake :)</p>
           </div>
           <label className="switch">
@@ -34,7 +34,7 @@ const Settings = ({closeMenu, hardMode, switchHardMode, switchDarkMode, isDarkMo
         </div>
         <div className={'setting'}>
           <div className={'section-txt'}>
-            <h5>DARK THEME</h5>
+            <h3>DARK THEME</h3>
             <p>Toggle to turn dark mode on and off.</p>
           </div>
           <label className="switch">
@@ -54,7 +54,7 @@ const Settings = ({closeMenu, hardMode, switchHardMode, switchDarkMode, isDarkMo
         </div> */}
         <div className={'setting'}>
           <div className={'section-txt'}>
-            <h5>FEEDBACK</h5>
+            <h3>FEEDBACK</h3>
             <p>Please reach out with any questions, comments praise or concerns!</p>
           </div>
           <div id={'feedback-txt'}>

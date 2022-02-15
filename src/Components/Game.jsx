@@ -71,7 +71,7 @@ const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, 
 
     useEffect(() => {
         if(playedToday){
-            console.log(prevGameArray);
+            // console.log(prevGameArray);
             setGameGrid(createGameObject(prevGameArray))
         }
     }, [playedToday])
