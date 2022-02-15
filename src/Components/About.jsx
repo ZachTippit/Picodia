@@ -49,7 +49,7 @@ const About = ({closeMenu, isDarkMode, closing}) => {
         <ExampleRow exClue={"2 " + " " + " 1"} exArray={[1,1,'',1,'']} nextStart={nextAnim} order={3} onToNext={onToNext} isDarkMode={isDarkMode}/>
         <ExampleRow exClue={"2 " + " " + " 1"} exArray={[1,1,'','',1]} nextStart={nextAnim} order={3} onToNext={onToNext} isDarkMode={isDarkMode}/>
         <p><b>You only get one chance a day, so play carefully ;)</b> Don't lose all of your lives!</p>
-        <LoseExampleRow exClue={"1"} exArray={[1,'',0,0,0]} nextStart={nextAnim} order={4} onToNext={onToNext} isDarkMode={isDarkMode}/>
+        <LoseExampleRow exClue={"2"} exArray={[1,1,0,0,0]} nextStart={nextAnim} order={4} onToNext={onToNext} isDarkMode={isDarkMode}/>
       </div>
       <div>
         <p style={{textAlign: 'center'}}><b>A new puzzle will be available each day!</b></p>

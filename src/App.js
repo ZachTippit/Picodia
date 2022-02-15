@@ -11,6 +11,7 @@ ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
 const App = () => {
 
   const [puzzleReference, setPuzzleRef] = useState(0);
+  const [whatIsIt, setWhatIsIt] = useState();
   const [dailyPuzzle, setDailyPuzzle] = useState([]);
   const [playedToday, setPlayedToday] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -89,6 +90,7 @@ const App = () => {
   useEffect(() => {
 
     //// Google Analytics initializer on window
+    ReactGA.set({ page: window.location.pathname });
     ReactGA.pageview(window.location.pathname);
     // console.log(cookies);
     //// Cookie handlers
@@ -110,7 +112,7 @@ const App = () => {
     if(win){  
       let lifeWins = parseInt(cookies[`${numLives}LifeWins`])
       let avgTimes = parseInt(cookies[`${numLives}LifeAvgTime`])
-      setGameOverNote('Nice work!')
+      setGameOverNote(`Nice! It\'s ${whatIsIt}.`)
       // ON WIN
         // ++ won games
       setCookie('wonGames', parseInt(cookies.wonGames) + 1);
@@ -169,8 +171,9 @@ const App = () => {
   // PUZZLE REF FETCHER: Uses google sheets index to pick puzzle (this will create an API limit bottleneck in the future). Also used as daily counter
   useEffect(() => {
     const getPuzzle = async () => {
-      const puzzleResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_SPREADSHEET_ID}/values/Sheet1!B${puzzleReference}?key=${process.env.REACT_APP_SHEETS_API_KEY}`).then((response) => response.json())
-      setDailyPuzzle(puzzleResponse.values[0][0]);
+      const puzzleResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_SPREADSHEET_ID}/values/Sheet1!A${puzzleReference}:B${puzzleReference}?key=${process.env.REACT_APP_SHEETS_API_KEY}`).then((response) => response.json())
+      setDailyPuzzle(puzzleResponse.values[0][1]);
+      setWhatIsIt(puzzleResponse.values[0][0])
     }
 
     if(puzzleReference !== 0){

@@ -107,7 +107,7 @@ const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, 
                                         </div>   
                                     :   
                             // Aaaand the cells
-                                        <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} handleCell={handleGuess} key={`cell@${index}`} nextAnim={nextAnim} didWin={didWin} order={index} playedToday={playedToday}/>
+                                        <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} isStarted={isStarted} gridSize={gridSize} handleCell={handleGuess} key={`cell@${index}`} nextAnim={nextAnim} didWin={didWin} order={index} playedToday={playedToday}/>
                                     }
                                     </>     
                                     }

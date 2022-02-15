@@ -6,7 +6,7 @@ import { Grid } from '@mui/material'
 
 const config = {delta: 1}
 
-const Cell = ({cell, cellNum, isDarkMode, handleCell, didWin, nextAnim, order, playedToday}) => {
+const Cell = ({cell, cellNum, gridSize, isDarkMode, isStarted, handleCell, didWin, nextAnim, order, playedToday}) => {
     const [guessed, setGuessed] = useState(playedToday);
     const [flagged, setFlagged] = useState(false);
     const [winAnimation, setWinAnimation] = useState(false);
@@ -60,6 +60,8 @@ const Cell = ({cell, cellNum, isDarkMode, handleCell, didWin, nextAnim, order, p
                   (guessed ? (cell ? 'right pulsate-fwd ' : ' wrong pulsate-fwd ') : ' '))
                 + (flagged ? ' flagged ' : ' ')
                 + (winAnimation ? ' win-animation': '')
+                + ((isStarted && parseInt(cellNum/gridSize) == 5) ? ' horz-mid-thick ' : ' ' )
+                + ((isStarted && cellNum%gridSize == 5) ? ' vert-mid-thick ' : ' ')
               }
       onMouseUp={(e) => handleClick(e)} onDragEnter={(e) => handleClick(e)}
       onDragLeave={(e) => handleClick(e)}
