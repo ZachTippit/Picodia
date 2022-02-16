@@ -373,6 +373,7 @@ html {
     .clue-row-container{
         padding-right: 0.25rem;
         transition: 0.5s;
+        max-height: 32px;
     }
 
     .clue-row > p {

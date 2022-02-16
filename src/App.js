@@ -174,13 +174,14 @@ const App = () => {
   // PUZZLE REF FETCHER: Uses google sheets index to pick puzzle (this will create an API limit bottleneck in the future). Also used as daily counter
   useEffect(() => {
     const getPuzzle = async () => {
-      const puzzleResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_SPREADSHEET_ID}/values/Sheet1!A${puzzleReference}:B${puzzleReference}?key=${process.env.REACT_APP_SHEETS_API_KEY}`).then((response) => response.json())
+      const puzzleResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_SPREADSHEET_ID}/values/Sheet1!A${puzzleReference}:B${puzzleReference}?key=${process.env.REACT_APP_SHEETS_API_KEY}`).then((response) => response.json()).then(data => console.log(data))
       setDailyPuzzle(puzzleResponse.values[0][1]);
       setWhatIsIt(puzzleResponse.values[0][0])
     }
 
     if(puzzleReference !== 0){
       if(!isStarted && puzzleReference == cookies.playedToday){
+        console.log('toots')
         // console.log(cookies.prevGameArray)
         setPlayedToday(true);
         setPrevGameArray(cookies.prevGameArray)
@@ -191,6 +192,8 @@ const App = () => {
         getPuzzle();
       }    
     }
+
+    console.log(puzzleReference, cookies.playedToday);
 
     // getPuzzle();
   }, [puzzleReference])
@@ -296,7 +299,7 @@ const App = () => {
     <div id={'cover-screen'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
       <div id={'app'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
         <Navbar openMenu={isSeen} isDarkMode={isDarkMode}/>
-        { (playedToday && !isOpen) && <Ping note={`You have already played today! It was ${whatIsIt}`} playedToday={true} /> }
+        { (playedToday && !isOpen) && <Ping note={`You have already played today. It was ${whatIsIt}!`} playedToday={true} /> }
         { goAlert && <Ping note={gameOverNote} didWin={didWin} isCopy={false}/> }
         { alert && <Ping note={'Copied to clipboard!'} isCopy={true}/> }
         { isOpen && showWindow()}
