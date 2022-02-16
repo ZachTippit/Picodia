@@ -3,7 +3,7 @@ import './styles.css'
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
 
-const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameOver, handleGameOverTime, prevTime, prevLives}) => {
+const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameOver, handleGameOverTime, prevTime, prevLives, preGameAnim}) => {
 
   const [pingStart, setPingStart] = useState(true);
   const [totalTime, setTotalTime] = useState(0);
@@ -44,12 +44,12 @@ const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameO
   return (
     <div id={'footer'}>
       {(!isStarted && !playedToday) ? 
-        <div>
-          <button className={'start-button ' + (pingStart && 'pulsate-fwd')} onClick={() => startGame()} onAnimationEnd={() => {setPingStart(false)}}>Start Game</button>
+        <div className={(preGameAnim ? 'fade-out-right ' : ' ')}>
+          <p className={'solve-to-start-txt '}><b>Solve the puzzle to start</b></p>
         </div>
       :
         <>
-          <div>
+          <div className='move-on-start-footer'>
             <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>LIVES</p>
             <div id={'maxLives'}>
               {[...Array(maxLives)].map((life, index) => (
@@ -70,7 +70,7 @@ const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameO
               ))}
             </div>
           </div>
-          <div className='fade-in-fwd'>
+          <div className='fade-in-fwd move-on-start-footer '>
             <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>TIME</p>
             <div style={{margin: 'auto', textAlign: 'center'}}>
               <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? parseInt(prevTime/60) : minutes)}</label>

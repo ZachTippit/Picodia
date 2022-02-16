@@ -3,6 +3,7 @@ import { About, Footer, Game, Navbar, Settings, Stats, Ping } from './Components
 import { useCookies } from 'react-cookie'
 import ReactGA from 'react-ga';
 import './Components/styles.css';
+import SolveToStart from './Components/Game/SolveToStart';
 
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
 
@@ -23,11 +24,13 @@ const App = () => {
   const [didWin, setDidWin] = useState();
   const [gameOver, setGameOver] = useState(false);
   const [ping, setPing] = useState(false);
+  const [pingHowTo, setPingHowTo] = useState(false);
   const [prevGameArray, setPrevGameArray] = useState([]);
   const [prevLives, setPrevLives] = useState()
   const [prevOutcome, setPrevOutcome] = useState()
   const [prevTime, setPrevTime] = useState()
-  
+  const [preGameAnim, setPreGameAnim] = useState(false)
+  const [startPing, setStartPing] = useState(false);
   const [alert, setAlert] = useState(false)
   const [goAlert, setGOAlert] = useState(false)
   const [gameOverNote, setGameOverNote] = useState(false);
@@ -155,7 +158,21 @@ const App = () => {
     setPrevGameArray(answerArray);
   }
 
-  const startGame = () => { setIsStarted(true); }
+  const startGame = () => { 
+    setPreGameAnim(true)
+    setTimeout(() => {
+      setIsStarted(true);
+      setPreGameAnim(false)
+    }, 1200)
+    
+    setTimeout(() => {
+      setStartPing(true)
+    }, 3000)
+    setTimeout(() => {
+      setStartPing(false)
+    }, 8000)
+  
+  }
 
   const handleWin = () => {
     setDidWin(true);
@@ -197,9 +214,6 @@ const App = () => {
         getPuzzle();
       }    
     }
-
-    console.log(puzzleReference, cookies.playedToday);
-
     // getPuzzle();
   }, [puzzleReference])
 
@@ -236,6 +250,13 @@ const App = () => {
 
   const loseLife = () => {
     setLives(lives - 1);
+  }
+
+  const wrongSolveToStart = () => {
+    setPingHowTo(true)
+    setTimeout(() => {
+      setPingHowTo(false)
+    }, 500)
   }
 
   const switchHardMode = () => {
@@ -303,14 +324,20 @@ const App = () => {
   return (
     <div id={'cover-screen'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
       <div id={'app'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
-        <Navbar openMenu={isSeen} isDarkMode={isDarkMode}/>
+        <Navbar openMenu={isSeen} isDarkMode={isDarkMode} pingHowTo={pingHowTo}/>
         { (playedToday && !isOpen) && <Ping note={`You have already played today. It was ${whatIsIt}!`} playedToday={true} /> }
+        { (startPing && !playedToday) && <Ping note='Good luck!' isCopy={false} startPing={true}/>}
         { goAlert && <Ping note={gameOverNote} didWin={didWin} isCopy={false}/> }
         { alert && <Ping note={'Copied to clipboard!'} isCopy={true}/> }
         { isOpen && showWindow()}
-        <Game isDarkMode={isDarkMode} puzzle={dailyPuzzle} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} gameOver={gameOver} handleWin={handleWin} didWin={didWin} handlePrevGameArray={handlePrevGameArray} prevGameArray={prevGameArray} playedToday={playedToday}/>
+        { isStarted ? 
+          <Game isDarkMode={isDarkMode} puzzle={dailyPuzzle} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} gameOver={gameOver} handleWin={handleWin} didWin={didWin} handlePrevGameArray={handlePrevGameArray} prevGameArray={prevGameArray} playedToday={playedToday}/>
+         :
+          <SolveToStart isDarkMode={isDarkMode} isStarted={isStarted} handleWin={startGame} preGameAnim={preGameAnim} wrongSolveToStart={wrongSolveToStart}/>
+        }
         <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} ping={ping} 
-                gameOver={gameOver} handleGameOverTime={handleGameOverTime} playedToday={playedToday} prevTime={cookies.prevTime} prevLives={cookies.prevLives} />
+                gameOver={gameOver} handleGameOverTime={handleGameOverTime} playedToday={playedToday} 
+                prevTime={cookies.prevTime} prevLives={cookies.prevLives} preGameAnim={preGameAnim}/>
       </div>
     </div>
   );

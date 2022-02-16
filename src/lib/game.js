@@ -13,7 +13,7 @@ const rowClues = (answer) => {
                 consecutive+=1;
                 rowIndex.push(consecutive.toString());
                 return;
-            } else if ((cell === 0) && (consecutive === 0)){
+            } else if ((cell === 0 || cell === 2) && (consecutive === 0)){
                 // Pass
             } else {
                 rowIndex.push(consecutive.toString())
