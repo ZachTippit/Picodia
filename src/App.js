@@ -65,8 +65,6 @@ const App = () => {
     setCookie('totalGames', 0);       // Total games played
     setCookie('wonGames', 0);         // Games won
     setCookie('lostGames', 0)         // Games lost
-    setCookie('currentStreak', 0);    // Current win streak
-    setCookie('maxStreak', 0);        // Longest win streak
     setCookie('playedPicodia', true)  // Played Picodia before?  
     setCookie('playedToday', 0)       // Played Picodia today? -- saves as daily number to check against
     setCookie('lostGames', 0)         
@@ -114,11 +112,18 @@ const App = () => {
       // ON WIN
         // ++ won games
       setCookie('wonGames', parseInt(cookies.wonGames) + 1);
-        // ++ current streak
-      setCookie('currentStreak', parseInt(cookies.currentStreak) + 1);
-        // ++ max streak, if possible
-      cookies.currentStreak + 1 > cookies.maxStreak && setCookie('maxStreak', parseInt(cookies.maxStreak) + 1);
-        // ++ games per life
+
+      if(cookies.currentStreak === undefined){
+        setCookie('currentStreak', 1)
+        setCookie('maxStreak', 1)
+      } else {
+        setCookie('currentStreak', parseInt(cookies.currentStreak) + 1);  
+      }
+
+      if(cookies.currentStreak + 1 > cookies.maxStreak){
+        setCookie('maxStreak', parseInt(cookies.maxStreak) + 1);
+      }
+      
         console.log((lifeWins*avgTimes + cookies.prevTime)/(lifeWins + 1))
       setCookie(`${[numLives]}LifeWins`, parseInt(cookies[`${numLives}LifeWins`]) + 1);
       setCookie(`${numLives}LifeAvgTime`, ((lifeWins*avgTimes + cookies.prevTime)/(lifeWins + 1)))
