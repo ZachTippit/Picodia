@@ -179,9 +179,15 @@ const App = () => {
       setWhatIsIt(puzzleResponse.values[0][0])
     }
 
+    const getPuzzleWhat = async () => {
+      const puzzWhat = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_SPREADSHEET_ID}/values/Sheet1!A${puzzleReference}?key=${process.env.REACT_APP_SHEETS_API_KEY}`).then((response) => response.json())
+      setWhatIsIt(puzzWhat.values[0][0])
+    }
+
     if(puzzleReference !== 0){
       if(!isStarted && puzzleReference == cookies.playedToday){
         // console.log(cookies.prevGameArray)
+        getPuzzleWhat();
         setPlayedToday(true);
         setPrevGameArray(cookies.prevGameArray)
         setPrevLives(cookies.prevLives)
