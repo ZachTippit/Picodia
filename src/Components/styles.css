@@ -503,6 +503,10 @@ html {
         background-color: rgba(204,204,204,0.3);
     }
 
+    .mt{
+        padding-top: 6rem;
+    }
+
 
 #footer {
     border-top: 1px solid lightgray;

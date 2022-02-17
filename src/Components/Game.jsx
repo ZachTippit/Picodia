@@ -69,14 +69,14 @@ const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, 
 
     useEffect(() => {
         if(playedToday){
-            console.log(prevGameArray);
+            // console.log(prevGameArray);
             setGameGrid(createGameObject(prevGameArray))
         }
     }, [playedToday])
 
-    useEffect(() => {
-            console.log(gameGrid);
-    }, [gameGrid])
+    // useEffect(() => {
+    //         console.log(gameGrid);
+    // }, [gameGrid])
 
   return (
     <div id='game' onClick={() => pingStartBtn()}>

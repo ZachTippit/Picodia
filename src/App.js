@@ -282,6 +282,7 @@ const App = () => {
       return valString.length < 2 ? "0"+valString : valString;
     }
     const hearts = (playedToday ? (prevOutcome ? '❤️'.repeat(prevLives) : '🖤') : (didWin ? '❤️'.repeat(lives) : '🖤'))
+    console.log(hearts);
     const prefaceText = '⏱'
     const gameTime = (playedToday ? prevTime : gameOverTime)
     const copyText = `Picodia #${puzzleReference}    ${hearts}    ${prefaceText}${pad(parseInt(gameTime/60))}:${pad(gameTime%60)}`
@@ -333,7 +334,7 @@ const App = () => {
         { isStarted ? 
           <Game isDarkMode={isDarkMode} puzzle={dailyPuzzle} pingStartBtn={pingStartBtn} isStarted={isStarted} loseLife={loseLife} gameOver={gameOver} handleWin={handleWin} didWin={didWin} handlePrevGameArray={handlePrevGameArray} prevGameArray={prevGameArray} playedToday={playedToday}/>
          :
-          <SolveToStart isDarkMode={isDarkMode} isStarted={isStarted} handleWin={startGame} preGameAnim={preGameAnim} wrongSolveToStart={wrongSolveToStart}/>
+          <SolveToStart isDarkMode={isDarkMode} isStarted={isStarted} handleWin={startGame} preGameAnim={preGameAnim} wrongSolveToStart={wrongSolveToStart} playedToday={playedToday} />
         }
         <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} ping={ping} 
                 gameOver={gameOver} handleGameOverTime={handleGameOverTime} playedToday={playedToday} 

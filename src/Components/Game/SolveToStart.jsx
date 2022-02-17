@@ -11,7 +11,7 @@ import { createGameObject } from '../../lib/game.js';
 const answer = [[1,1,1],[1,0,0],[1,0,1]]
 const blank = [[2,2,2],[2,2,2],[2,2,2]];
 
-const SolveToStart = ({isStarted, preGameAnim, isDarkMode, handleWin, wrongSolveToStart}) => {
+const SolveToStart = ({isStarted, preGameAnim, isDarkMode, handleWin, wrongSolveToStart, playedToday}) => {
 
     const [correctSquares, setCorrectSquares] = useState(0)
     const [winNum, setWinNum] = useState(6)
@@ -42,7 +42,7 @@ const SolveToStart = ({isStarted, preGameAnim, isDarkMode, handleWin, wrongSolve
 
 
   return (
-    <div id='startPuzz' className={'move-on-start-footer ' + (preGameAnim ? ' fade-out-right' : ' ')}>
+    <div id='startPuzz' className={'move-on-start-footer mt ' + (preGameAnim ? ' fade-out-right ' : ' ')}>
         <div id='game-board'>
             <Grid container columns={gridSize} width='75%'>
                 {gameGrid.map((cell, index) => (
