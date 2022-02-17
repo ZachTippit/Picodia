@@ -331,17 +331,19 @@ html {
         color: white;
     }
 
-#solve-to-start{
-    margin-top: 30%;
-    margin-bottom: 30%;
+#startPuzz{
     overflow-y: none;
-    min-height: 500px;
+    min-height: 550px;
+}
+
+#game-box {
+    transition: 2s all;
 }
 
 #game {
     transform: translateX(-40px);
     overflow-y: none;
-    min-height: 500px;
+    min-height: 550px;
 }
 
     .disable-select {
@@ -498,7 +500,7 @@ html {
     }
     
     .played-ping{
-        background-color: #ccc;
+        background-color: rgba(204,204,204,0.3);
     }
 
 
@@ -578,7 +580,7 @@ html {
 }
 
 @media screen and (max-width: 361px) {
-    #game{
+    #game, #startPuzz{
         width: 97%;
         margin: auto;
         margin-top: 10%;
@@ -593,7 +595,7 @@ html {
 }
 
 @media screen and (max-height: 361px) {
-    #game{
+    #game, #startPuzz{
         width: 97%;
         margin: auto;
         margin-top: 10%;
@@ -608,7 +610,7 @@ html {
 }
 
 @media screen and (min-height: 800px) {
-    #game {
+    #game, #startPuzz {
         margin-top: 20%;
     }
 
@@ -641,7 +643,7 @@ html {
         width: 100%;
     }
 
-    #game {
+    #game, #startPuzz {
         height: 40vh; 
         margin: auto;
         margin-top: 22.5%;

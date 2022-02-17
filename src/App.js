@@ -337,7 +337,8 @@ const App = () => {
         }
         <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} ping={ping} 
                 gameOver={gameOver} handleGameOverTime={handleGameOverTime} playedToday={playedToday} 
-                prevTime={cookies.prevTime} prevLives={cookies.prevLives} preGameAnim={preGameAnim}/>
+                prevTime={cookies.prevTime} prevLives={cookies.prevLives} preGameAnim={preGameAnim}
+                whatIsIt={whatIsIt}/>
       </div>
     </div>
   );

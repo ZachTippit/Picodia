@@ -42,7 +42,7 @@ const SolveToStart = ({isStarted, preGameAnim, isDarkMode, handleWin, wrongSolve
 
 
   return (
-    <div id='solve-to-start' className={'move-on-start-footer ' + (preGameAnim ? ' fade-out-right' : ' ')}>
+    <div id='startPuzz' className={'move-on-start-footer ' + (preGameAnim ? ' fade-out-right' : ' ')}>
         <div id='game-board'>
             <Grid container columns={gridSize} width='75%'>
                 {gameGrid.map((cell, index) => (

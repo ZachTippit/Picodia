@@ -3,7 +3,7 @@ import './styles.css'
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
 
-const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameOver, handleGameOverTime, prevTime, prevLives, preGameAnim}) => {
+const Footer = ({lives, maxLives, isStarted, playedToday, whatIsIt, ping, gameOver, handleGameOverTime, prevTime, prevLives, preGameAnim}) => {
 
   const [pingStart, setPingStart] = useState(true);
   const [totalTime, setTotalTime] = useState(0);
@@ -43,43 +43,43 @@ const Footer = ({lives, maxLives, isStarted, playedToday, startGame, ping, gameO
 
   return (
     <div id={'footer'}>
-      {(!isStarted && !playedToday) ? 
-        <div className={(preGameAnim ? 'fade-out-right ' : ' ')}>
-          <p className={'solve-to-start-txt '}><b>Solve the puzzle to start</b></p>
-        </div>
-      :
-        <>
-          <div className='move-on-start-footer'>
-            <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>LIVES</p>
-            <div id={'maxLives'}>
-              {[...Array(maxLives)].map((life, index) => (
-                <>{
-                  playedToday ?
-                    <>{
-                      index >= prevLives ?
+        {(!isStarted) ? 
+          <div className={(preGameAnim ? 'fade-out-right ' : ' ')}>
+            <p className={'solve-to-start-txt '}><b>Solve the puzzle to start</b></p>
+          </div>
+        :
+          <>
+            <div className='move-on-start-footer'>
+              <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>LIVES</p>
+              <div id={'maxLives'}>
+                {[...Array(maxLives)].map((life, index) => (
+                  <>{
+                    playedToday ?
+                      <>{
+                        index >= prevLives ?
+                          <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life} key={`no-heart${index}`}/> :
+                          <img className={'life'} src={Heart} alt='Lives' key={life} key={`heart${index}`}/> 
+                      }</>
+                      :
+                      <>{
+                        index >= lives ?
                         <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life} key={`no-heart${index}`}/> :
                         <img className={'life'} src={Heart} alt='Lives' key={life} key={`heart${index}`}/> 
-                    }</>
-                    :
-                    <>{
-                      index >= lives ?
-                      <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={life} key={`no-heart${index}`}/> :
-                      <img className={'life'} src={Heart} alt='Lives' key={life} key={`heart${index}`}/> 
-                    }</>
-                }</> 
-              ))}
+                      }</>
+                  }</> 
+                ))}
+              </div>
             </div>
-          </div>
-          <div className='fade-in-fwd move-on-start-footer '>
-            <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>TIME</p>
-            <div style={{margin: 'auto', textAlign: 'center'}}>
-              <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? parseInt(prevTime/60) : minutes)}</label>
-              <label style={{fontSize: '0.75rem'}}>:</label>
-              <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? prevTime%60 : seconds)}</label>
+            <div className='fade-in-fwd move-on-start-footer '>
+              <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>TIME</p>
+              <div style={{margin: 'auto', textAlign: 'center'}}>
+                <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? parseInt(prevTime/60) : minutes)}</label>
+                <label style={{fontSize: '0.75rem'}}>:</label>
+                <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? prevTime%60 : seconds)}</label>
+              </div>
             </div>
-          </div>
-        </>
-      }
+          </>
+        }
     </div>
   )
 };
