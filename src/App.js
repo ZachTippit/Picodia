@@ -94,11 +94,12 @@ const App = () => {
     // console.log(cookies);
     //// Cookie handlers
     // cookieRemover();
-    cookies.playedPicodia === undefined && cookieInit();
+    
     // console.log('Initial cookie load: ', cookies)
   }, [])
 
   const handleGameOver = (win, numLives) => {
+    cookies.playedPicodia === undefined && cookieInit();
       // SAVES CURRENT DAY'S GAME
     setCookie('prevLives', numLives)
     setCookie('prevOutcome', win)

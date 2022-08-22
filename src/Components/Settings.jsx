@@ -68,7 +68,7 @@ const Settings = ({closeMenu, hardMode, switchHardMode, switchDarkMode, isDarkMo
           <p>©2022 by Zach Tippit</p>
         </div>
         <div>
-          <p><a href='www.zachtippit.com'>More projects at zachtippit.com</a></p>
+          <p><a href='https://www.zachtippit.com'>More projects at zachtippit.com</a></p>
         </div>     
         <div>
           <p>Picodia #{version}</p>
