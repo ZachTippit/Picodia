@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import ExampleRow from './ExampleRow';
-import './styles.css';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
-import { Grid } from '@mui/material';
 import LoseExampleRow from './LoseExampleRow';
 import ExampleGrid from './ExampleGrid';
 

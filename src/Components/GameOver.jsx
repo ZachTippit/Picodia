@@ -2,7 +2,6 @@ import React from 'react';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { default as Heart } from '../assets/heart.png'
-import './styles.css'
 
 const GameOver = ({closeMenu, closing, playerStats, didWin, isDarkMode}) => {
   return (

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useSwipeable } from 'react-swipeable'
-import '../styles.css';
-
 import { Grid } from '@mui/material'
 
 const config = {delta: 1}

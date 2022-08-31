@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Grid } from '@mui/material'
-
-
 import Clues from './Game/Clues.jsx'
 import Cell from './Game/Cell.jsx'
-import './styles.css';
 import { createGameObject } from '../lib/game.js';
-
 
 const answer = [[1,1,0,0,0,0,0,1], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,1]];
 
 const blank = [[2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2]]
 
 const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, handleWin, didWin, handlePrevGameArray, prevGameArray, playedToday}) => {
+
+    useEffect(() => {
+        console.log(prevGameArray)
+    }, [])
 
     const [correctSquares, setCorrectSquares] = useState(0)
     const [winNum, setWinNum] = useState(4)

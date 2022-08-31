@@ -1,5 +1,4 @@
 import React from 'react';
-import './styles.css';
 import {default as Question } from '../assets/question.png'
 import {default as Stats } from '../assets/graph.png'
 import {default as Settings } from '../assets/setting.png'

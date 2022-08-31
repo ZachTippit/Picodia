@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './styles.css'
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
 

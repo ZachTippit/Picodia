@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import './styles.css'
 
 const Ping = ({note, isCopy, didWin, playedToday=false, startPing=false}) => {
     const [close, setClose] = useState(false);

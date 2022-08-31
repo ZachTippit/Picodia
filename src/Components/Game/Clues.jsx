@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Grid } from '@mui/material'
-import '../styles.css'
 
 
 const Clues = ({cell, index, rowOrCol, isStarted}) => {

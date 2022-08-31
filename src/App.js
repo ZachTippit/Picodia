@@ -1,14 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import { About, Footer, Game, Navbar, Settings, Stats, Ping } from './Components'
-import { useCookies } from 'react-cookie'
 import ReactGA from 'react-ga';
-import './Components/styles.css';
 import SolveToStart from './Components/Game/SolveToStart';
+import {storageInit, onGameOver, handleWinStats, handleLoseStats, gameArrayChunker} from './lib/utilities'
 
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
 
 const App = () => {
-
   const [puzzleReference, setPuzzleRef] = useState(0);
   const [whatIsIt, setWhatIsIt] = useState();
   const [dailyPuzzle, setDailyPuzzle] = useState([]);
@@ -25,7 +23,7 @@ const App = () => {
   const [gameOver, setGameOver] = useState(false);
   const [ping, setPing] = useState(false);
   const [pingHowTo, setPingHowTo] = useState(false);
-  const [prevGameArray, setPrevGameArray] = useState([]);
+  const [prevGameArray, setPrevGameArray] = useState(JSON.parse(localStorage.prevGameArray));
   const [prevLives, setPrevLives] = useState()
   const [prevOutcome, setPrevOutcome] = useState()
   const [prevTime, setPrevTime] = useState()
@@ -34,112 +32,30 @@ const App = () => {
   const [alert, setAlert] = useState(false)
   const [goAlert, setGOAlert] = useState(false)
   const [gameOverNote, setGameOverNote] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies()
   const [gameOverTime, setGameOverTime] = useState()
-
-  const cookieRemover = () => {
-    removeCookie('totalGames');       // Total games played
-    removeCookie('wonGames');         // Games won
-    removeCookie('lostGames')         // Games lost
-    removeCookie('currentStreak');    // Current win streak
-    removeCookie('maxStreak');        // Longest win streak
-    removeCookie('playedPicodia')     // Played Picodia before?  
-    removeCookie('playedToday')       // Played Picodia today?
-    removeCookie('undefinedLifeAvgTime')                 // Weird cookie thang
-    removeCookie('0LifeWins', 0);
-    removeCookie('0LifeAvgTime', 0);
-    removeCookie('avgLossTime', 0);
-    removeCookie('1LifeWins', 0);
-    removeCookie('1LifeAvgTime', 0);
-    removeCookie('2LifeWins', 0);
-    removeCookie('2LifeAvgTime', 0);
-    removeCookie('3LifeWins', 0);
-    removeCookie('3LifeAvgTime', 0);
-    removeCookie('prevGameLives', 0);
-    removeCookie('prevGameArray', 0);
-    removeCookie('prevGameOutcome', 0);
-    removeCookie('prevGameTime', 0);
-    removeCookie('prevLives', 0);
-    removeCookie('prevOutcome', 0);
-    removeCookie('prevTime', 0);
-  }
-
-  const cookieInit = () => {
-    setCookie('totalGames', 0);       // Total games played
-    setCookie('wonGames', 0);         // Games won
-    setCookie('lostGames', 0)         // Games lost
-    setCookie('playedPicodia', true)  // Played Picodia before?  
-    setCookie('playedToday', 0)       // Played Picodia today? -- saves as daily number to check against
-    setCookie('lostGames', 0)         
-    setCookie('avgLossTime', 0);
-    setCookie('0LifeWins', 0);
-    setCookie('1LifeWins', 0);
-    setCookie('1LifeAvgTime', 0);
-    setCookie('2LifeWins', 0);
-    setCookie('2LifeAvgTime', 0);
-    setCookie('3LifeWins', 0);
-    setCookie('3LifeAvgTime', 0);
-    setCookie('prevTime', 0)
-    setCookie('prevLives', 0)
-    setCookie('prevOutcome', false)
-    setCookie('prevGameArray', [])
-  }
 
   // App initializer
   useEffect(() => {
-
     //// Google Analytics initializer on window
     ReactGA.set({ page: window.location.pathname });
     ReactGA.pageview(window.location.pathname);
-    // console.log(cookies);
-    //// Cookie handlers
-    // cookieRemover();
+   
+    // Will clear localStorage
+    // localStorage.clear();
     
-    // console.log('Initial cookie load: ', cookies)
+    console.log('Initial localStorage load: ', localStorage)
   }, [])
 
-  const handleGameOver = (win, numLives) => {
-    cookies.playedPicodia === undefined && cookieInit();
-      // SAVES CURRENT DAY'S GAME
-    setCookie('prevLives', numLives)
-    setCookie('prevOutcome', win)
-    setCookie('prevGameArray', prevGameArray)
-        // You've played today
-    setCookie('playedToday', puzzleReference);
-        // ++ Total games played
-    setCookie('totalGames', parseInt(cookies.totalGames) + 1);
-        // Refreshes avg time per life (and loss)
+  const handleGameOver = (win, numLives) => { 
+    onGameOver(numLives, win, prevGameArray, puzzleReference)
     if(win){  
-      let lifeWins = parseInt(cookies[`${numLives}LifeWins`])
-      let avgTimes = parseInt(cookies[`${numLives}LifeAvgTime`])
       setGameOverNote(`Nice! It\'s ${whatIsIt}.`)
-      // ON WIN
-        // ++ won games
-      setCookie('wonGames', parseInt(cookies.wonGames) + 1);
-
-      if(cookies.currentStreak === undefined){
-        setCookie('currentStreak', 1)
-        setCookie('maxStreak', 1)
-      } else {
-        setCookie('currentStreak', parseInt(cookies.currentStreak) + 1);  
-      }
-
-      if(cookies.currentStreak + 1 > cookies.maxStreak){
-        setCookie('maxStreak', parseInt(cookies.maxStreak) + 1);
-      }
-      
-        console.log((lifeWins*avgTimes + cookies.prevTime)/(lifeWins + 1))
-      setCookie(`${[numLives]}LifeWins`, parseInt(cookies[`${numLives}LifeWins`]) + 1);
-      setCookie(`${numLives}LifeAvgTime`, ((lifeWins*avgTimes + cookies.prevTime)/(lifeWins + 1)))
+      handleWinStats(numLives);
     } else {
-      let losses = parseInt(cookies.lostGames)
-      let avgLossTime = parseInt(cookies.avgLossTime)
       setGameOverNote('Bummer...')
-      setCookie(`${numLives}LifeAvgTime`, (( losses * avgLossTime + cookies.prevTime )/(losses + 1)))
-          // Resets current streak
-      setCookie('lostGames', parseInt(cookies.lostGames) + 1);
-      setCookie('currentStreak', 0);      
+      handleLoseStats(numLives)
     }
+
     setGOAlert(true);
     setTimeout(() => {
       setGOAlert(false)
@@ -151,7 +67,7 @@ const App = () => {
   }
 
   const handleGameOverTime = (totalTime, minutes, seconds) => {
-    setCookie('prevTime', totalTime)
+    localStorage.prevTime = totalTime
     setGameOverTime(totalTime);
   }
 
@@ -203,20 +119,21 @@ const App = () => {
     }
 
     if(puzzleReference !== 0){
-      if(!isStarted && puzzleReference == cookies.playedToday){
-        // console.log(cookies.prevGameArray)
+      if(!isStarted && puzzleReference == localStorage.playedToday){
         getPuzzleWhat();
         setPlayedToday(true);
-        setPrevGameArray(cookies.prevGameArray)
-        setPrevLives(cookies.prevLives)
-        setPrevTime(cookies.prevTime)
-        setPrevOutcome(cookies.prevOutcome)
+        setPrevGameArray(JSON.parse(localStorage.prevGameArray))
+        setPrevLives(localStorage.prevLives)
+        setPrevTime(localStorage.prevTime)
+        setPrevOutcome(localStorage.prevOutcome)
       } else {
         getPuzzle();
       }    
     }
     // getPuzzle();
   }, [puzzleReference])
+
+  useEffect(() => {console.log(prevGameArray)}, [prevGameArray])
 
   // HARD MODE: Turns on hard mode (reduces to 1 life), can't turn off mid-game.
   useEffect(() => {
@@ -242,12 +159,6 @@ const App = () => {
       handleGameOver(didWin, lives, gameOverTime)
     }  
   }, [gameOver])
-
-  useEffect(() => {  
-    if(cookies.playedToday == puzzleReference){
-     // setPlayedToday(true);
-    }
-  }, [cookies])
 
   const loseLife = () => {
     setLives(lives - 1);
@@ -311,17 +222,13 @@ const App = () => {
       case 'about':
         return <About closeMenu={isSeen} isDarkMode={isDarkMode} closing={closing}/>
       case 'stats':
-        return <Stats closeMenu={isSeen} isDarkMode={isDarkMode} closing={closing} gameOver={gameOver} didWin={didWin} cookies={cookies} copyToClipboard={copyToClipboard} playedToday={playedToday}/>
+        return <Stats closeMenu={isSeen} isDarkMode={isDarkMode} closing={closing} gameOver={gameOver} didWin={didWin} cookies={localStorage} copyToClipboard={copyToClipboard} playedToday={playedToday}/>
       case 'settings':
         return <Settings closeMenu={isSeen} hardMode={hardMode} switchHardMode={switchHardMode} switchDarkMode={switchDarkMode} isDarkMode={isDarkMode} closing={closing} version={puzzleReference}/>
       default:
         return;
     }
   }
-
-  // useEffect(() => {
-  //   console.log(whatIsIt);
-  // }, [whatIsIt])
 
   return (
     <div id={'cover-screen'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
@@ -339,7 +246,7 @@ const App = () => {
         }
         <Footer lives={lives} maxLives={maxLives} isStarted={isStarted} startGame={startGame} ping={ping} 
                 gameOver={gameOver} handleGameOverTime={handleGameOverTime} playedToday={playedToday} 
-                prevTime={cookies.prevTime} prevLives={cookies.prevLives} preGameAnim={preGameAnim}
+                prevTime={localStorage.prevTime} prevLives={localStorage.prevLives} preGameAnim={preGameAnim}
                 whatIsIt={whatIsIt}/>
       </div>
     </div>

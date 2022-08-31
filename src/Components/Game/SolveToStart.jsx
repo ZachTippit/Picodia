@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Grid } from '@mui/material'
-
-
 import StartClues from './StartClues.jsx'
 import StartCell from './StartCell.jsx'
-import '../styles.css';
 import { createGameObject } from '../../lib/game.js';
 
 

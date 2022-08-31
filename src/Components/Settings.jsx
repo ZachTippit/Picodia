@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './styles.css';
 import './slider.css';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
