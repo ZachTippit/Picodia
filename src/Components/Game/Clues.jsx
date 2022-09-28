@@ -24,7 +24,7 @@ const Clues = ({cell, index, rowOrCol, isStarted}) => {
         <Grid container direction={rowOrCol} justifyContent='flex-end' alignItems='center' style={{height: '100%'}} columnSpacing={1} draggable='false'>
             {cell.map((clue, index2) => (
               <Grid item key={`${rowOrCol}-clue-item@${index2}`} className={`clue-${rowOrCol}`} draggable='false'>
-                  <p className={(isStarted ? `fade-in-${rowOrCol} shown` : 'hidden')} draggable='false'>{clue}</p>
+                  <p className={`fade-in-${rowOrCol}`} draggable='false'>{clue}</p>
               </Grid>))}
         </Grid>
     </Grid>  

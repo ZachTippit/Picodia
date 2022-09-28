@@ -1,8 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import { Grid } from '@mui/material';
 import ExampleRow from './ExampleRow';
+import { useSelector } from 'react-redux'
+import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 
-const ExampleGrid = ({nextStart, order, isDarkMode}) => {
+const ExampleGrid = ({nextStart, order}) => {
+  const isDarkMode = useSelector(selectGameConfig).isDarkMode
     const [nextAnim, setNextAnim] = useState(-1);
 
     const onToNext = () => {
@@ -22,7 +25,7 @@ const ExampleGrid = ({nextStart, order, isDarkMode}) => {
                     <p style={{margin: 0, textAlign: 'center', paddingRight: '0.5rem'}}>3</p>
                 </Grid>
                 <Grid item xs alignSelf={'center'}>
-                    <p style={{margin: 0, textAlign: 'right', paddingRight: '0.5rem'}}>{}</p>
+                  <p style={{margin: 0, textAlign: 'center', paddingRight: '0.5rem'}}>1</p>
                 </Grid>
                 <Grid item xs alignSelf={'center'}>
                     <p style={{margin: 0, textAlign: 'center', paddingRight: '0.5rem'}}>1</p>

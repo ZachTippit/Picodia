@@ -4,10 +4,20 @@ import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import LoseExampleRow from './LoseExampleRow';
 import ExampleGrid from './ExampleGrid';
+import { useSelector } from 'react-redux'
+import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
+import { selectClosing } from '../features/windowHandler/windowHandlerSlice';
 
-const About = ({closeMenu, isDarkMode, closing}) => {
+const About = ({closeMenu}) => {
+  const isDarkMode = useSelector(selectGameConfig).isDarkMode
 
+  const [closing, setClosing] = useState(false);
   const [nextAnim, setNextAnim] = useState(0);
+
+  const closeWindow = () => {
+    setClosing(true)
+    closeMenu('')
+  }
 
   const onToNext = () => {
     setNextAnim(nextAnim + 1);
@@ -26,8 +36,8 @@ const About = ({closeMenu, isDarkMode, closing}) => {
   }, [nextAnim])
 
   return (
-    <div id={'about'} className={'fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ') + (closing && 'fade-out-bottom')}>
-      <img className={'close-btn-about'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu('')}/>
+    <div id={'about'} className={'fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ') + (closing && ' fade-out-bottom')}>
+      <img className={'close-btn-about'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeWindow('')}/>
       <div className={'section-header'}>
         <h2 style={{fontSize: '1.25rem'}}>PICODIA RULES</h2>
         <p>Solve the <b>Nonogram</b> with less than 3 mistakes. You win if you complete puzzle correctly by filling in all of the correct cells.</p>

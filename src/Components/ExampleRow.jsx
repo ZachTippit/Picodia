@@ -1,7 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import { Grid } from '@mui/material'
+import { useSelector } from 'react-redux'
+import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 
-const ExampleRow = ({exClue, exArray, nextStart, onToNext, order, isDarkMode}) => {
+const ExampleRow = ({exClue, exArray, nextStart, onToNext, order}) => {
+    const isDarkMode = useSelector(selectGameConfig).isDarkMode
+
     const [nextAnim, setNextAnim] = useState();
 
     useEffect(() => {

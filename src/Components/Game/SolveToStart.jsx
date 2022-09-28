@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Grid } from '@mui/material'
-import StartClues from './StartClues.jsx'
+import Clues from './Clues'
 import StartCell from './StartCell.jsx'
 import { createGameObject } from '../../lib/game.js';
+import { useSelector } from 'react-redux'
+import { selectGameConfig } from '../../features/gameConfig/gameConfigSlice';
 
 
 const answer = [[1,1,1],[1,0,0],[1,0,1]]
 const blank = [[2,2,2],[2,2,2],[2,2,2]];
 
-const SolveToStart = ({isStarted, preGameAnim, isDarkMode, handleWin, wrongSolveToStart, playedToday}) => {
+const SolveToStart = ({isStarted, preGameAnim, handleWin, wrongSolveToStart, playedToday}) => {
+    const isDarkMode = useSelector(selectGameConfig).isDarkMode
 
     const [correctSquares, setCorrectSquares] = useState(0)
     const [winNum, setWinNum] = useState(6)
@@ -48,15 +51,15 @@ const SolveToStart = ({isStarted, preGameAnim, isDarkMode, handleWin, wrongSolve
                             // Blank top-left corner
                             <Grid item xs={1} key={`blank@${index}`} />
                             :
-                            // Column StartClues (if index is in the first row)
+                            // Column Clues (if index is in the first row)
                             <>
                                 { (parseInt(index/gridSize)===0)  ? 
-                                <StartClues cell={cell} index={index} rowOrCol={'column'} key={`clues-col-${index}`} isStarted={isStarted}/>
+                                <Clues cell={cell} index={index} rowOrCol={'column'} key={`clues-col-${index}`} isStarted={isStarted}/>
                                 : 
-                            // Row StartClues (in index is on far left side after the first row)  
+                            // Row Clues (in index is on far left side after the first row)  
                                 <>
                                     { index%gridSize === 0 ? 
-                                    <StartClues cell={cell} index={index} rowOrCol={'row'} key={`clues-row-${index}`} isStarted={isStarted} />
+                                    <Clues cell={cell} index={index} rowOrCol={'row'} key={`clues-row-${index}`} isStarted={isStarted} />
                                     :
                             // Space creator for above.
                                     <>

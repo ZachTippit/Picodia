@@ -2,8 +2,13 @@ import React, {useState, useEffect} from 'react'
 import { Grid } from '@mui/material'
 import {default as Heart} from '../assets/heart.png'
 import {default as EmptyHeart} from '../assets/empty-heart.png'
+import { useSelector } from 'react-redux'
+import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 
-const LoseExampleRow = ({exClue, exArray, nextStart, order, isDarkMode}) => {
+
+const LoseExampleRow = ({exClue, exArray, nextStart, order}) => {
+    const isDarkMode = useSelector(selectGameConfig).isDarkMode
+
     const [nextAnim, setNextAnim] = useState(-1);
     const [fakeGameOver, setFakeGameOver] = useState();
 

@@ -1,70 +1,26 @@
-# Getting Started with Create React App
+#   Picodia Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Picodia is a web-based game based on a combination between Picross puzzles and the daily nature of Wordle. The tech stack is JS/React, MUI for styling and utilizes local storage for the caching of user play data.
 
-## Available Scripts
+##  Current Works-in-Progress
 
-In the project directory, you can run:
+The current version of the project is missing some key features, which will be added as development continues:
 
-### `npm start`
+    -   Ability to "mark" squares for ease of play
+    -   Replayability of previous levels (still need to figure out implementation)
+    -   Re-do tutorial for greater clarity of the rules
+    -   Change cookies storage to local storage
+    -   Re-implement state management into Redux
+    -   Refactor css into variables for ease of editing
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+##  External Integrations
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+There are a few external platforms that this app communicates with.
 
-### `npm test`
+Presently, the app is connected into a spreadsheet holding all of the puzzles (using the Google Sheets API). This is restrictive from a scale perspective (~20k reads/daily), and is not a programmatically secure solution.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+In the next phase of development, the app will connect into a Node/Express backend hosted on GCP to read puzzles. This will be managed by an admin/backend app built in Golang. The hope is to containerize the front end components (probably just this game) to allow greater scalability and practice with implementing Docker/K8s.
 
-### `npm run build`
+##  Testing Framework
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Picodia does not currently have a testing framework. This should change.

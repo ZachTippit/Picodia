@@ -4,10 +4,19 @@ import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
+import { useSelector } from 'react-redux'
+import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
+import { selectClosing } from '../features/windowHandler/windowHandlerSlice';
 
+const Stats = ({closeMenu, cookies, gameOver, playedToday, copyToClipboard}) => {
+  const isDarkMode = useSelector(selectGameConfig).isDarkMode
 
-const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, playedToday, copyToClipboard}) => {
+  const [closing, setClosing] = useState(false);
 
+  const closeWindow = () => {
+    setClosing(true)
+    closeMenu('')
+  }
   // useEffect(() => {
   //   console.log(cookies);
   // }, [cookies])
@@ -25,7 +34,7 @@ const Stats = ({closeMenu, cookies, isDarkMode, closing, gameOver, playedToday, 
 
   return (
     <div className={'full-screen-cover fade-in-fwd ' + (closing && 'fade-out-bck')}>
-      <div className={'full-screen-container'} onClick={() => closeMenu()}>
+      <div className={'full-screen-container'} onClick={() => closeWindow()}>
         <div className={'card fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ')}>
           <img className={'close-btn-stats'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeMenu()}/>
           <h2 style={{textAlign: 'center', fontSize: '1.25rem'}}>STATISTICS</h2>

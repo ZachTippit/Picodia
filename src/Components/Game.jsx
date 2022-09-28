@@ -3,16 +3,22 @@ import { Grid } from '@mui/material'
 import Clues from './Game/Clues.jsx'
 import Cell from './Game/Cell.jsx'
 import { createGameObject } from '../lib/game.js';
+import { useDispatch, useSelector } from 'react-redux'
+import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
+import { loseLife } from '../features/gameState/gameStateSlice.js';
+
 
 const answer = [[1,1,0,0,0,0,0,1], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,1]];
 
 const blank = [[2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2]]
 
-const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, handleWin, didWin, handlePrevGameArray, prevGameArray, playedToday}) => {
+const Game = ({isStarted, puzzle, gameOver, handleWin, didWin, handlePrevGameArray, prevGameArray, playedToday}) => {
+    const dispatch = useDispatch()
+    const isDarkMode = useSelector(selectGameConfig).isDarkMode
 
-    useEffect(() => {
-        console.log(prevGameArray)
-    }, [])
+    // useEffect(() => {
+    //     console.log(prevGameArray)
+    // }, [])
 
     const [correctSquares, setCorrectSquares] = useState(0)
     const [winNum, setWinNum] = useState(4)
@@ -39,7 +45,7 @@ const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, 
         } else {
             setAnswerArray(answerArray[parseInt(cellNum/gridSize) - 1][cellNum%gridSize - 2])
             ansArr[parseInt(cellNum/gridSize) - 1][cellNum%gridSize - 2] = 0;
-            loseLife();
+            dispatch(loseLife());
         }
         setAnswerArray(ansArr);
     }
@@ -79,7 +85,7 @@ const Game = ({isStarted, loseLife, puzzle, gameOver, isDarkMode, pingStartBtn, 
     // }, [gameGrid])
 
   return (
-    <div id='game' onClick={() => pingStartBtn()}>
+    <div id='game'>
         <div id='game-board' className={(!isStarted | gameOver ) ? 'disable-select' : undefined}>
             <Grid container columns={gridSize} className={isStarted ? ' move-on-start' : undefined}>
                 {gameGrid.map((cell, index) => (

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useSwipeable } from 'react-swipeable'
 import { Grid } from '@mui/material'
+import { useSelector } from 'react-redux'
+import { selectGameConfig } from '../../features/gameConfig/gameConfigSlice';
 
 const config = {delta: 1}
 
-const StartCell = ({cell, cellNum, gridSize, isDarkMode, isStarted, handleCell, didWin, nextAnim, order, playedToday}) => {
-    const [guessed, setGuessed] = useState(playedToday);
+const StartCell = ({cell, cellNum, gridSize, isStarted, handleCell, didWin, nextAnim, order, playedToday}) => {
+  const isDarkMode = useSelector(selectGameConfig).isDarkMode  
+  const [guessed, setGuessed] = useState(playedToday);
     const [flagged, setFlagged] = useState(false);
     const [winAnimation, setWinAnimation] = useState(false);
 

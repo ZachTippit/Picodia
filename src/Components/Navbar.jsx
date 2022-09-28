@@ -5,8 +5,11 @@ import {default as Settings } from '../assets/setting.png'
 import {default as QuestionDark } from '../assets/question-dark.png'
 import {default as StatsDark } from '../assets/graph-dark.png'
 import {default as SettingsDark } from '../assets/setting-dark.png'
+import { useSelector } from 'react-redux';
+import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 
-const Navbar = ({openMenu, isDarkMode, pingHowTo}) => {
+const Navbar = ({openMenu, pingHowTo}) => {
+  const isDarkMode = useSelector(selectGameConfig).isDarkMode
   return (
     <div id={'nav'}>
       <img src={(isDarkMode ? Question : QuestionDark)} alt='About icon' id={'nav-about-btn'} className={(pingHowTo ? 'wobble-ver-right ' : ' ')}onClick={() => openMenu('about')}/>    
