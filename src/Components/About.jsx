@@ -51,39 +51,39 @@ const About = ({closeMenu}) => {
         <Carousel  
           swipeable emulateTouch  
           autoPlay infiniteLoop interval={10000}
-          showStatus={false} showIndicators={false}
+          showStatus={false} showIndicators={false} showThumbs={false}
           onChange={onToNext}>
-          <div>
+          <div className='tutorial-tile'>
             <h3>The Basics</h3>
             <ExampleGrid nextStart={nextAnim} order={0} />
-            <p style={{marginTop: '0'}}>Each row and column contains the hint for that row or column. The number on the borders are how many consecutive blocks there are.</p>
+            <p className='about-desc'>Each row and column contains the hint for that row or column. The number on the borders are how many consecutive blocks there are.</p>
           </div>
-          <div>
+          <div className='tutorial-tile'>
             <h3>Reading the Clues</h3>
             <ExampleRow exClue={"5"} exArray={[1,1,1,1,1]} nextStart={nextAnim} order={1} />
-            <p style={{marginTop: '2rem'}}>Some clues are obvious and can be figured out from context (ex: 5 blocks long and a space between each number...)</p>
+            <p>Some clues are obvious and can be figured out from context (ex: 5 blocks long and a space between each number...)</p>
           </div>
-          <div>
+          <div className='tutorial-tile'>
             <h3>Consecutive Numbers</h3>
             <ExampleRow exClue={"4"} exArray={[1,1,1,1,'']} nextStart={nextAnim} order={2} />
             <ExampleRow exClue={"4"} exArray={['',1,1,1,1]} nextStart={nextAnim} order={2} />
-            <p style={{marginTop: '2rem'}}><b>Careful!</b> Even if the numbers are consecutive, you must use the other clues to determine where it goes.</p>
+            <p ><b>Careful!</b> Even if the numbers are consecutive, you must use the other clues to determine where it goes.</p>
           </div>
-          <div>
+          <div className='tutorial-tile'>
             <h3>Mind the gaps!</h3>
             <ExampleRow exClue={"2 2"} exArray={[1,1,'',1,1]} nextStart={nextAnim} order={3} />
-            <p style={{marginTop: '2rem'}}>Some clues are obvious and can be figured out from context (ex: 5 blocks long and a space between each number...)</p>
+            <p>Some clues are obvious and can be figured out from context (ex: 5 blocks long and a space between each number...)</p>
           </div>
-          <div>
+          <div className='tutorial-tile'>
             <h3>Inferring Empty Blocks</h3>
             <ExampleRow exClue={"3 1"} exArray={[1,1,1,'',1]} nextStart={nextAnim} order={4} />
             <ExampleRow exClue={"2 1"} exArray={[1,1,'','',1]} nextStart={nextAnim} order={4} />
-            <p style={{marginTop: '2rem'}}>If there is more than one number in the clue, there must be at least one empty block between them (but there could be more).</p>
+            <p>If there is more than one number in the clue, there must be at least one empty block between them (but there could be more).</p>
           </div>
-          <div>
+          <div className='tutorial-tile'>
             <h3>Careful - Don't Lose!</h3>
             <LoseExampleRow exClue={"2"} exArray={[1,1,0,0,0]} nextStart={nextAnim} order={5} />
-            <p style={{marginTop: '2rem'}}><b>You only get one chance a day, so play carefully ;)</b> Don't lose all of your lives!</p>
+            <p><b>You only get one chance a day, so play carefully ;)</b> Don't lose all of your lives!</p>
           </div>
         </Carousel>
       </div>

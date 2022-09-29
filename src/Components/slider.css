@@ -1,13 +1,17 @@
 /* The switch - the box around the slider */
 .markup-btn {
   position: absolute;
-  bottom: 0;
+  bottom: 1rem;
   display: flex;
   justify-content: space-between;
   width: 90%;
   -webkit-transform: translateX(70px);
   -ms-transform: translateX(70px);
   transform: translateX(70px);
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
 }
 
 .switch {

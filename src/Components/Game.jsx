@@ -119,7 +119,7 @@ const Game = ({isStarted, gameOver, handleWin, handlePrevGameArray}) => {
                     ))}
                 </Grid>
             </div>
-            <div className={'markup-btn '}>
+            <div className={(isStarted ? ' move-on-start ' : ' ') + ' markup-btn '}>
                 <div className={'section-txt'}>
                     <h3>Markup - {gameState.markUp ? "On" : "Off"}</h3>
                     <p>Toggle to mark up (or right-click on a computer)</p>
