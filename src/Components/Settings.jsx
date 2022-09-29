@@ -63,7 +63,16 @@ const Settings = ({closeMenu, version}) => {
             <a href='https://www.zachtippit.com' target='_blank' rel="noreferrer"><span className={'feedback-link'}>Portfolio</span></a>
           </div>
         </div>
-      </div>
+        {/* <div className={'setting '}>
+          <div className={'section-txt'}>
+            <h3>VERSION NOTES</h3>
+            <p>Interested in the development history? Check it out!</p>
+          </div>
+          <div id={'feedback-txt'}>
+            <a href='https://www.zachtippit.com' target='_blank' rel="noreferrer"><span className={'feedback-link'}>Dev Log</span></a>
+          </div>
+        </div>
+      </div> */}
       <div id={'setting-footer'}>
         <div>
           <p>©2022 by Zach Tippit</p>

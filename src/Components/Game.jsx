@@ -54,8 +54,9 @@ const Game = ({isStarted, gameOver, handleWin, handlePrevGameArray}) => {
     }, [correctSquares])
 
     useEffect(() => {
+        
         let puzzle = gameConfig.dailyPuzzle
-
+        console.log(puzzle)
         if(!Array.isArray(puzzle)){
             puzzle = JSON.parse(puzzle)
         }
