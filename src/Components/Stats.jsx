@@ -8,8 +8,9 @@ import { useSelector } from 'react-redux'
 import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 import { selectClosing } from '../features/windowHandler/windowHandlerSlice';
 
-const Stats = ({closeMenu, cookies, gameOver, playedToday, copyToClipboard}) => {
+const Stats = ({closeMenu, gameOver, copyToClipboard}) => {
   const isDarkMode = useSelector(selectGameConfig).isDarkMode
+  const gameConfig = useSelector(state => state.gameConfig)
 
   const [closing, setClosing] = useState(false);
 
@@ -17,9 +18,6 @@ const Stats = ({closeMenu, cookies, gameOver, playedToday, copyToClipboard}) => 
     setClosing(true)
     closeMenu('')
   }
-  // useEffect(() => {
-  //   console.log(cookies);
-  // }, [cookies])
 
   const timeParser = (avgTime) => {
     const minutes = parseInt(avgTime/60);
@@ -41,19 +39,19 @@ const Stats = ({closeMenu, cookies, gameOver, playedToday, copyToClipboard}) => 
           <div id={'stat-holder'}>
             <div id={'stat-summary'}>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{cookies.totalGames | 0}</p>
+                <p className={'stat-num'}>{localStorage.totalGames | 0}</p>
                 <p className={'stat-label'}>Played</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{(isNaN(cookies.wonGames/cookies.totalGames * 100) ? 0 : `${(cookies.wonGames/cookies.totalGames * 100).toFixed(1)}%`) | '00.0%'}</p>
+                <p className={'stat-num'}>{(isNaN(localStorage.wonGames/localStorage.totalGames * 100) ? 0 : `${(localStorage.wonGames/localStorage.totalGames * 100).toFixed(1)}%`) | '00.0%'}</p>
                 <p className={'stat-label'}>Win %</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{cookies.currentStreak | 0}</p>
+                <p className={'stat-num'}>{localStorage.currentStreak | 0}</p>
                 <p className={'stat-label'}>Current Streak</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{cookies.maxStreak | 0}</p>
+                <p className={'stat-num'}>{localStorage.maxStreak | 0}</p>
                 <p className={'stat-label'}>Max Streak</p>
               </div>
             </div> 
@@ -66,30 +64,26 @@ const Stats = ({closeMenu, cookies, gameOver, playedToday, copyToClipboard}) => 
                 <img src={Heart} alt='Lives' />
                 <img src={Heart} alt='Lives' />
               </Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{cookies['3LifeWins'] | 0}</p></Grid>
-              {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['3LifeAvgTime'])}</p></Grid> */}
-              <Grid item xs={4} className={'stat-time'}><p>Coming soon :)</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{localStorage['_3LifeWins'] | 0}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage['_3LifeAvgTime'])}</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
                 <img src={Heart} alt='Lives' />
                 <img src={Heart} alt='Lives' />
               </Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{cookies['2LifeWins'] | 0}</p></Grid>
-              {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['2LifeAvgTime'])}</p></Grid> */}
-              <Grid item xs={4} className={'stat-time'}><p>...</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{localStorage['_2LifeWins'] | 0}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage['_2LifeAvgTime'])}</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
                 <img src={Heart} alt='Lives' />
               </Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{cookies['1LifeWins'] | 0}</p></Grid>
-              {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies['1LifeAvgTime'])}</p></Grid> */}
-              <Grid item xs={4} className={'stat-time'}><p>...</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{localStorage['_1LifeWins'] | 0}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage['_1LifeAvgTime'])}</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
                 <img src={EmptyHeart} alt='Lives' />
               </Grid>
-              <Grid item xs={4} className={'stat-time'}><p>{cookies.lostGames | 0}</p></Grid>
-              {/* <Grid item xs={4} className={'stat-time'}><p>{timeParser(cookies.avgLossTime)}</p></Grid> */}
-              <Grid item xs={4} className={'stat-time'}><p>...</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{localStorage.lostGames | 0}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage.lossAvgTime)}</p></Grid>
             </Grid>
-          {(gameOver || playedToday) &&
+          {(gameOver || gameConfig.playedToday) &&
               <>
               <Divider sx={{width: '80%', m: 'auto', my: 2}}/>
               <div className='end-game-txt'>

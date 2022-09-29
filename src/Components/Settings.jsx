@@ -4,11 +4,12 @@ import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { togglesDarkMode, selectGameConfig } from '../features/gameConfig/gameConfigSlice';
-import { toggleHardMode } from '../features/gameState/gameStateSlice';
+import { selectGameState, toggleHardMode } from '../features/gameState/gameStateSlice';
 
-const Settings = ({closeMenu, hardMode, version}) => {
+const Settings = ({closeMenu, version}) => {
   const dispatch = useDispatch();
   const darkMode = useSelector(selectGameConfig).isDarkMode
+  const gameState = useSelector(selectGameState);
 
   const [closing, setClosing] = useState(false);
 
@@ -28,7 +29,7 @@ const Settings = ({closeMenu, hardMode, version}) => {
             <p>Lowers lives to 1! Don't make a mistake :)</p>
           </div>
           <label className=" switch">
-            <input type="checkbox" defaultChecked={hardMode} onClick={() => dispatch(toggleHardMode(false))}/>
+            <input type="checkbox" defaultChecked={gameState.hardMode} onClick={() => dispatch(toggleHardMode(false))}/>
             <span className="slider round"></span>
           </label>
         </div>

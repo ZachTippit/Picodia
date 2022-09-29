@@ -10,10 +10,10 @@ export const gameConfig = {
     whatIsIt: '',
     lastPlayed: 0,
     isDarkMode: false,
-
+    playedToday: false
 }
 
-export const statsState = {
+export const statState = {
     prevGameArray: [],
     prevLives: 0,
     prevOutcome: '',

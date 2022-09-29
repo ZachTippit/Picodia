@@ -1,74 +1,75 @@
 import React, { useState, useEffect } from 'react'
-import { useSwipeable } from 'react-swipeable'
 import { useSelector } from 'react-redux'
 import { selectGameConfig } from '../../features/gameConfig/gameConfigSlice';
 import { Grid } from '@mui/material'
+import { selectGameState } from '../../features/gameState/gameStateSlice';
 
 const config = {delta: 1}
 
-const Cell = ({cell, cellNum, gridSize, isStarted, handleCell, didWin, nextAnim, order, playedToday}) => {
+const Cell = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
   const isDarkMode = useSelector(selectGameConfig).isDarkMode
- 
-  const [guessed, setGuessed] = useState(playedToday);
-    const [flagged, setFlagged] = useState(false);
-    const [winAnimation, setWinAnimation] = useState(false);
 
-    // const swipeCheck = useSwipeable({
-    //   onSwiping: (eventData => {handleGuess(); console.log(eventData);}),
-    //   config
-    // })
- 
-    const handleGuess = () => {
-        setGuessed(true)
+  const gameConfig = useSelector(state => state.gameConfig)
+  const gameState = useSelector(selectGameState)
+
+  const [guessed, setGuessed] = useState(gameConfig.playedToday);
+  const [flagged, setFlagged] = useState(false);
+  const [winAnimation, setWinAnimation] = useState(false);
+
+  const handleGuess = () => {
+    if (gameState.markUp){
+      setFlagged(!flagged)
+    } else {
+      setGuessed(true)
+    }
+  }
+
+  const handleFlagged = () => {
+    console.log('test')
+    setFlagged(!flagged);
+  }
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    if(e.button===0){
+      handleGuess();
+    } else if(e.button===1) {
+      handleFlagged();
+    }
+  }
+
+  useEffect(() => {
+      if(guessed){
+          cell ? handleCell(true, cellNum) : handleCell(false, cellNum)
+      }
+  }, [guessed, cell])
+
+  useEffect(() => {
+    if(nextAnim === order && gameState.didWin){
+      setWinAnimation(true);
     }
 
-    const handleFlagged = () => {
-      setFlagged(!flagged);
+  }, [nextAnim])
+
+  useEffect(() => {
+    if(gameConfig.playedToday && gameState.isStarted){
+      setGuessed(gameConfig.playedToday);
     }
-
-    const handleClick = (e) => {
-      e.preventDefault();
-      if(e.button===0){
-        handleGuess();
-      } else if(e.button===1) {
-        handleFlagged();
-      }
-    }
-
-    useEffect(() => {
-        if(guessed){
-            cell ? handleCell(true, cellNum) : handleCell(false, cellNum)
-        }
-    }, [guessed, cell])
-
-    useEffect(() => {
-      if(nextAnim === order && didWin){
-        setWinAnimation(true);
-      }
-
-    }, [nextAnim])
-
-    useEffect(() => {
-      if(playedToday){
-        setGuessed(playedToday);
-      }
-    }, [playedToday])
+  }, [gameConfig.playedToday])
 
   return (
     <Grid item xs={1} 
       className={'cell '
                 + (isDarkMode ? 'light-' : 'dark-') 
-                + (playedToday ? ((cell === 1 ? 'right pulsate-fwd ' : cell === 0 ? ' wrong pulsate-fwd ' : ' flagged pulsate-fwd ')) : 
+                + (gameConfig.playedToday ? ((cell === 1 ? 'right pulsate-fwd ' : cell === 0 ? ' wrong pulsate-fwd ' : ' flagged pulsate-fwd ')) : 
                   (guessed ? (cell ? 'right pulsate-fwd ' : ' wrong pulsate-fwd ') : ' '))
                 + (flagged ? ' flagged ' : ' ')
                 + (winAnimation ? ' win-animation': '')
-                + ((isStarted && parseInt(cellNum/gridSize) == 5) ? ' horz-mid-thick ' : ' ' )
-                + ((isStarted && cellNum%gridSize == 5) ? ' vert-mid-thick ' : ' ')
+                + ((gameState.isStarted && parseInt(cellNum/gridSize) == 5) ? ' horz-mid-thick ' : ' ' )
+                + ((gameState.isStarted && cellNum%gridSize == 5) ? ' vert-mid-thick ' : ' ')
               }
-      onMouseUp={(e) => handleClick(e)} onDragEnter={(e) => handleClick(e)}
-      onDragLeave={(e) => handleClick(e)}
+      onMouseUp={(e) => handleClick(e)}
       onContextMenu={(e) => { e.preventDefault(); handleFlagged()}}
-      onTouchStart={() => handleGuess()} onTouchMove={() => handleGuess()}
       // {...swipeCheck}
       >
     </Grid>

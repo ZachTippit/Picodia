@@ -2,6 +2,7 @@
 // Want to take answer array and turn it into a game object to render and use
 
 const rowClues = (answer) => {
+    
     let rowClueArray = [];
     answer.forEach(row => {
         let consecutive = 0;
@@ -25,10 +26,16 @@ const rowClues = (answer) => {
         })   
         rowClueArray.push(rowIndex);        
     })
+
+    if(rowClueArray.length === 0){
+        rowClueArray.push(' ')
+    }
+
     return rowClueArray;
 }
 
 const colClues = (answer) => {
+
     let colClueArray = [];
     for (let col in [...Array(answer.length).keys()]){
         let consecutive = 0;
@@ -57,10 +64,16 @@ const colClues = (answer) => {
         }  
         colClueArray.push(colIndex); 
     } 
+
+    if(colClueArray.length === 0){
+        colClueArray.push(' ')
+    }
+
     return colClueArray;
 }
 
 const gameArray = (answer) => {
+
     // Need value 
     const flatArr = [];
     answer.forEach(row => {

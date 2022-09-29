@@ -4,37 +4,34 @@ import Clues from './Game/Clues.jsx'
 import Cell from './Game/Cell.jsx'
 import { createGameObject } from '../lib/game.js';
 import { useDispatch, useSelector } from 'react-redux'
-import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
-import { loseLife } from '../features/gameState/gameStateSlice.js';
+import { toggleMarkup } from '../features/gameState/gameStateSlice'
+import { loseLife, selectGameState } from '../features/gameState/gameStateSlice.js';
 
 
 const answer = [[1,1,0,0,0,0,0,1], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,1]];
 
 const blank = [[2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2]]
 
-const Game = ({isStarted, puzzle, gameOver, handleWin, didWin, handlePrevGameArray, prevGameArray, playedToday}) => {
+const Game = ({isStarted, gameOver, handleWin, handlePrevGameArray}) => {
     const dispatch = useDispatch()
-    const isDarkMode = useSelector(selectGameConfig).isDarkMode
 
-    // useEffect(() => {
-    //     console.log(prevGameArray)
-    // }, [])
+    const gameConfig = useSelector(state => state.gameConfig)
+    const gameState = useSelector(state => state.gameState)
 
     const [correctSquares, setCorrectSquares] = useState(0)
     const [winNum, setWinNum] = useState(4)
     const [gridSize, setGridSize] = useState(10)
     const [gameGrid, setGameGrid] = useState(createGameObject(answer))
-    const [isPuzzleSet, setIsPuzzleSet] = useState(false)
     const [nextAnim, setNextAnim] = useState(0);
     const [answerArray, setAnswerArray] = useState(blank)
 
     useEffect(() => {
-        if((didWin) && (nextAnim < gameGrid.length)){
+        if((gameState.didWin) && (nextAnim < gameGrid.length)){
             setTimeout(() => {
                 setNextAnim(nextAnim + 1)
             }, 50)
         }
-    }, [didWin, nextAnim])
+    }, [gameState.didWin, nextAnim])
 
     const handleGuess = (isCorrect, cellNum) => {
         let ansArr = [...answerArray];
@@ -57,74 +54,83 @@ const Game = ({isStarted, puzzle, gameOver, handleWin, didWin, handlePrevGameArr
     }, [correctSquares])
 
     useEffect(() => {
-        if(!playedToday){
-            // console.log(puzzle)
+        let puzzle = gameConfig.dailyPuzzle
+
+        if(!Array.isArray(puzzle)){
+            puzzle = JSON.parse(puzzle)
+        }
+
+        if(!gameConfig.playedToday && typeof puzzle !== 'undefined'){
             if(puzzle.length > 2){
-                // console.log(puzzle)
-                setGridSize(JSON.parse(puzzle).length + 2)
-                setGameGrid(createGameObject(JSON.parse(puzzle)))
-                setWinNum(JSON.parse(puzzle).flat().reduce((curr, next) => curr + next))
-                setIsPuzzleSet(true)
+                setGridSize(10)
+                setGameGrid(createGameObject(puzzle))
+                setWinNum(puzzle.flat().reduce((curr, next) => curr + next))
             }
         }
-    }, [puzzle])
+    }, [gameConfig.dailyPuzzle])
 
     useEffect(() => {
         handlePrevGameArray(answerArray);
-    }, [didWin])
+    }, [gameState.didWin])
 
     useEffect(() => {
-        if(playedToday){
+        if(gameConfig.playedToday){
             // console.log(prevGameArray);
-            setGameGrid(createGameObject(prevGameArray))
+            setGameGrid(createGameObject(JSON.parse(localStorage.prevGameArray)))
         }
-    }, [playedToday])
+    }, [gameConfig.playedToday])
 
-    // useEffect(() => {
-    //         console.log(gameGrid);
-    // }, [gameGrid])
-
-  return (
-    <div id='game'>
-        <div id='game-board' className={(!isStarted | gameOver ) ? 'disable-select' : undefined}>
-            <Grid container columns={gridSize} className={isStarted ? ' move-on-start' : undefined}>
-                {gameGrid.map((cell, index) => (
-                    <>
-                        { index === 0 || index === 1 ?
-                            // Blank top-left corner
-                            <Grid item xs={1} key={`blank@${index}`} />
-                            :
-                            // Column Clues (if index is in the first row)
-                            <>
-                                { (parseInt(index/gridSize)===0)  ? 
-                                <Clues cell={cell} index={index} rowOrCol={'column'} key={`clues-col-${index}`} isStarted={isStarted}/>
-                                : 
-                            // Row Clues (in index is on far left side after the first row)  
+    return (
+        <div id='game'>
+            <div id='game-board' className={(!isStarted | gameOver ) ? 'disable-select' : ' '}>
+                <Grid container columns={gridSize} className={isStarted ? ' move-on-start' : ' '}>
+                    {gameGrid.map((cell, index) => (
+                        <>
+                            { index === 0 || index === 1 ?
+                                // Blank top-left corner
+                                <Grid item xs={1} key={`blank@${index}`} />
+                                :
+                                // Column Clues (if index is in the first row)
                                 <>
-                                    { index%gridSize === 0 ? 
-                                    <Clues cell={cell} index={index} rowOrCol={'row'} key={`clues-row-${index}`} isStarted={isStarted} />
-                                    :
-                            // Space creator for above.
+                                    { (parseInt(index/gridSize)===0)  ? 
+                                    <Clues cell={cell} index={index} rowOrCol={'column'} key={`clues-col-${index}`} isStarted={isStarted}/>
+                                    : 
+                                // Row Clues (in index is on far left side after the first row)  
                                     <>
-                                    {index%gridSize === 1  ? 
-                                        <div key={`empty${index}`}>
-                                        </div>   
-                                    :   
-                            // Aaaand the cells
-                                        <Cell isDarkMode={isDarkMode} cell={cell} cellNum={index} isStarted={isStarted} gridSize={gridSize} handleCell={handleGuess} key={`cell@${index}`} nextAnim={nextAnim} didWin={didWin} order={index} playedToday={playedToday}/>
-                                    }
-                                    </>     
-                                    }
-                                </>   
-                                }       
-                            </>
-                        } 
-                </>
-                ))}
-            </Grid>
+                                        { index%gridSize === 0 ? 
+                                        <Clues cell={cell} index={index} rowOrCol={'row'} key={`clues-row-${index}`} isStarted={isStarted} />
+                                        :
+                                // Space creator for above.
+                                        <>
+                                        {index%gridSize === 1  ? 
+                                            <div key={`empty${index}`}>
+                                            </div>   
+                                        :   
+                                // Aaaand the cells
+                                            <Cell cell={cell} cellNum={index} isStarted={isStarted} gridSize={gridSize} handleCell={handleGuess} key={`cell@${index}`} nextAnim={nextAnim} order={index} />
+                                        }
+                                        </>     
+                                        }
+                                    </>   
+                                    }       
+                                </>
+                            } 
+                    </>
+                    ))}
+                </Grid>
+            </div>
+            <div className={'markup-btn '}>
+                <div className={'section-txt'}>
+                    <h3>Markup - {gameState.markUp ? "On" : "Off"}</h3>
+                    <p>Toggle to mark up (or right-click on a computer)</p>
+                </div>
+            <label className=" switch">
+                <input type="checkbox" onClick={() => dispatch(toggleMarkup())} defaultChecked={false}/>
+                <span className="slider round"></span>
+            </label>
+            </div>  
         </div>
-    </div>
-  )
+    )
 }
 
 export default Game;

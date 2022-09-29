@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { windowHandler } from "../../app/initialState";
 
 export const windowHandlerSlice = createSlice({

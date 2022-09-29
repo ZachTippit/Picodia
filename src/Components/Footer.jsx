@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectGameState } from '../features/gameState/gameStateSlice'
 import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 
-const Footer = ({gameOver, handleGameOverTime, prevTime, prevLives, preGameAnim}) => {
+const Footer = ({gameOver, handleGameOverTime, preGameAnim}) => {
 
   const gameConfig = useSelector(selectGameConfig)
   const gameState = useSelector(selectGameState);
@@ -35,13 +35,6 @@ const Footer = ({gameOver, handleGameOverTime, prevTime, prevLives, preGameAnim}
 
   useEffect(() => gameOver && handleGameOverTime(totalTime, minutes, seconds), [gameOver])
 
-  // useEffect(() => {
-  //   console.log(playedToday, prevTime, prevLives);
-  // }, [])
-
-
-//  && !playedToday -- checks against if played today
-
   return (
     <div id={'footer'}>
         {(!gameState.isStarted) ? 
@@ -57,7 +50,7 @@ const Footer = ({gameOver, handleGameOverTime, prevTime, prevLives, preGameAnim}
                   <>{
                     gameConfig.playedToday ?
                       <>{
-                        index >= prevLives ?
+                        index >= localStorage.prevLives ?
                           <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={`no-heart${index}`}/> :
                           <img className={'life'} src={Heart} alt='Lives' key={`heart${index}`}/> 
                       }</>
@@ -74,9 +67,9 @@ const Footer = ({gameOver, handleGameOverTime, prevTime, prevLives, preGameAnim}
             <div className='fade-in-fwd move-on-start-footer '>
               <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>TIME</p>
               <div style={{margin: 'auto', textAlign: 'center'}}>
-                <label style={{fontSize: '0.75rem'}}>{pad(gameConfig.playedToday ? parseInt(prevTime/60) : minutes)}</label>
+                <label style={{fontSize: '0.75rem'}}>{pad(gameConfig.playedToday ? parseInt(localStorage.prevTime/60) : minutes)}</label>
                 <label style={{fontSize: '0.75rem'}}>:</label>
-                <label style={{fontSize: '0.75rem'}}>{pad(gameConfig.playedToday ? prevTime%60 : seconds)}</label>
+                <label style={{fontSize: '0.75rem'}}>{pad(gameConfig.playedToday ? localStorage.prevTime%60 : seconds)}</label>
               </div>
             </div>
           </>

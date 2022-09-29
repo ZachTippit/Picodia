@@ -1,14 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { gameConfig, statsState, gameState, windowHandler } from './initialState'
+import { gameConfig, statState, gameState, windowHandler } from './initialState'
 import gameConfigReducer from '../features/gameConfig/gameConfigSlice'
 import gameStateReducer from '../features/gameState/gameStateSlice'
 import windowHandlerReducer from '../features/windowHandler/windowHandlerSlice'
+import statReducer from '../features/stats/statSlice'
 
 export const initialState = {
     gameConfig,
     gameState,
     windowHandler,
-    statsState
+    statState
 }
 
 const setDarkMode = (isDarkMode) => {
@@ -23,6 +24,7 @@ export const store = configureStore({
         gameConfig: gameConfigReducer,
         gameState: gameStateReducer,
         windowHandler: windowHandlerReducer,
+        stats: statReducer,
     },
     initialState
 })

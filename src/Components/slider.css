@@ -1,4 +1,15 @@
 /* The switch - the box around the slider */
+.markup-btn {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  -webkit-transform: translateX(70px);
+  -ms-transform: translateX(70px);
+  transform: translateX(70px);
+}
+
 .switch {
     position: relative;
     display: inline-block;
