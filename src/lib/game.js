@@ -1,6 +1,3 @@
-//Create game object
-// Want to take answer array and turn it into a game object to render and use
-
 const rowClues = (answer) => {
     
     let rowClueArray = [];

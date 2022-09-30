@@ -12,7 +12,7 @@ const Navbar = ({openMenu, pingHowTo}) => {
   const isDarkMode = useSelector(selectGameConfig).isDarkMode
   return (
     <div id={'nav'}>
-      <img src={(isDarkMode ? Question : QuestionDark)} alt='About icon' id={'nav-about-btn'} className={(pingHowTo ? 'wobble-ver-right ' : ' ')}onClick={() => openMenu('about')}/>    
+      <img src={(isDarkMode ? Question : QuestionDark)} alt='About icon' id={'nav-about-btn'} className={(pingHowTo ? 'wobble-ver-right ' : ' ')} onClick={() => openMenu('about')}/>    
       <h1 id={'title'}>PICODIA</h1>
       <div id={'nav-right-btns'}>
         <img src={(isDarkMode ? Stats : StatsDark)} alt='Stats icon' id={'nav-stats-btn'} onClick={() => openMenu('stats')}/>

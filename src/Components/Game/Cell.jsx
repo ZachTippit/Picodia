@@ -24,24 +24,17 @@ const Cell = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
     }
   }
 
-  const handleFlagged = () => {
-    console.log('test')
-    setFlagged(!flagged);
-  }
-
   const handleClick = (e) => {
     e.preventDefault();
     if(e.button===0){
       handleGuess();
     } else if(e.button===1) {
-      handleFlagged();
+      setFlagged(!flagged);
     }
   }
 
   useEffect(() => {
-      if(guessed){
-          cell ? handleCell(true, cellNum) : handleCell(false, cellNum)
-      }
+      guessed && handleCell(cell ? true : false, cellNum)
   }, [guessed, cell])
 
   useEffect(() => {
@@ -69,7 +62,7 @@ const Cell = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
                 + ((gameState.isStarted && cellNum%gridSize == 5) ? ' vert-mid-thick ' : ' ')
               }
       onMouseUp={(e) => handleClick(e)}
-      onContextMenu={(e) => { e.preventDefault(); handleFlagged()}}
+      onContextMenu={(e) => { e.preventDefault(); setFlagged(!flagged)}}
       // {...swipeCheck}
       >
     </Grid>

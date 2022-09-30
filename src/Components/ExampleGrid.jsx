@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Grid } from '@mui/material';
 import ExampleRow from './ExampleRow';
-import { useSelector } from 'react-redux'
-import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 
 const ExampleGrid = ({nextStart, order}) => {
   const [nextAnim, setNextAnim] = useState(-1);

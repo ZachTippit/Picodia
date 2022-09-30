@@ -5,7 +5,7 @@ import Cell from './Game/Cell.jsx'
 import { createGameObject } from '../lib/game.js';
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleMarkup } from '../features/gameState/gameStateSlice'
-import { loseLife, selectGameState } from '../features/gameState/gameStateSlice.js';
+import { loseLife } from '../features/gameState/gameStateSlice.js';
 
 
 const answer = [[1,1,0,0,0,0,0,1], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,1]];
@@ -17,6 +17,7 @@ const Game = ({isStarted, gameOver, handleWin, handlePrevGameArray}) => {
 
     const gameConfig = useSelector(state => state.gameConfig)
     const gameState = useSelector(state => state.gameState)
+    const isMobile = useSelector(state => state.windowHandler.isMobile)
 
     const [correctSquares, setCorrectSquares] = useState(0)
     const [winNum, setWinNum] = useState(4)
@@ -56,7 +57,6 @@ const Game = ({isStarted, gameOver, handleWin, handlePrevGameArray}) => {
     useEffect(() => {
         
         let puzzle = gameConfig.dailyPuzzle
-        console.log(puzzle)
         if(!Array.isArray(puzzle)){
             puzzle = JSON.parse(puzzle)
         }
@@ -123,7 +123,7 @@ const Game = ({isStarted, gameOver, handleWin, handlePrevGameArray}) => {
             <div className={(isStarted ? ' move-on-start ' : ' ') + ' markup-btn '}>
                 <div className={'section-txt'}>
                     <h3>Markup - {gameState.markUp ? "On" : "Off"}</h3>
-                    <p>Toggle to mark up (or right-click on a computer)</p>
+                    <p>Toggle to make notes on puzzle{!isMobile ? ' (or right-click on a computer)' : '.'}</p>
                 </div>
             <label className=" switch">
                 <input type="checkbox" onClick={() => dispatch(toggleMarkup())} defaultChecked={false}/>

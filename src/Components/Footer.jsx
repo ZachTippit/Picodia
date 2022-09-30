@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { selectGameState } from '../features/gameState/gameStateSlice'
 import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 
-const Footer = ({gameOver, handleGameOverTime, preGameAnim}) => {
+const Footer = ({openMenu, gameOver, handleGameOverTime, preGameAnim}) => {
 
   const gameConfig = useSelector(selectGameConfig)
   const gameState = useSelector(selectGameState);
+  const isMobile = useSelector(state => state.windowHandler.isMobile)
+  
   const [totalTime, setTotalTime] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -27,6 +29,10 @@ const Footer = ({gameOver, handleGameOverTime, preGameAnim}) => {
     }
   }, [])
 
+  useEffect(() => {
+    console.log(localStorage.playedPicodia)
+  }, [])
+
   useEffect(() => !gameOver && setSeconds(totalTime%60), [totalTime])
 
   useEffect(() => !gameOver && setMinutes(parseInt(totalTime/60)), [seconds])
@@ -39,7 +45,14 @@ const Footer = ({gameOver, handleGameOverTime, preGameAnim}) => {
     <div id={'footer'}>
         {(!gameState.isStarted) ? 
           <div className={(preGameAnim ? 'fade-out-right ' : ' ')}>
-            <p className={'solve-to-start-txt '}><b>Solve the puzzle to start</b></p>
+            {localStorage.playedPicodia=='false' ? 
+              <div onClick={() => openMenu('about')}>
+                <p className={'solve-to-start-txt '}><b>{isMobile ? 'Tap ' : 'Click here '} to learn how to play!</b></p>
+              </div>  
+              :
+              <p className={'solve-to-start-txt '}><b>Solve the puzzle to start</b></p>
+            }
+            
           </div>
         :
           <>

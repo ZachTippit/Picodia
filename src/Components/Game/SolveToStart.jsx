@@ -4,17 +4,12 @@ import Clues from './Clues'
 import StartCell from './StartCell'
 import { createGameObject } from '../../lib/game.js';
 import { useSelector } from 'react-redux'
-import { selectGameConfig } from '../../features/gameConfig/gameConfigSlice';
 
 
 const answer = [[1,1,1],[1,0,0],[1,0,1]]
-const blank = [[2,2,2],[2,2,2],[2,2,2]];
 
 const SolveToStart = ({preGameAnim, handleWin, wrongSolveToStart}) => {
-    const isDarkMode = useSelector(selectGameConfig).isDarkMode
-
-    const gameConfig = useSelector(state => state.gameConfig)
-    const gameState = useSelector(state => state.gameState)
+    const isDarkMode = useSelector(state => state.gameConfig).isDarkMode
 
     const [correctSquares, setCorrectSquares] = useState(0)
     const [winNum, setWinNum] = useState(6)

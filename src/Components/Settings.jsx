@@ -53,16 +53,6 @@ const Settings = ({closeMenu, version}) => {
             <span className="slider round"></span>
           </label>
         </div> */}
-        <div className={'setting '}>
-          <div className={'section-txt'}>
-            <h3>FEEDBACK</h3>
-            <p>Please reach out with any questions, comments praise or concerns!</p>
-          </div>
-          <div id={'feedback-txt'}>
-            <a href='mailto:zachary.tippit@gmail.com'><span className={'feedback-link'}>Email</span></a>
-            <a href='https://www.zachtippit.com' target='_blank' rel="noreferrer"><span className={'feedback-link'}>Portfolio</span></a>
-          </div>
-        </div>
         {/* <div className={'setting '}>
           <div className={'section-txt'}>
             <h3>VERSION NOTES</h3>
@@ -71,8 +61,17 @@ const Settings = ({closeMenu, version}) => {
           <div id={'feedback-txt'}>
             <a href='https://www.zachtippit.com' target='_blank' rel="noreferrer"><span className={'feedback-link'}>Dev Log</span></a>
           </div>
+        </div>*/}
+        <div className={'setting '}>
+          <div className={'section-txt'}>
+            <h3>REPORT BUGS</h3>
+            <p>Notice something awry? Love the game? Let me know!</p>
+          </div>
+          <div id={'feedback-txt'}>
+            <a href='https://forms.gle/NyVch6Lskic5woJ17' target='_blank' rel="noreferrer"><span className={'feedback-link'}>Report Bugs</span></a>
+          </div>
         </div>
-      </div> */}
+      </div> 
       <div id={'setting-footer'}>
         <div>
           <p>©2022 by Zach Tippit</p>

@@ -43,7 +43,7 @@ const Stats = ({closeMenu, gameOver, copyToClipboard}) => {
                 <p className={'stat-label'}>Played</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{(isNaN(localStorage.wonGames/localStorage.totalGames * 100) ? 0 : `${(localStorage.wonGames/localStorage.totalGames * 100).toFixed(1)}%`) | '00.0%'}</p>
+                <p className={'stat-num'}>{parseFloat(localStorage.winPercent)}%</p>
                 <p className={'stat-label'}>Win %</p>
               </div>
               <div className={'stat-block'}>

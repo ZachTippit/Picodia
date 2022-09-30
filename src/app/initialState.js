@@ -41,4 +41,5 @@ export const windowHandler = {
     startPing: false,
     alert: false,
     goAlert: false,
+    isMobile: window.matchMedia("only screen and (max-width: 760px)").matches
 }

@@ -5,13 +5,14 @@ import SolveToStart from './Components/Game/SolveToStart';
 import { onGameOver, handleWinStats, handleLoseStats, storageInit } from './lib/utilities'
 import { useSelector, useDispatch } from 'react-redux'
 import { _startGame, setDidWin } from './features/gameState/gameStateSlice'
-import { hasPlayedToday, puzzleIs, fetchPuzzle, fetchPuzzleRef } from './features/gameConfig/gameConfigSlice';
+import { hasPlayedToday, fetchPuzzle, fetchPuzzleRef } from './features/gameConfig/gameConfigSlice';
 import { setPath } from './features/windowHandler/windowHandlerSlice'
 import {  } from './features/stats/statSlice'
 
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
 
 const App = () => {
+
   const dispatch = useDispatch();
 
   const gameConfig = useSelector(state => state.gameConfig)
@@ -38,9 +39,7 @@ const App = () => {
     ReactGA.set({ page: window.location.pathname });
     ReactGA.pageview(window.location.pathname);
     // console.log(initialState)
-
     localStorage.length === 0 && storageInit();
-
     // Will clear localStorage
     // localStorage.clear();
     // console.log('Initial localStorage load: ', localStorage)
@@ -105,8 +104,11 @@ const App = () => {
   }
 
   const startGame = () => { 
+
     setPreGameAnim(true)
+    
     setTimeout(() => {
+      localStorage.playedPicodia = true;
       dispatch(_startGame())
       setPreGameAnim(false)
     }, 1200)
@@ -114,6 +116,7 @@ const App = () => {
     setTimeout(() => {
       setStartPing(true)
     }, 3000)
+
     setTimeout(() => {
       setStartPing(false)
     }, 8000)
@@ -226,6 +229,7 @@ const App = () => {
           />
         }
         <Footer 
+          openMenu={isSeen}
           isStarted={gameState.isStarted} 
           startGame={startGame}
           gameOver={gameOver} 

@@ -1,12 +1,14 @@
 // Local Storage Handlers
 
 const storageInit = () => {
-    localStorage.totalGames = 0;       // Total games played
-    localStorage.wonGames = 0;         // Games won
-    localStorage.lostGames = 0         // Games lost
-    localStorage.playedPicodia = true  // Played Picodia before?  
-    localStorage.playedToday = 0       // Played Picodia today? -- saves as daily number to check against
-    localStorage.lostGames = 0         
+    localStorage.totalGames = 0;        // Total games played
+    localStorage.wonGames = 0;          // Games won
+    localStorage.winPercent = 0;      // Percentage of games won   
+    localStorage.lostGames = 0;         // Games lost
+    localStorage.currentStreak = 0;     // Current win streak
+    localStorage.maxStreak = 0;         // Best win streak
+    localStorage.playedPicodia = false; // Played Picodia before?  
+    localStorage.playedToday = 0;       // Played Picodia today? -- saves as daily number to check against        
     localStorage.avgLossTime = 0;
     localStorage.lossAvgTime = 0;
     localStorage._1LifeWins = 0;
@@ -50,29 +52,23 @@ const gameArrayChunker = (gameArray, puzzleSize) => {
 }
 
 const handleWinStats = (numLives) => {
-    let lifeWins = parseInt(localStorage.getItem(`${numLives}LifeWins`))
-    let avgTimes = parseInt(localStorage.getItem(`${numLives}LifeAvgTime`))
+    let lifeWins = parseInt(localStorage.getItem(`_${numLives}LifeWins`))
+    let avgTimes = parseInt(localStorage.getItem(`_${numLives}LifeAvgTime`))
       // ++ won games
     localStorage.wonGames = parseInt(localStorage.wonGames) + 1;
-
-    if(localStorage.currentStreak === undefined){
-      localStorage.currentStreak = 1
-      localStorage.maxStreak = 1
-    } else {
-      localStorage.currentStreak = parseInt(localStorage.currentStreak) + 1;  
-    }
+    localStorage.currentStreak += 1;
 
     if((localStorage.currentStreak + 1) > localStorage.maxStreak){
       localStorage.maxStreak = parseInt(localStorage.maxStreak) + 1;
     }
-    
-    console.log((lifeWins*avgTimes + localStorage.prevTime)/(lifeWins + 1))
 
-    localStorage.setItem(`${[numLives]}LifeWins`, parseInt(localStorage.getItem(`${numLives}LifeWins`)) + 1);
-    localStorage.setItem(`${numLives}LifeAvgTime`, ((lifeWins*avgTimes + localStorage.prevTime)/(lifeWins + 1)))
+    localStorage.winPercent = (parseInt(localStorage.wonGames)/parseInt(localStorage.totalGames) * 100).toFixed(1) | 0
+
+    localStorage.setItem(`_${[numLives]}LifeWins`, parseInt(localStorage.getItem(`_${numLives}LifeWins`)) + 1);
+    localStorage.setItem(`_${numLives}LifeAvgTime`, ((lifeWins*avgTimes + localStorage.prevTime)/(lifeWins + 1)))
 }
 
-const handleLoseStats = (numLives) => {
+const handleLoseStats = () => {
     let losses = parseInt(localStorage.lostGames)
     let avgLossTime = parseInt(localStorage.avgLossTime)
     localStorage.lossAvgTime = (losses * avgLossTime + localStorage.prevTime)/(losses + 1)
