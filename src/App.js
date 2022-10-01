@@ -40,7 +40,7 @@ const App = () => {
     localStorage.length === 0 && storageInit();
     // Will clear localStorage
     // localStorage.clear();
-    console.log('Initial localStorage load: ', localStorage)
+    // console.log('Initial localStorage load: ', localStorage)
   }, [])
 
   // Gets puzzle reference for puzzle fetcher

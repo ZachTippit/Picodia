@@ -1,3 +1,4 @@
+import { responsiveFontSizes } from '@mui/material'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import {gameConfig} from '../../app/initialState'
 
@@ -22,7 +23,8 @@ export const fetchPuzzle = createAsyncThunk('gameConfig/fetchPuzzle', async (puz
 
 //  This will be the puzzle fetcher for the project -- will revisit once backend is set up
 export const fetchDailyPuzzle = createAsyncThunk('gameConfig/fetchDailyPuzzle', async () => {
-    const puzzle = await fetch(`https://us-central1-picodia-prod.cloudfunctions.net/getPuzzle`, {mode: 'no-cors'}).then((response) => console.log(response))
+    const puzzle = await fetch(`https://us-central1-picodia-prod.cloudfunctions.net/getPuzzle`).then(response => response.json())
+    console.log(puzzle)
     // return [puzzle.values[0][0],puzzle.values[0][1]]
 })
 
