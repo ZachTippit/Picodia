@@ -19,6 +19,13 @@ export const fetchPuzzle = createAsyncThunk('gameConfig/fetchPuzzle', async (puz
     return [puzzle.values[0][0],puzzle.values[0][1]]
 })
 
+
+//  This will be the puzzle fetcher for the project -- will revisit once backend is set up
+export const fetchDailyPuzzle = createAsyncThunk('gameConfig/fetchDailyPuzzle', async () => {
+    const puzzle = await fetch(`https://us-central1-picodia-prod.cloudfunctions.net/getPuzzle`).then((response) => console.log(response))
+    // return [puzzle.values[0][0],puzzle.values[0][1]]
+})
+
 export const gameConfigSlice = createSlice({
     name: 'gameConfig',
     initialState: gameConfig,
@@ -62,6 +69,18 @@ export const gameConfigSlice = createSlice({
                 gameConfig.dailyPuzzle = action.payload[1]
             })
             .addCase(fetchPuzzle.rejected, (gameConfig, action) => {
+                gameConfig.status = 'failed'
+                gameConfig.error = action.error.message
+            })
+            .addCase(fetchDailyPuzzle.pending, (gameConfig, action) => {
+                gameConfig.status = 'loading'
+            })
+            .addCase(fetchDailyPuzzle.fulfilled, (gameConfig, action) => {
+                gameConfig.status = 'succeeded'
+                // gameConfig.whatIsIt1 = action.payload[0]
+                // gameConfig.dailyPuzzle1 = action.payload[1]
+            })
+            .addCase(fetchDailyPuzzle.rejected, (gameConfig, action) => {
                 gameConfig.status = 'failed'
                 gameConfig.error = action.error.message
             })

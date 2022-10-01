@@ -21,6 +21,7 @@ const storageInit = () => {
     localStorage.prevLives = 0
     localStorage.prevOutcome = false
     localStorage.prevGameArray = []
+    localStorage.lastPlayed = 0;
 }
 
 const onGameOver = (numLives, win, prevGameArray, puzzleReference) => {
@@ -28,7 +29,7 @@ const onGameOver = (numLives, win, prevGameArray, puzzleReference) => {
         // SAVES CURRENT DAY'S GAME (# lives and T/F for win)
     localStorage.prevLives = numLives
     localStorage.prevOutcome = win  
-
+    localStorage.lastPlayed = puzzleReference
     localStorage.prevGameArray = JSON.stringify(prevGameArray)
         // You've played today
     localStorage.playedToday = puzzleReference;
@@ -56,7 +57,7 @@ const handleWinStats = (numLives) => {
     let avgTimes = parseInt(localStorage.getItem(`_${numLives}LifeAvgTime`))
       // ++ won games
     localStorage.wonGames = parseInt(localStorage.wonGames) + 1;
-    localStorage.currentStreak += 1;
+    localStorage.currentStreak = parseInt(localStorage.currentStreak) + 1;
 
     if((localStorage.currentStreak + 1) > localStorage.maxStreak){
       localStorage.maxStreak = parseInt(localStorage.maxStreak) + 1;

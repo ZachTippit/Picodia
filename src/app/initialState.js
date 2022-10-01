@@ -10,7 +10,9 @@ export const gameConfig = {
     whatIsIt: '',
     lastPlayed: 0,
     isDarkMode: false,
-    playedToday: false
+    playedToday: false,
+    whatIsIt1: '',
+    dailyPuzzle1: Array(8)
 }
 
 export const statState = {

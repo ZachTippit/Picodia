@@ -5,7 +5,7 @@ import SolveToStart from './Components/Game/SolveToStart';
 import { onGameOver, handleWinStats, handleLoseStats, storageInit } from './lib/utilities'
 import { useSelector, useDispatch } from 'react-redux'
 import { _startGame, setDidWin } from './features/gameState/gameStateSlice'
-import { hasPlayedToday, fetchPuzzle, fetchPuzzleRef } from './features/gameConfig/gameConfigSlice';
+import { hasPlayedToday, fetchPuzzle, fetchDailyPuzzle, fetchPuzzleRef } from './features/gameConfig/gameConfigSlice';
 import { setPath } from './features/windowHandler/windowHandlerSlice'
 import {  } from './features/stats/statSlice'
 
@@ -15,15 +15,13 @@ const App = () => {
 
   const dispatch = useDispatch();
 
-  const gameConfig = useSelector(state => state.gameConfig)
-  const gameState = useSelector(state => state.gameState)
+  const {playedToday, puzzleReference,isDarkMode, whatIsIt, whatIsIt1 } = useSelector(state => state.gameConfig)
+  const { isStarted, lives, didWin } = useSelector(state => state.gameState)
   const path = useSelector(state => state.windowHandler.path)
 
   const [isOpen, setIsOpen] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [pingHowTo, setPingHowTo] = useState(false);
-  const [prevGameArray, setPrevGameArray] = useState(localStorage.prevGameArray);
-  const [prevOutcome, setPrevOutcome] = useState()
   const [preGameAnim, setPreGameAnim] = useState(false)
   const [startPing, setStartPing] = useState(false);
   const [alert, setAlert] = useState(false)
@@ -42,13 +40,14 @@ const App = () => {
     localStorage.length === 0 && storageInit();
     // Will clear localStorage
     // localStorage.clear();
-    // console.log('Initial localStorage load: ', localStorage)
+    console.log('Initial localStorage load: ', localStorage)
   }, [])
 
   // Gets puzzle reference for puzzle fetcher
   useEffect(() => {
     const getPuzzleRef = async () => {
       await dispatch(fetchPuzzleRef())
+      await dispatch(fetchDailyPuzzle())
     }
 
     getPuzzleRef();    
@@ -57,27 +56,25 @@ const App = () => {
   // PUZZLE REF FETCHER: Uses google sheets index to pick puzzle (this will create an API limit bottleneck in the future). Also used as daily counter
   useEffect(() => {
     const getPuzzle = async () => {
-      await dispatch(fetchPuzzle(gameConfig.puzzleReference))
+      await dispatch(fetchPuzzle(puzzleReference))
     }
 
     getPuzzle(); 
    
-    if(gameConfig.puzzleReference !== 0){
-      if(!gameState.isStarted && gameConfig.playedToday === localStorage.playedToday){
+    if(puzzleReference !== 0){
+      if(!isStarted && puzzleReference === localStorage.lastPlayed){
         getPuzzle(); 
         dispatch(hasPlayedToday(true));
-        setPrevGameArray(JSON.parse(localStorage.prevGameArray))
-        setPrevOutcome(localStorage.prevOutcome)
       } else {
         getPuzzle(); 
       }    
     }
-  }, [gameConfig.puzzleReference])
+  }, [puzzleReference])
 
   const handleGameOver = (win, numLives) => { 
-    onGameOver(numLives, win, prevGameArray, gameConfig.puzzleReference)
+    onGameOver(numLives, win, localStorage.prevGameArray, puzzleReference)
     if(win){  
-      setGameOverNote(`Nice! It's ${gameConfig.whatIsIt}.`)
+      setGameOverNote(`Nice! It's ${whatIsIt}.`)
       handleWinStats(numLives);
     } else {
       setGameOverNote('Bummer...')
@@ -97,10 +94,6 @@ const App = () => {
   const handleGameOverTime = (totalTime) => {
     localStorage.prevTime = totalTime
     setGameOverTime(totalTime);
-  }
-
-  const handlePrevGameArray = (answerArray) => {
-    setPrevGameArray(answerArray);
   }
 
   const startGame = () => { 
@@ -132,15 +125,15 @@ const App = () => {
 
   // LIVES: Checks for running out of lives.
   useEffect(() => { 
-    if(gameState.lives===0){ 
+    if(lives===0){ 
       dispatch(setDidWin(false)); // REPLACE
       setGameOver(true)
     }
-  }, [gameState.lives])
+  }, [lives])
 
   useEffect(() => { 
     if(gameOver){
-      handleGameOver(gameState.didWin, gameState.lives, gameOverTime)
+      handleGameOver(didWin, lives, gameOverTime)
     }  
   }, [gameOver])
 
@@ -156,10 +149,10 @@ const App = () => {
       let valString = val + '';
       return valString.length < 2 ? "0"+valString : valString;
     }
-    const hearts = (gameConfig.playedToday ? (prevOutcome ? '❤️'.repeat(localStorage.prevLives) : '🖤') : (gameState.didWin ? '❤️'.repeat(gameState.lives) : '🖤'))
+    const hearts = (playedToday ? (localStorage.prevOutcome ? '❤️'.repeat(localStorage.prevLives) : '🖤') : (didWin ? '❤️'.repeat(lives) : '🖤'))
     const prefaceText = '⏱'
-    const gameTime = (gameConfig.playedToday ? localStorage.prevTime : gameOverTime)
-    const copyText = `Picodia #${gameConfig.puzzleReference}    ${hearts}    ${prefaceText}${pad(parseInt(gameTime/60))}:${pad(gameTime%60)}`
+    const gameTime = (playedToday ? localStorage.prevTime : gameOverTime)
+    const copyText = `Picodia #${puzzleReference}    ${hearts}    ${prefaceText}${pad(parseInt(gameTime/60))}:${pad(gameTime%60)}`
     navigator.clipboard.writeText(copyText);
     // alert(copyText);
     setAlert(true)
@@ -180,9 +173,9 @@ const App = () => {
       case 'about':
         return <About closeMenu={isSeen}/>
       case 'stats':
-        return <Stats closeMenu={isSeen} gameOver={gameOver} cookies={localStorage} copyToClipboard={copyToClipboard}/>
+        return <Stats closeMenu={isSeen} gameOver={gameOver} copyToClipboard={copyToClipboard}/>
       case 'settings':
-        return <Settings closeMenu={isSeen} version={gameConfig.puzzleReference}/>
+        return <Settings closeMenu={isSeen} version={puzzleReference}/>
       default:
         return;
     }
@@ -197,29 +190,25 @@ const App = () => {
       case 'gameOver':
         return <Ping note={gameOverNote}/>
       case 'playedToday':
-        return <Ping note={`You have already played today. It was ${gameConfig.whatIsIt}!`} />
+        return <Ping note={`You have already played today. It was ${whatIsIt}!`} />
       default:
         return
     }
   }
  
   return (
-    <div id={'cover-screen'} className={(gameConfig.isDarkMode ? 'dark-theme' : 'light-theme')}>
-      <div id={'app'} className={(gameConfig.isDarkMode ? 'dark-theme' : 'light-theme')}>
+    <div id={'cover-screen'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
+      <div id={'app'} className={(isDarkMode ? 'dark-theme' : 'light-theme')}>
         <Navbar openMenu={isSeen} pingHowTo={pingHowTo}/>
-        { (gameConfig.playedToday && !isOpen) && showPing('playedToday') }
-        { (startPing && !gameConfig.playedToday) && showPing('goodLuck')}
+        { (playedToday && !isOpen) && showPing('playedToday') }
+        { (startPing && !playedToday) && showPing('goodLuck')}
         { goAlert && showPing('gameOver') }
         { alert && showPing('copiedToClipboard') }
         { isOpen && showWindow()}
-        { gameState.isStarted ? 
+        { isStarted ? 
           <Game 
-            puzzle={gameConfig.dailyPuzzle} 
-            isStarted={gameState.isStarted} 
             gameOver={gameOver} 
             handleWin={handleWin} 
-            handlePrevGameArray={handlePrevGameArray} 
-            prevGameArray={prevGameArray}
           />
           :
           <SolveToStart 
@@ -230,7 +219,7 @@ const App = () => {
         }
         <Footer 
           openMenu={isSeen}
-          isStarted={gameState.isStarted} 
+          isStarted={isStarted} 
           startGame={startGame}
           gameOver={gameOver} 
           handleGameOverTime={handleGameOverTime}

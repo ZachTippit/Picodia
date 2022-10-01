@@ -12,12 +12,13 @@ const answer = [[1,1,0,0,0,0,0,1], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,0], [0,0,0,
 
 const blank = [[2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2]]
 
-const Game = ({isStarted, gameOver, handleWin, handlePrevGameArray}) => {
+const Game = ({gameOver, handleWin}) => {
     const dispatch = useDispatch()
 
     const gameConfig = useSelector(state => state.gameConfig)
     const gameState = useSelector(state => state.gameState)
     const isMobile = useSelector(state => state.windowHandler.isMobile)
+    const isStarted = useSelector(state => state.gameState.isStarted)
 
     const [correctSquares, setCorrectSquares] = useState(0)
     const [winNum, setWinNum] = useState(4)
@@ -71,7 +72,7 @@ const Game = ({isStarted, gameOver, handleWin, handlePrevGameArray}) => {
     }, [gameConfig.dailyPuzzle])
 
     useEffect(() => {
-        handlePrevGameArray(answerArray);
+        localStorage.prevGameArray = answerArray
     }, [gameState.didWin])
 
     useEffect(() => {
