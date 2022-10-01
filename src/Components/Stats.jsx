@@ -43,7 +43,7 @@ const Stats = ({closeMenu, gameOver, copyToClipboard}) => {
                 <p className={'stat-label'}>Played</p>
               </div>
               <div className={'stat-block'}>
-                <p className={'stat-num'}>{parseFloat(localStorage.winPercent)}%</p>
+                <p className={'stat-num'}>{isNaN(parseFloat(localStorage.winPercent)) ? 0 : parseFloat(localStorage.winPercent)}%</p>
                 <p className={'stat-label'}>Win %</p>
               </div>
               <div className={'stat-block'}>
