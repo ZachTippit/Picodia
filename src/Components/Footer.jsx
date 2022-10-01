@@ -29,10 +29,6 @@ const Footer = ({openMenu, gameOver, handleGameOverTime, preGameAnim}) => {
     }
   }, [])
 
-  useEffect(() => {
-    console.log(localStorage.playedPicodia)
-  }, [])
-
   useEffect(() => !gameOver && setSeconds(totalTime%60), [totalTime])
 
   useEffect(() => !gameOver && setMinutes(parseInt(totalTime/60)), [seconds])
