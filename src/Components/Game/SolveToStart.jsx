@@ -18,10 +18,10 @@ const SolveToStart = () => {
     const [correctCellCount, setCorrectCellCount] = useState(0)
 
     const handleGuess = (isCorrect) => {
-        if(isCorrect){
+        if(isCorrect){ 
             setCorrectCellCount(correctCellCount + 1);
-        } else {
-            wrongSolveToStart();
+        } else { 
+            wrongSolveToStart(); 
         }
     }
 

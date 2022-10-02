@@ -134,7 +134,7 @@ html {
     position: absolute;
     top: 0;
     z-index: 1;
-    min-height: 96vh;
+    min-height: 94vh;
     max-width: 450px;
     margin: auto;
     overflow-y: auto;
@@ -591,6 +591,7 @@ html {
 
     #about {
         width: 100%;
+        min-height: 100vh;
     }
 
     #stats-card {
