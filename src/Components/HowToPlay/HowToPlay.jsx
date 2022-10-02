@@ -1,17 +1,17 @@
 import React, {useState, useEffect} from 'react';
-import ExampleRow from './ExampleRow';
-import {default as Close} from '../assets/close.png'
-import {default as CloseDark} from '../assets/close-dark.png'
-import LoseExampleRow from './LoseExampleRow';
-import ExampleGrid from './ExampleGrid';
 import { useSelector } from 'react-redux'
-import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
-import { selectClosing } from '../features/windowHandler/windowHandlerSlice';
 import { Carousel } from 'react-responsive-carousel'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-const About = ({closeMenu}) => {
-  const isDarkMode = useSelector(selectGameConfig).isDarkMode
+import ExampleGrid from './ExampleGrid';
+import ExampleRow from './ExampleRow';
+import LoseExampleRow from './LoseExampleRow';
+
+import {default as Close} from '../../assets/close.png'
+import {default as CloseDark} from '../../assets/close-dark.png'
+
+const HowToPlay = ({closeMenu}) => {
+  const isDarkMode = useSelector(state => state.gameConfig.isDarkMode)
   const isMobile = useSelector(state => state.windowHandler.isMobile)
 
   const [closing, setClosing] = useState(false);
@@ -85,4 +85,4 @@ const About = ({closeMenu}) => {
   )
 };
 
-export default About;
+export default HowToPlay;

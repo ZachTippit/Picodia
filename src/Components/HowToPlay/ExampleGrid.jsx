@@ -30,7 +30,7 @@ const ExampleGrid = ({nextStart, order}) => {
       </Grid>
       <ExampleRow exClue={"3"} exArray={[1,1,1]} nextStart={nextAnim} order={0} onToNext={onToNext} />
       <ExampleRow exClue={"1"} exArray={[1,'','']} nextStart={nextAnim} order={1} onToNext={onToNext} />
-      <ExampleRow exClue={"3"} exArray={[1,1,1]} nextStart={nextAnim} order={2} onToNext={onToNext} />
+      <ExampleRow exClue={"1 1"} exArray={[1,'',1]} nextStart={nextAnim} order={2} onToNext={onToNext} />
     </Grid>
   )
 }

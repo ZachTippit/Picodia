@@ -1,16 +1,15 @@
 import React, {useState, useEffect} from 'react'
-import { Grid } from '@mui/material'
-import {default as Heart} from '../assets/heart.png'
-import {default as EmptyHeart} from '../assets/empty-heart.png'
 import { useSelector } from 'react-redux'
-import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
+import { Grid } from '@mui/material'
+
+import {default as Heart} from '../../assets/heart.png'
+import {default as EmptyHeart} from '../../assets/empty-heart.png'
 
 
 const LoseExampleRow = ({exClue, exArray, nextStart, order}) => {
-    const isDarkMode = useSelector(selectGameConfig).isDarkMode
+    const isDarkMode = useSelector(state => state.gameConfig.isDarkMode)
 
     const [nextAnim, setNextAnim] = useState(-1);
-    const [fakeGameOver, setFakeGameOver] = useState();
 
     useEffect(() => {
         if(nextStart === order){
@@ -19,12 +18,6 @@ const LoseExampleRow = ({exClue, exArray, nextStart, order}) => {
             }, 1000)
         }
     }, [nextStart])
-
-    useEffect(() => {
-        if(nextAnim === 3){
-            setFakeGameOver(true);
-        }
-    }, [nextAnim])
 
   return (
     <Grid container direction='row' margin='1rem 0'>

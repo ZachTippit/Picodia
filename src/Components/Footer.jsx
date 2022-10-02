@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { selectGameState } from '../features/gameState/gameStateSlice'
 import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 
-const Footer = ({openMenu, gameOver, handleGameOverTime, preGameAnim}) => {
+const Footer = ({openMenu, gameOver, preGameAnim}) => {
 
   const gameConfig = useSelector(selectGameConfig)
   const gameState = useSelector(selectGameState);
@@ -35,7 +35,11 @@ const Footer = ({openMenu, gameOver, handleGameOverTime, preGameAnim}) => {
 
   useEffect(() => {(gameState.isStarted && !gameOver) && setTotalTime(0)}, [gameState.isStarted])
 
-  useEffect(() => gameOver && handleGameOverTime(totalTime, minutes, seconds), [gameOver])
+  useEffect(() => {
+    if(gameOver){
+      localStorage.prevTime = totalTime
+    }
+  }, [gameOver])
 
   return (
     <div id={'footer'}>

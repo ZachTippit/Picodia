@@ -6,13 +6,14 @@ import {default as QuestionDark } from '../assets/question-dark.png'
 import {default as StatsDark } from '../assets/graph-dark.png'
 import {default as SettingsDark } from '../assets/setting-dark.png'
 import { useSelector } from 'react-redux';
-import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 
-const Navbar = ({openMenu, pingHowTo}) => {
-  const isDarkMode = useSelector(selectGameConfig).isDarkMode
+const Navbar = ({openMenu}) => {
+  const isDarkMode = useSelector(state => state.gameState.isDarkMode)
+  const pingHowTo = useSelector(state => state.windowHandler.pingHowTo)
+
   return (
     <div id={'nav'}>
-      <img src={(isDarkMode ? Question : QuestionDark)} alt='About icon' id={'nav-about-btn'} className={(pingHowTo ? 'wobble-ver-right ' : ' ')} onClick={() => openMenu('about')}/>    
+      <img src={(isDarkMode ? Question : QuestionDark)} alt='About icon' id={'nav-about-btn'} className={(pingHowTo ? 'wobble-ver-right ' : ' ')} onClick={() => openMenu('how-to-play')}/>    
       <h1 id={'title'}>PICODIA</h1>
       <div id={'nav-right-btns'}>
         <img src={(isDarkMode ? Stats : StatsDark)} alt='Stats icon' id={'nav-stats-btn'} onClick={() => openMenu('stats')}/>
