@@ -40,7 +40,7 @@ const Stats = ({ closeMenu }) => {
     const hearts = localStorage.prevOutcome ? '❤️'.repeat(localStorage.prevLives) : '🖤'
     const prefaceText = '⏱'
     const gameTime = localStorage.prevTime
-    const copyText = `Picodia #${puzzleReference}    ${hearts}    ${prefaceText}${pad(parseInt(gameTime/60))}:${pad(gameTime%60)}`
+    const copyText = `Picodia #${puzzleReference} ${hearts} ${prefaceText}${pad(parseInt(gameTime/60))}:${pad(gameTime%60)} -- try it yourself at picodia.app!`
     navigator.clipboard.writeText(copyText);
     // alert(copyText);
     dispatch(toggleAlert())
