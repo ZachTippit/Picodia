@@ -1,15 +1,6 @@
-import React, { useState, useEffect } from 'react'
 import { Grid } from '@mui/material'
 
-
 const Clues = ({cell, index, rowOrCol}) => {
-
-  const [cellArray, setCellArray] = useState(cell)
-
-// useEffect(() => {
-//     console.log(cellArray)
-//     console.log(Array.isArray(cellArray))
-// }, [cellArray])
 
   return ( 
     <Grid item xs={(rowOrCol==='column' ? 1 : 2)} className={`disable-select clue-${rowOrCol}-container`} key={`${rowOrCol}-clue@${index}`} draggable='false'>

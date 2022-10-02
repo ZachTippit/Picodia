@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux'
+
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
-import { useSelector } from 'react-redux'
-import { selectGameState } from '../features/gameState/gameStateSlice'
-import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
 
-const Footer = ({openMenu, gameOver, preGameAnim}) => {
 
-  const gameConfig = useSelector(selectGameConfig)
-  const gameState = useSelector(selectGameState);
+const Footer = ({openMenu}) => {
+
+  const { playedToday } = useSelector( state => state.gameConfig )
+  const {isStarted, lives, maxLives, preGameAnimation, stateOfGame } = useSelector( state => state.gameState );
   const isMobile = useSelector(state => state.windowHandler.isMobile)
   
   const [totalTime, setTotalTime] = useState(0);
@@ -21,7 +21,7 @@ const Footer = ({openMenu, gameOver, preGameAnim}) => {
   }
 
   useEffect(() => {
-    if(!gameOver){
+    if(stateOfGame !== 'game over'){
       const interval = setInterval(() => {
         setTotalTime(totalTime => totalTime + 1)
       }, 1000);
@@ -29,22 +29,22 @@ const Footer = ({openMenu, gameOver, preGameAnim}) => {
     }
   }, [])
 
-  useEffect(() => !gameOver && setSeconds(totalTime%60), [totalTime])
+  useEffect(() => stateOfGame !== 'game over' && setSeconds(totalTime%60), [totalTime])
 
-  useEffect(() => !gameOver && setMinutes(parseInt(totalTime/60)), [seconds])
+  useEffect(() => stateOfGame !== 'game over' && setMinutes(parseInt(totalTime/60)), [seconds])
 
-  useEffect(() => {(gameState.isStarted && !gameOver) && setTotalTime(0)}, [gameState.isStarted])
+  useEffect(() => {(isStarted && (stateOfGame !== 'game over')) && setTotalTime(0)}, [isStarted])
 
   useEffect(() => {
-    if(gameOver){
+    if(stateOfGame === 'game over'){
       localStorage.prevTime = totalTime
     }
-  }, [gameOver])
+  }, [stateOfGame])
 
   return (
     <div id={'footer'}>
-        {(!gameState.isStarted) ? 
-          <div className={(preGameAnim ? 'fade-out-right ' : ' ')}>
+        {(!isStarted) ? 
+          <div className={(preGameAnimation ? 'fade-out-right ' : ' ')}>
             {localStorage.playedPicodia=='false' ? 
               <div onClick={() => openMenu('about')}>
                 <p className={'solve-to-start-txt '}><b>{isMobile ? 'Tap ' : 'Click here '} to learn how to play!</b></p>
@@ -59,9 +59,9 @@ const Footer = ({openMenu, gameOver, preGameAnim}) => {
             <div className='move-on-start-footer'>
               <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>LIVES</p>
               <div id={'maxLives'}>
-                {[...Array(gameState.maxLives)].map((life, index) => (
+                {[...Array(maxLives)].map((life, index) => (
                   <>{
-                    gameConfig.playedToday ?
+                    playedToday ?
                       <>{
                         index >= localStorage.prevLives ?
                           <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={`no-heart${index}`}/> :
@@ -69,7 +69,7 @@ const Footer = ({openMenu, gameOver, preGameAnim}) => {
                       }</>
                       :
                       <>{
-                        index >= gameState.lives ?
+                        index >= lives ?
                         <img className={'life vibrate-1'} src={EmptyHeart} alt='Lives' key={`no-heart${index}`}/> :
                         <img className={'life'} src={Heart} alt='Lives' key={`heart${index}`}/> 
                       }</>
@@ -80,9 +80,9 @@ const Footer = ({openMenu, gameOver, preGameAnim}) => {
             <div className='fade-in-fwd move-on-start-footer '>
               <p style={{textAlign: 'center', marginBottom: '0.5rem', fontWeight: 'bold'}}>TIME</p>
               <div style={{margin: 'auto', textAlign: 'center'}}>
-                <label style={{fontSize: '0.75rem'}}>{pad(gameConfig.playedToday ? parseInt(localStorage.prevTime/60) : minutes)}</label>
+                <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? parseInt(localStorage.prevTime/60) : minutes)}</label>
                 <label style={{fontSize: '0.75rem'}}>:</label>
-                <label style={{fontSize: '0.75rem'}}>{pad(gameConfig.playedToday ? localStorage.prevTime%60 : seconds)}</label>
+                <label style={{fontSize: '0.75rem'}}>{pad(playedToday ? localStorage.prevTime%60 : seconds)}</label>
               </div>
             </div>
           </>

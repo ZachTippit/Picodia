@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import { Divider, Grid } from '@mui/material';
+import { toggleAlert } from '../features/windowHandler/windowHandlerSlice';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { default as Heart } from '../assets/heart.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
-import { useSelector } from 'react-redux'
-import { selectGameConfig } from '../features/gameConfig/gameConfigSlice';
-import { selectClosing } from '../features/windowHandler/windowHandlerSlice';
 
-const Stats = ({closeMenu, gameOver, copyToClipboard}) => {
-  const isDarkMode = useSelector(selectGameConfig).isDarkMode
-  const gameConfig = useSelector(state => state.gameConfig)
 
+const Stats = ({ closeMenu }) => {
+  const dispatch = useDispatch()
+
+  const { isDarkMode, playedToday, puzzleReference } = useSelector(state => state.gameConfig)
+  const { stateOfGame } = useSelector(state => state.gameState)
+  
   const [closing, setClosing] = useState(false);
 
   const closeWindow = () => {
@@ -29,6 +31,25 @@ const Stats = ({closeMenu, gameOver, copyToClipboard}) => {
     let valString = val + '';
     return valString.length < 2 ? "0"+valString : valString;
   }
+
+  const copyToClipboard = () => {
+    const pad = (val) => {
+      let valString = val + '';
+      return valString.length < 2 ? "0"+valString : valString;
+    }
+    const hearts = localStorage.prevOutcome ? '❤️'.repeat(localStorage.prevLives) : '🖤'
+    const prefaceText = '⏱'
+    const gameTime = localStorage.prevTime
+    const copyText = `Picodia #${puzzleReference}    ${hearts}    ${prefaceText}${pad(parseInt(gameTime/60))}:${pad(gameTime%60)}`
+    navigator.clipboard.writeText(copyText);
+    // alert(copyText);
+    dispatch(toggleAlert())
+    setTimeout(() => {
+      dispatch(toggleAlert())
+    }, 4000)
+  }
+
+
 
   return (
     <div className={'full-screen-cover fade-in-fwd ' + (closing && 'fade-out-bck')}>
@@ -83,7 +104,7 @@ const Stats = ({closeMenu, gameOver, copyToClipboard}) => {
               <Grid item xs={4} className={'stat-time'}><p>{localStorage.lostGames | 0}</p></Grid>
               <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage.lossAvgTime)}</p></Grid>
             </Grid>
-          {(gameOver || gameConfig.playedToday) &&
+          {(stateOfGame === 'game over' || playedToday) &&
               <>
               <Divider sx={{width: '80%', m: 'auto', my: 2}}/>
               <div className='end-game-txt'>

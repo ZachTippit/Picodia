@@ -5,7 +5,8 @@ import Ping from './Ping'
 
 const PingHandler = () => {
 
-    const { playedToday, whatIsIt, didWin } = useSelector(state => state.gameConfig)
+    const { playedToday, whatIsIt } = useSelector(state => state.gameConfig)
+    const { didWin } = useSelector(state => state.gameState)
     const { startPing, alert, goAlert, isOpen } = useSelector(state => state.windowHandler)
 
     const showPing = (type) => {

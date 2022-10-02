@@ -29,11 +29,17 @@ export const gameStateSlice = createSlice({
         },
         toggleMarkup: (gameState) => {
             gameState.markUp = !gameState.markUp
+        },
+        changeGameState: (gameState, action) => {
+            gameState.stateOfGame = action.payload
+        },
+        togglePreGameAnimation: (gameState) => {
+            gameState.preGameAnimation = !gameState.preGameAnimation
         }
     }
 })
 
-export const { _startGame, loseLife, setDidWin, toggleHardMode, toggleMarkup } = gameStateSlice.actions;
+export const { _startGame, loseLife, setDidWin, toggleHardMode, toggleMarkup, togglePreGameAnimation, changeGameState } = gameStateSlice.actions;
 
 export const selectGameState = (state) => state.gameState;
 

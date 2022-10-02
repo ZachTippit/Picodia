@@ -12,7 +12,9 @@ export const gameConfig = {
     isDarkMode: false,
     playedToday: false,
     whatIsIt1: '',
-    dailyPuzzle1: Array(8)
+    dailyPuzzle1: Array(8),
+    gridSize: 10,
+    winNum: 4
 }
 
 export const statState = {
@@ -30,7 +32,9 @@ export const gameState = {
     didWin: false,
     gameOver: false,
     gameOverNote: false,
-    gameOverTime: ''
+    gameOverTime: '',
+    stateOfGame: 'starting',
+    preGameAnimation: false
 }
 
 export const windowHandler = {
