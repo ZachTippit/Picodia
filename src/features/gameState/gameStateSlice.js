@@ -21,7 +21,9 @@ export const gameStateSlice = createSlice({
                 gameState.lives = 1
                 gameState.maxLives = 1
             } else if (!gameState.hardMode && !action.payload){
-                gameState.lives = 3
+                if(!gameState.isStarted){
+                    gameState.lives = 3
+                }
                 gameState.maxLives = 3
             } else if (!gameState.hardMode && action.payload){
                 return

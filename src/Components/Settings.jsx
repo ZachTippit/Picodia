@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './slider.css';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { togglesDarkMode, selectGameConfig } from '../features/gameConfig/gameConfigSlice';
-import { selectGameState, toggleHardMode } from '../features/gameState/gameStateSlice';
+import { togglesDarkMode } from '../features/gameConfig/gameConfigSlice';
+import { toggleHardMode } from '../features/gameState/gameStateSlice';
 
 const Settings = ({closeMenu, version}) => {
   const dispatch = useDispatch();
-  const darkMode = useSelector(selectGameConfig).isDarkMode
-  const gameState = useSelector(selectGameState);
+  const { isDarkMode } = useSelector(state => state.gameConfig)
+  const { hardMode } = useSelector(state => state.gameState)
 
   const [closing, setClosing] = useState(false);
 
@@ -24,8 +24,8 @@ const Settings = ({closeMenu, version}) => {
   }
 
   return (
-    <div id={'settings'} className={'fade-in-bottom ' + (darkMode ? 'dark-theme ' : 'light-theme ') + (closing && 'fade-out-bottom')} style={{maxWidth: '450px', margin: 'auto'}}>
-      <img className={'close-btn'} src={(darkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeWindow()}/>
+    <div id={'settings'} className={'fade-in-bottom ' + (isDarkMode ? ' dark-theme ' : 'light-theme ') + (closing && ' fade-out-bottom')} style={{maxWidth: '450px', margin: 'auto'}}>
+      <img className={'close-btn'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeWindow()}/>
       <h2 style={{textAlign: 'center', fontSize: '1.25rem'}}>SETTINGS</h2>
       <div style={{width: '100%'}}>
         <div className={'setting '}>
@@ -34,8 +34,11 @@ const Settings = ({closeMenu, version}) => {
             <p>Lowers lives to 1! Don't make a mistake :)</p>
           </div>
           <label className=" switch">
-            <input type="checkbox" defaultChecked={gameState.hardMode} onClick={() => dispatch(toggleHardMode(false))}/>
-            <span className="slider round"></span>
+            <div class="button b2" id="button-11">
+              <input type="checkbox" class="checkbox" onClick={() =>dispatch(toggleHardMode())} defaultChecked={hardMode}/>
+              <div class="knobs"><span></span></div> 
+              <div class="layer"></div>
+            </div>
           </label>
         </div>
         <div className={'setting '}>
@@ -44,8 +47,11 @@ const Settings = ({closeMenu, version}) => {
             <p>Toggle to turn dark mode on and off.</p>
           </div>
           <label className=" switch">
-            <input type="checkbox" onClick={() => dispatch(togglesDarkMode())} defaultChecked={darkMode}/>
-            <span className="slider round"></span>
+            <div class="button b2" id="button-11">
+              <input type="checkbox" class="checkbox" onClick={() => dispatch(togglesDarkMode())} defaultChecked={isDarkMode}/>
+              <div class="knobs"><span></span></div>
+              <div class="layer"></div>
+            </div>
           </label>
         </div>
         {/* <div className={'setting'}>

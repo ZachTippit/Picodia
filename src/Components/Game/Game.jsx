@@ -78,8 +78,11 @@ const Game = () => {
                     <p>Toggle to make notes on puzzle{!isMobile ? ' (or right-click on a computer)' : '.'}</p>
                 </div>
             <label className=" switch">
-                <input type="checkbox" onClick={() => dispatch(toggleMarkup())} defaultChecked={false}/>
-                <span className="slider round"></span>
+                <div class="button b2" id="button-11">
+                    <input type="checkbox" class="checkbox" onClick={() => dispatch(toggleMarkup())} defaultChecked={false}/>
+                    <div class="knobs"><span></span></div>
+                    <div class="layer"></div>
+                </div>
             </label>
             </div>  
         </div>

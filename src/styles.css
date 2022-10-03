@@ -198,7 +198,7 @@ html {
     left: 0;
     right: 0;
     z-index: 1;
-    min-height: 90vh;
+    min-height: 91vh;
     padding: 2rem 0;
     overflow-y: none;
 }
@@ -265,7 +265,7 @@ html {
     left: 0;
     right: 0;
     z-index: 1;
-    height: 100vh;
+    height: 96vh;
 }
 
     #version-notes{
@@ -619,6 +619,7 @@ html {
 @media screen and (max-width: 600px) {
     #settings {
         padding: 1.5rem;
+        height: 100vh;
     }
 
     #about {
@@ -632,6 +633,10 @@ html {
 
     #game {
         width: 95%;
+    }
+
+    #version-notes-container{
+        height: 100vh;
     }
 
     #footer {
