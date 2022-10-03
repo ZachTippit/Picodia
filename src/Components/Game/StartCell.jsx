@@ -56,7 +56,7 @@ const StartCell = ({cell, cellNum, gridSize, handleCell, didWin, nextAnim, order
         className={'cell '
                     +   (isDarkMode ? 'light-' : 'dark-') 
                     +   (guessed ? (cell ? 'right pulsate-fwd ' : ' wrong pulsate-fwd ') : ' ')
-                    +   (flagged ? ' flagged ' : ' ')
+                    +   (flagged ? (isDarkMode ? ' flagged-dark ' : 'flagged ') : ' ')
                     +   (winAnimation ? ' win-animation': '')
                     +   ((gameState.isStarted && parseInt(cellNum/gridSize) == 5) ? ' horz-mid-thick ' : ' ' )
                     +   ((gameState.isStarted && cellNum%gridSize == 5) ? ' vert-mid-thick ' : ' ')

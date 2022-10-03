@@ -56,7 +56,7 @@ const Cell = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
                 + (isDarkMode ? 'light-' : 'dark-') 
                 + (gameConfig.playedToday ? ((cell === 1 ? 'right pulsate-fwd ' : cell === 0 ? ' wrong pulsate-fwd ' : ' flagged pulsate-fwd ')) : 
                   (guessed ? (cell ? 'right pulsate-fwd ' : ' wrong pulsate-fwd ') : ' '))
-                + (flagged ? ' flagged ' : ' ')
+                + (flagged ? (isDarkMode ? ' flagged-dark ' : 'flagged ') : ' ')
                 + (winAnimation ? ' win-animation': '')
                 + ((gameState.isStarted && parseInt(cellNum/gridSize) == 5) ? ' horz-mid-thick ' : ' ' )
                 + ((gameState.isStarted && cellNum%gridSize == 5) ? ' vert-mid-thick ' : ' ')
