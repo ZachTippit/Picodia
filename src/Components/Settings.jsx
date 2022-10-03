@@ -18,6 +18,11 @@ const Settings = ({closeMenu, version}) => {
     closeMenu('')
   }
 
+  const openVersionNotes = () => {
+    setClosing(true)
+    closeMenu('version-notes')
+  }
+
   return (
     <div id={'settings'} className={'fade-in-bottom ' + (darkMode ? 'dark-theme ' : 'light-theme ') + (closing && 'fade-out-bottom')} style={{maxWidth: '450px', margin: 'auto'}}>
       <img className={'close-btn'} src={(darkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeWindow()}/>
@@ -53,15 +58,15 @@ const Settings = ({closeMenu, version}) => {
             <span className="slider round"></span>
           </label>
         </div> */}
-        {/* <div className={'setting '}>
+        <div className={'setting '}>
           <div className={'section-txt'}>
             <h3>VERSION NOTES</h3>
             <p>Interested in the development history? Check it out!</p>
           </div>
-          <div id={'feedback-txt'}>
-            <a href='https://www.zachtippit.com' target='_blank' rel="noreferrer"><span className={'feedback-link'}>Dev Log</span></a>
+          <div id={'feedback-txt'} onClick={() => openVersionNotes()}>
+            <p><span className={'feedback-link'}><u>Dev Log</u></span></p>
           </div>
-        </div>*/}
+        </div>
         <div className={'setting '}>
           <div className={'section-txt'}>
             <h3>REPORT BUGS</h3>

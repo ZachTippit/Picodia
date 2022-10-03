@@ -8,7 +8,7 @@ import {default as SettingsDark } from '../assets/setting-dark.png'
 import { useSelector } from 'react-redux';
 
 const Navbar = ({openMenu}) => {
-  const isDarkMode = useSelector(state => state.gameState.isDarkMode)
+  const isDarkMode = useSelector(state => state.gameConfig.isDarkMode)
   const pingHowTo = useSelector(state => state.windowHandler.pingHowTo)
 
   return (

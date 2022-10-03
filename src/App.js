@@ -8,6 +8,7 @@ import { _startGame, togglePreGameAnimation } from './features/gameState/gameSta
 import { fetchDailyPuzzle } from './features/gameConfig/gameConfigSlice';
 import { toggleGameOverAlert, toggleOpen, toggleStartPing, setPath } from './features/windowHandler/windowHandlerSlice'
 import PingHandler from './Components/PingHandler';
+import VersionNotes from './Components/VersionNotes';
 
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
 
@@ -71,10 +72,16 @@ const App = () => {
   }
 
   const isSeen = (path) => {
-    setTimeout(() => {
-      dispatch(toggleOpen())
-      dispatch(setPath(path))
-    }, 500);    
+    if(path === 'version-notes'){
+      setTimeout(() => {
+        dispatch(setPath(path))
+      }, 500)
+    } else {
+      setTimeout(() => {
+        dispatch(toggleOpen())
+        dispatch(setPath(path))
+      }, 500);  
+    }
   }
 
   const showWindow = (path) => {
@@ -85,6 +92,8 @@ const App = () => {
         return <Stats closeMenu={isSeen} />
       case 'settings':
         return <Settings closeMenu={isSeen} version={puzzleReference}/>
+      case 'version-notes':
+        return <VersionNotes closeMenu={isSeen}/>
       default:
         return;
     }

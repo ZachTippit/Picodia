@@ -19,7 +19,7 @@
 
 html {
     overflow-x: hidden;
-  }
+}
 
 #cover-screen{
     position: absolute;
@@ -27,6 +27,7 @@ html {
     bottom: 0;
     left: 0;
     right: 0;
+    height: 100%;
 }
 
  body {
@@ -256,6 +257,33 @@ html {
         margin: auto;
         z-index: 2;
         min-height: 15%;
+    }
+
+#version-notes-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    height: 100vh;
+}
+
+    #version-notes{
+        position: relative;
+        height: 90%;
+        margin: 2rem 0;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
+    .version-note{
+        width: 80%;
+        margin: auto;
+        border-bottom: 1px #aaa solid;
+    }
+
+    .version-txt p, h3, p, ul {
+        font-size: 0.75rem;
     }
 
 .full-screen-cover {
