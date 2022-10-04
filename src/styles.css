@@ -462,6 +462,7 @@ html {
         background: inherit;
         transition: all 0.1s ease-in;
         height: 2rem;
+        cursor: pointer;
     }
 
     .ex-cell{

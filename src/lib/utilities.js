@@ -26,6 +26,7 @@ const storageInit = () => {
     localStorage.lastPlayed = 0;
     localStorage.todayDate = '';
     localStorage.whatIsIt = '';
+    localStorage.todayDate = '';
 }
 
 const onGameOver = (numLives, win, prevGameArray, puzzleReference, whatIsIt) => {  
@@ -86,7 +87,6 @@ const handleLoseStats = () => {
 
 const checkDate = () => {
     const today = todayDate()
-    console.log(localStorage.todayDate)
     console.log(today)
     console.log(localStorage.todayDate == today)
     return localStorage.todayDate == today

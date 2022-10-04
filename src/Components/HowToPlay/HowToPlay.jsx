@@ -72,6 +72,13 @@ const HowToPlay = ({closeMenu}) => {
             <p>If there is more than one number in the clue, there must be at least one empty block between them (but there could be more).</p>
           </div>
           <div className='tutorial-tile'>
+            <h3>Don't Forget to Mark Up!</h3>
+            <ExampleRow exClue={"2 1"} exArray={[1,1,2,1,2]} nextStart={nextAnim} order={4} />
+            <ExampleRow exClue={"2 1"} exArray={[1,1,2,2,1]} nextStart={nextAnim} order={4} />
+            <ExampleRow exClue={"2 1"} exArray={[2,1,1,2,1]} nextStart={nextAnim} order={4} />
+            <p>As you fill in cells, don't forget to mark the cells around them to help you solve the rest of the puzzle.</p>
+          </div>
+          <div className='tutorial-tile'>
             <h3>Careful - Don't Lose!</h3>
             <LoseExampleRow exClue={"2"} exArray={[1,1,0,0,0]} nextStart={nextAnim} order={5} />
             <p><b>You only get one chance a day, so play carefully ;)</b> Don't lose all of your lives!</p>
