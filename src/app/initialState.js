@@ -26,8 +26,8 @@ export const statState = {
 
 export const gameState = {
     hardMode: false,
-    maxLives: 3,
-    lives: 3,
+    maxLives: 4,
+    lives: 4,
     isStarted: false,
     didWin: false,
     gameOver: false,

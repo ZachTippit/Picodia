@@ -388,7 +388,7 @@ html {
 
 #startPuzz{
     overflow-y: none;
-    min-height: 550px;
+    min-height: 475px;
 }
 
 #game-box {
@@ -682,9 +682,6 @@ html {
 }
 
 @media screen and (min-height: 800px) {
-    #game, #startPuzz {
-        margin-top: 20%;
-    }
 
     .how-to-play {
         padding: 1rem;
@@ -711,7 +708,6 @@ html {
     #game, #startPuzz {
         height: 40vh; 
         margin: auto;
-        margin-top: 22.5%;
         margin-bottom: 25%;
         width: 90%;
        

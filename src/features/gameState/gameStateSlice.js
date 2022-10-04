@@ -18,15 +18,13 @@ export const gameStateSlice = createSlice({
             gameState.hardMode = !gameState.hardMode
 
             if(gameState.hardMode){
-                gameState.lives = 1
-                gameState.maxLives = 1
+                gameState.lives = 2
+                gameState.maxLives = 2
             } else if (!gameState.hardMode && !action.payload){
                 if(!gameState.isStarted){
-                    gameState.lives = 3
+                    gameState.lives = 4
                 }
-                gameState.maxLives = 3
-            } else if (!gameState.hardMode && action.payload){
-                return
+                gameState.maxLives = 4
             }
         },
         toggleMarkup: (gameState) => {
