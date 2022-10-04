@@ -54,22 +54,12 @@ const Settings = ({closeMenu, version}) => {
             </div>
           </label>
         </div>
-        {/* <div className={'setting'}>
-          <div className={'section-txt'}>
-            <h5>ACCESSIBILITY MODE</h5>
-            <p>Removes click and drag functionality from both touch and mouse usage.</p>
-          </div>
-          <label className="switch">
-            <input type="checkbox" />
-            <span className="slider round"></span>
-          </label>
-        </div> */}
         <div className={'setting '}>
           <div className={'section-txt'}>
             <h3>VERSION NOTES</h3>
             <p>Interested in the development history? Check it out!</p>
           </div>
-          <div id={'feedback-txt'} onClick={() => openVersionNotes()}>
+          <div id={'feedback-txt'} className='version-link' onClick={() => openVersionNotes()}>
             <p><span className={'feedback-link'}><u>Dev Log</u></span></p>
           </div>
         </div>

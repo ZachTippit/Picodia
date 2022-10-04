@@ -37,7 +37,6 @@ const onGameOver = (numLives, win, prevGameArray, puzzleReference, whatIsIt) => 
     localStorage.lastPlayed = puzzleReference
     localStorage.prevGameArray = JSON.stringify(prevGameArray)
     localStorage.whatIsIt = whatIsIt
-    console.log(prevGameArray, localStorage.prevGameArray)
         // You've played today
     localStorage.playedToday = puzzleReference;
         // ++ Total games played
