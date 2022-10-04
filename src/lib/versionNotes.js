@@ -1,12 +1,13 @@
 exports.versionNotes = [
     {
         versionNum: "0.5.3",
-        date: "10/3/22",
+        date: "10/4/22",
         introText: "It's Beta Time!",
         updateList: [
             "Still need to add testing suite to cover code, but there is a branch dedicated to that already.",
             "Replaced Google Sheets API connection with Google Functions call that talks to the MongoDB",
-            "Updated version notes access for visibility/ease of access!"
+            "Updated version notes access for visibility/ease of access!",
+            "Changed lives to 4 (2 on hard mode) for ease of play"
         ],
         outroText: "Planning on launching beta to test scalability and last changes before broader deployment. So much still on the wishlist, but we are close to 1.0.0!"
     },

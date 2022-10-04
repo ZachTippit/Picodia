@@ -41,7 +41,7 @@ export const gameConfigSlice = createSlice({
         },
         puzzleIs: (gameConfig, action) => {
             gameConfig.whatIsIt = action.payload
-        }   
+        },
     },
     extraReducers(builder) {
         builder

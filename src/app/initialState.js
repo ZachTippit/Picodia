@@ -14,7 +14,8 @@ export const gameConfig = {
     whatIsIt1: '',
     dailyPuzzle1: Array(8),
     gridSize: 10,
-    winNum: 4
+    winNum: 4,
+    today: ''
 }
 
 export const statState = {
@@ -34,7 +35,9 @@ export const gameState = {
     gameOverNote: false,
     gameOverTime: '',
     stateOfGame: 'starting',
-    preGameAnimation: false
+    preGameAnimation: false,
+    currentGameArray: [],
+    prevGameArray: []
 }
 
 export const windowHandler = {

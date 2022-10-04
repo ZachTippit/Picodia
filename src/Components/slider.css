@@ -9,7 +9,7 @@
 /* The switch - the box around the slider */
 .markup-btn {
   position: absolute;
-  bottom: -5rem;
+  bottom: 0;
   display: flex;
   justify-content: space-between;
   width: 90%;

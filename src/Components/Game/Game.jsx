@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleMarkup } from '../../features/gameState/gameStateSlice';
-import { changeGameState, loseLife, setDidWin } from '../../features/gameState/gameStateSlice.js';
+import { changeGameState, loseLife, setDidWin, setCurrentGameArray } from '../../features/gameState/gameStateSlice.js';
 import { Grid } from '@mui/material';
 import Clues from './Clues.jsx';
 import Cell from './Cell.jsx';
@@ -13,12 +13,16 @@ const Game = () => {
     const dispatch = useDispatch();
 
     const isMobile = useSelector(state => state.windowHandler.isMobile);
-    const { dailyPuzzle, gridSize, winNum } = useSelector(state => state.gameConfig)
-    const {didWin, stateOfGame, isStarted, lives, markUp} = useSelector(state => state.gameState);
+    const { dailyPuzzle, gridSize, winNum, playedToday } = useSelector(state => state.gameConfig)
+    const {didWin, stateOfGame, isStarted, lives, markUp, currentGameArray} = useSelector(state => state.gameState);
 
     const [correctCellCount, setCorrectCellCount] = useState(0);
     const [nextAnim, setNextAnim] = useState(0);
-    const [answerArray, setAnswerArray] = useState(blank);
+    const [answerArray, setAnswerArray] = useState(JSON.parse(currentGameArray));
+
+    useEffect(() => {
+        console.log(currentGameArray)
+    }, [])
 
     useEffect(() => {
         if((didWin) && (nextAnim < dailyPuzzle.length)){
@@ -49,6 +53,7 @@ const Game = () => {
             ansArr[rowNum][colNum] = 0;           
         }
         setAnswerArray(ansArr);
+        dispatch(setCurrentGameArray(JSON.stringify(ansArr)));
     }
 
     return (

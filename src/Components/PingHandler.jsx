@@ -16,7 +16,7 @@ const PingHandler = () => {
           case 'copiedToClipboard':
             return <Ping note='Copied to clipboard!'/>
           case 'gameOver':
-            return <Ping note={didWin ? `Nice! It's ${whatIsIt}.` : 'Bummer...'}/>
+            return <Ping note={didWin ? `Nice! It's ${localStorage.whatIsIt}.` : 'Bummer...'}/>
           case 'playedToday':
             return <Ping note={`You have already played today. It was ${whatIsIt}!`} />
           default:

@@ -3,12 +3,12 @@
 const storageInit = () => {
     localStorage.totalGames = 0;        // Total games played
     localStorage.wonGames = 0;          // Games won
-    localStorage.winPercent = 0;      // Percentage of games won   
+    localStorage.winPercent = 0;        // Percentage of games won   
     localStorage.lostGames = 0;         // Games lost
     localStorage.currentStreak = 0;     // Current win streak
     localStorage.maxStreak = 0;         // Best win streak
     localStorage.playedPicodia = false; // Played Picodia before?  
-    localStorage.playedToday = 0;       // Played Picodia today? -- saves as daily number to check against        
+    localStorage.playedToday = false;   // Played Picodia today? -- saves as bool to check against date
     localStorage.avgLossTime = 0;
     localStorage.lossAvgTime = 0;
     localStorage._1LifeWins = 0;
@@ -17,20 +17,26 @@ const storageInit = () => {
     localStorage._2LifeAvgTime = 0;
     localStorage._3LifeWins = 0;
     localStorage._3LifeAvgTime = 0;
-    localStorage.prevTime = 0
-    localStorage.prevLives = 0
-    localStorage.prevOutcome = false
-    localStorage.prevGameArray = []
+    localStorage.prevTime = 0;
+    localStorage.prevLives = 0;
+    localStorage.prevOutcome = false;
+    localStorage.prevGameArray = [];
+    localStorage.currentGameArray = "";
+    localStorage.blankArray = "[[2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2]]";
     localStorage.lastPlayed = 0;
+    localStorage.todayDate = '';
+    localStorage.whatIsIt = '';
 }
 
-const onGameOver = (numLives, win, prevGameArray, puzzleReference) => {
-    localStorage.playedPicodia === undefined && storageInit();  
+const onGameOver = (numLives, win, prevGameArray, puzzleReference, whatIsIt) => {  
         // SAVES CURRENT DAY'S GAME (# lives and T/F for win)
     localStorage.prevLives = numLives
+    localStorage.todayDate = todayDate()
     localStorage.prevOutcome = win  
     localStorage.lastPlayed = puzzleReference
     localStorage.prevGameArray = JSON.stringify(prevGameArray)
+    localStorage.whatIsIt = whatIsIt
+    console.log(prevGameArray, localStorage.prevGameArray)
         // You've played today
     localStorage.playedToday = puzzleReference;
         // ++ Total games played
@@ -78,4 +84,21 @@ const handleLoseStats = () => {
     localStorage.currentStreak = 0;      
 }
 
-export {storageInit, onGameOver, handleWinStats, handleLoseStats, gameArrayChunker}
+const checkDate = () => {
+    const today = todayDate()
+    console.log(localStorage.todayDate)
+    console.log(today)
+    console.log(localStorage.todayDate == today)
+    return localStorage.todayDate == today
+}
+
+const todayDate = () => {
+    const date = new Date()
+    const day = date.getDay()
+    const month = date.getMonth()
+    const year = date.getFullYear()
+    const today = new Date(year, month, day)
+    return today
+}
+
+export {storageInit, onGameOver, handleWinStats, handleLoseStats, gameArrayChunker, checkDate, todayDate}
