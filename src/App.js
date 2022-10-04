@@ -27,7 +27,7 @@ const App = () => {
       
     // localStorage.clear();                             // Clears localStorage
     localStorage.length === 0 && storageInit();
-    console.log('localStorage on Load: ', localStorage)
+    // console.log('localStorage on Load: ', localStorage)
 
     const getDailyPuzzle = async () => {                  // Gets puzzle reference for puzzle fetcher
       await dispatch(fetchDailyPuzzle())

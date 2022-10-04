@@ -87,8 +87,6 @@ const handleLoseStats = () => {
 
 const checkDate = () => {
     const today = todayDate()
-    console.log(today)
-    console.log(localStorage.todayDate == today)
     return localStorage.todayDate == today
 }
 

@@ -18,11 +18,7 @@ const Game = () => {
 
     const [correctCellCount, setCorrectCellCount] = useState(0);
     const [nextAnim, setNextAnim] = useState(0);
-    const [answerArray, setAnswerArray] = useState(JSON.parse(currentGameArray));
-
-    useEffect(() => {
-        console.log(currentGameArray)
-    }, [])
+    const [answerArray, setAnswerArray] = useState(typeof JSON.parse(currentGameArray) !== 'undefined' ? JSON.parse(currentGameArray) : JSON.parse(localStorage.blankArray));
 
     useEffect(() => {
         if((didWin) && (nextAnim < dailyPuzzle.length)){
