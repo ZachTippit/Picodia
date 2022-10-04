@@ -89,10 +89,7 @@ const Settings = ({closeMenu, version}) => {
         </div>
         <div>
           <p><a href='https://www.zachtippit.com'>More projects at zachtippit.com</a></p>
-        </div>     
-        <div>
-          <p>Picodia #{version}</p>
-        </div>     
+        </div>        
       </div>     
     </div> 
   )

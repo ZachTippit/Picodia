@@ -77,19 +77,22 @@ const Game = () => {
                     }</>}</>}</>}</>))} {/* <-- LOL THIS IS AWFUL */}
                 </Grid> 
             </div>
+            { !playedToday && 
             <div className={(isStarted ? ' move-on-start ' : ' ') + ' markup-btn '}>
                 <div className={'section-txt'}>
                     <h3>Markup - {markUp ? "On" : "Off"}</h3>
                     <p>Toggle to make notes on puzzle{!isMobile ? ' (or right-click on a computer)' : '.'}</p>
                 </div>
-            <label className=" switch">
-                <div class="button b2" id="button-11">
-                    <input type="checkbox" class="checkbox" onClick={() => dispatch(toggleMarkup())} defaultChecked={false}/>
-                    <div class="knobs"><span></span></div>
-                    <div class="layer"></div>
-                </div>
-            </label>
+            
+                <label className=" switch">
+                    <div class="button b2" id="button-11">
+                        <input type="checkbox" class="checkbox" onClick={() => dispatch(toggleMarkup())} defaultChecked={false}/>
+                        <div class="knobs"><span></span></div>
+                        <div class="layer"></div>
+                    </div>
+                </label>
             </div>  
+            } 
         </div>
     )
 }
