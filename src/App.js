@@ -25,7 +25,7 @@ const App = () => {
     ReactGA.set({ page: window.location.pathname });     // Google Analytics initializer on window
     ReactGA.pageview(window.location.pathname);
       
-    localStorage.clear();                             // Clears localStorage
+    // localStorage.clear();                             // Clears localStorage
     localStorage.length === 0 && storageInit();
     console.log('localStorage on Load: ', localStorage)
 
