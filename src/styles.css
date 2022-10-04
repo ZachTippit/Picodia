@@ -483,10 +483,12 @@ html {
     }  
 
     .flagged {
+        transition: all 0.1s ease-in;
         background-color: #ccc
     }
 
     .flagged-dark{
+        transition: all 0.1s ease-in;
         background-color: #444;
     }
 
@@ -520,6 +522,15 @@ html {
         transition: all 0.1s ease-in;
         background-color: #222 !important;
         border: 1px #444 solid;
+    }
+
+    .light-flagged {
+        transition: all 0.1s ease-in;
+        background-color: #444
+    }
+
+    .dark-flagged {
+        background-color: #ccc;
     }
 
     .horz-mid-thick {

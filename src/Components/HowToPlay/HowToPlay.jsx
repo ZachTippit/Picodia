@@ -62,7 +62,7 @@ const HowToPlay = ({closeMenu}) => {
           <div className='tutorial-tile'>
             <h3>Mind the gaps!</h3>
             <ExampleRow exClue={"2 2"} exArray={[1,1,'',1,1]} nextStart={nextAnim} order={3} />
-            <p>Some clues are obvious and can be figured out from context (ex: 5 blocks long and a space between each number...)</p>
+            <p>Some clues are obvious and can be figured out from context (ex: "2 2" in a 5 block long row with a required space between each clue...)</p>
           </div>
           <div className='tutorial-tile'>
             <h3>Inferring Empty Blocks</h3>
