@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux';
-import { selectGameState } from '../features/gameState/gameStateSlice';
 
 const Ping = ({note, startPing=false}) => {
     const [close, setClose] = useState(false);

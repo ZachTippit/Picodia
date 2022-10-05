@@ -47,6 +47,4 @@ export const gameStateSlice = createSlice({
 
 export const { _startGame, loseLife, setDidWin, toggleHardMode, toggleMarkup, togglePreGameAnimation, setPrevGameArray, setCurrentGameArray, changeGameState } = gameStateSlice.actions;
 
-export const selectGameState = (state) => state.gameState;
-
 export default gameStateSlice.reducer;

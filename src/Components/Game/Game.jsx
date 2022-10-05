@@ -6,9 +6,6 @@ import { Grid } from '@mui/material';
 import Clues from './Clues.jsx';
 import Cell from './Cell.jsx';
 
-const answer = [[1,1,0,0,0,0,0,1], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,1]];
-const blank = [[2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2]];
-
 const Game = () => {
     const dispatch = useDispatch();
 
@@ -95,17 +92,5 @@ const Game = () => {
 
 export default Game;
 
-    // useEffect(() => { // This doesn't run. Delete? Need to add puzzle error handling in somehow.
-    //     let puzzle = gameConfig.dailyPuzzle
-    //     if(!Array.isArray(puzzle)){
-    //         puzzle = JSON.parse(puzzle)
-    //     }
-
-    //     if(!gameConfig.playedToday && typeof puzzle !== 'undefined'){
-    //         if(puzzle.length > 2){
-    //             setGridSize(10)
-    //             setGameGrid(createGameObject(puzzle))
-    //             setWinNum(puzzle.flat().reduce((curr, next) => curr + next))
-    //         }
-    //     }
-    // }, [gameConfig.dailyPuzzle])
+// const answer = [[1,1,0,0,0,0,0,1], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], [1,0,0,0,0,0,0,1]];
+// const blank = [[2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2]];

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { windowHandler } from "../../app/initialState";
 
 export const windowHandlerSlice = createSlice({
@@ -33,7 +33,5 @@ export const windowHandlerSlice = createSlice({
 })
 
 export const { toggleClosing, toggleOpen, togglePing, togglePingHowTo, toggleStartPing, toggleAlert, toggleGameOverAlert, setPath } = windowHandlerSlice.actions;
-
-export const selectClosing = (state) => state.windowHandler.closing;
 
 export default windowHandlerSlice.reducer;

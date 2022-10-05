@@ -99,16 +99,16 @@ const createGameObject = (answer) => {
     let offsetter = 0;
     [...Array(gameArrLength+1).keys()].map((item, index) => {
         if(index === 0 || index === 1) {
-          gameObj.push('');
+          return gameObj.push('');
         } else if(parseInt(index/gridSize) === 0){
-            gameObj.push(colClue[index-2])
+            return gameObj.push(colClue[index-2])
         } else if(index%gridSize === 0){
-            gameObj.push(rowClue[parseInt(index/gridSize)-1])
+            return gameObj.push(rowClue[parseInt(index/gridSize)-1])
         } else if(index%gridSize === 1){
-            gameObj.push('')
             offsetter+=2;
+            return gameObj.push('')
         } else {
-            gameObj.push(gameArr[index-(gridSize)-offsetter])
+            return gameObj.push(gameArr[index-(gridSize)-offsetter])
         }
     })
     return gameObj;

@@ -1,25 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import { useSwipeable } from 'react-swipeable'
+import { useState, useEffect } from 'react'
 import { Grid } from '@mui/material'
 import { useSelector } from 'react-redux'
-import { selectGameConfig } from '../../features/gameConfig/gameConfigSlice';
-
-const config = {delta: 1}
 
 const StartCell = ({cell, cellNum, gridSize, handleCell, didWin, nextAnim, order}) => {
-    const isDarkMode = useSelector(selectGameConfig).isDarkMode
+    
+    const isDarkMode = useSelector(state => state.gameConfig.isDarkMode)
 
-    const gameConfig = useSelector(state => state.gameConfig)
     const gameState = useSelector(state => state.gameState)
 
     const [guessed, setGuessed] = useState(false);
     const [flagged, setFlagged] = useState(false);
     const [winAnimation, setWinAnimation] = useState(false);
-
-    const swipeCheck = useSwipeable({
-        onSwiping: (eventData => {handleGuess(); console.log(eventData);}),
-        config
-    })
 
     const handleGuess = () => {
         setGuessed(true)

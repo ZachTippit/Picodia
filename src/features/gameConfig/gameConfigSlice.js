@@ -15,7 +15,7 @@ export const fetchDailyPuzzle = createAsyncThunk('gameConfig/fetchDailyPuzzle', 
             parsedPuzzle.push(subArray);
             subArray = [];
         }
-        subArray.push(cell)
+        return subArray.push(cell)
     });
     parsedPuzzle.push(subArray)
     const puzzleBoard = createGameObject(parsedPuzzle)
@@ -62,7 +62,5 @@ export const gameConfigSlice = createSlice({
 })
 
 export const { togglesDarkMode, hasPlayedToday, setPuzzleRef, puzzleIs } = gameConfigSlice.actions;
-
-export const selectGameConfig = (state) => state.gameConfig;
 
 export default gameConfigSlice.reducer;

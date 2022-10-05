@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import './slider.css';
+import { useState } from 'react';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { useSelector } from 'react-redux';

@@ -1,14 +1,12 @@
 import { useEffect } from 'react';
-import { HowToPlay, Footer, Game, Navbar, Settings, Stats } from './Components'
-import ReactGA from 'react-ga';
-import SolveToStart from './Components/Game/SolveToStart';
-import { onGameOver, handleWinStats, handleLoseStats, storageInit, checkDate, todayDate } from './lib/utilities'
 import { useSelector, useDispatch } from 'react-redux'
-import { _startGame, togglePreGameAnimation, setCurrentGameArray, setPrevGameArray } from './features/gameState/gameStateSlice'
+import ReactGA from 'react-ga';
+import { Footer, Game, HowToPlay, Navbar, PingHandler, Settings, SolveToStart, Stats, VersionNotes } from './Components'
+
+import { onGameOver, handleWinStats, handleLoseStats, storageInit, checkDate } from './lib/utilities'
+import { _startGame, togglePreGameAnimation, setCurrentGameArray } from './features/gameState/gameStateSlice'
 import { fetchDailyPuzzle, hasPlayedToday, puzzleIs } from './features/gameConfig/gameConfigSlice';
 import { toggleGameOverAlert, toggleOpen, toggleStartPing, setPath } from './features/windowHandler/windowHandlerSlice'
-import PingHandler from './Components/PingHandler';
-import VersionNotes from './Components/VersionNotes';
 
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
 
