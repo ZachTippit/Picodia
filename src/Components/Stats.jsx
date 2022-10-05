@@ -84,6 +84,14 @@ const Stats = ({ closeMenu }) => {
                 <img src={Heart} alt='Lives' />
                 <img src={Heart} alt='Lives' />
                 <img src={Heart} alt='Lives' />
+                <img src={Heart} alt='Lives' />
+              </Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{localStorage['_4LifeWins'] | 0}</p></Grid>
+              <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage['_4LifeAvgTime'])}</p></Grid>
+              <Grid item xs={4} alignSelf='center' className={'life-stat'}>
+                <img src={Heart} alt='Lives' />
+                <img src={Heart} alt='Lives' />
+                <img src={Heart} alt='Lives' />
               </Grid>
               <Grid item xs={4} className={'stat-time'}><p>{localStorage['_3LifeWins'] | 0}</p></Grid>
               <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage['_3LifeAvgTime'])}</p></Grid>

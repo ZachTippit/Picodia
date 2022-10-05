@@ -17,6 +17,8 @@ const storageInit = () => {
     localStorage._2LifeAvgTime = 0;
     localStorage._3LifeWins = 0;
     localStorage._3LifeAvgTime = 0;
+    localStorage._4LifeWins = 0;
+    localStorage._4LifeAvgTime = 0;
     localStorage.prevTime = 0;
     localStorage.prevLives = 0;
     localStorage.prevOutcome = false;
