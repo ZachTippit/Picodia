@@ -28,7 +28,6 @@ const storageInit = (store) => {
     store.lastPlayed = 0;
     store.todayDate = '';
     store.whatIsIt = '';
-    store.todayDate = '';
 }
 
 const onGameOver = (numLives, win, prevGameArray, puzzleReference, whatIsIt) => {  
