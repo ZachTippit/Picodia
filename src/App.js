@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import ReactGA from 'react-ga';
 import { Footer, Game, HowToPlay, Navbar, PingHandler, Settings, SolveToStart, Stats, VersionNotes } from './Components'
 
-import { onGameOver, handleWinStats, handleLoseStats, storageInit, checkDate } from './lib/utilities'
+import { onGameOver, handleWinStats, handleLoseStats, storageInit, checkDate, compareStorageKeys } from './lib/utilities'
 import { _startGame, togglePreGameAnimation, setCurrentGameArray } from './features/gameState/gameStateSlice'
 import { fetchDailyPuzzle, hasPlayedToday, puzzleIs } from './features/gameConfig/gameConfigSlice';
 import { toggleGameOverAlert, toggleOpen, toggleStartPing, setPath } from './features/windowHandler/windowHandlerSlice'
@@ -23,9 +23,11 @@ const App = () => {
     ReactGA.set({ page: window.location.pathname });     // Google Analytics initializer on window
     ReactGA.pageview(window.location.pathname);
       
-    // localStorage.clear();                             // Clears localStorage
-    localStorage.length === 0 && storageInit();
-    // console.log('localStorage on Load: ', localStorage)
+    // localStorage.clear();                                         // Clears localStorage
+    localStorage.length === 0 && storageInit(localStorage);          // Checks storage length, if empty, create storage object.
+    !compareStorageKeys(localStorage) && storageInit(localStorage)   // Compares current localStorage to init values. If properties are not the same, update keys. (This is to assist in version control).
+
+    console.log('localStorage on Load: ', localStorage)
 
     const getDailyPuzzle = async () => {                  // Gets puzzle reference for puzzle fetcher
       await dispatch(fetchDailyPuzzle())

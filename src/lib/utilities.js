@@ -1,34 +1,34 @@
 // Local Storage Handlers
 
-const storageInit = () => {
-    localStorage.totalGames = 0;        // Total games played
-    localStorage.wonGames = 0;          // Games won
-    localStorage.winPercent = 0;        // Percentage of games won   
-    localStorage.lostGames = 0;         // Games lost
-    localStorage.currentStreak = 0;     // Current win streak
-    localStorage.maxStreak = 0;         // Best win streak
-    localStorage.playedPicodia = false; // Played Picodia before?  
-    localStorage.playedToday = false;   // Played Picodia today? -- saves as bool to check against date
-    localStorage.avgLossTime = 0;
-    localStorage.lossAvgTime = 0;
-    localStorage._1LifeWins = 0;
-    localStorage._1LifeAvgTime = 0;
-    localStorage._2LifeWins = 0;
-    localStorage._2LifeAvgTime = 0;
-    localStorage._3LifeWins = 0;
-    localStorage._3LifeAvgTime = 0;
-    localStorage._4LifeWins = 0;
-    localStorage._4LifeAvgTime = 0;
-    localStorage.prevTime = 0;
-    localStorage.prevLives = 0;
-    localStorage.prevOutcome = false;
-    localStorage.prevGameArray = [];
-    localStorage.currentGameArray = "";
-    localStorage.blankArray = "[[2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2]]";
-    localStorage.lastPlayed = 0;
-    localStorage.todayDate = '';
-    localStorage.whatIsIt = '';
-    localStorage.todayDate = '';
+const storageInit = (store) => {
+    store.totalGames = 0;        // Total games played
+    store.wonGames = 0;          // Games won
+    store.winPercent = 0;        // Percentage of games won   
+    store.lostGames = 0;         // Games lost
+    store.currentStreak = 0;     // Current win streak
+    store.maxStreak = 0;         // Best win streak
+    store.playedPicodia = false; // Played Picodia before?  
+    store.playedToday = false;   // Played Picodia today? -- saves as bool to check against date
+    store.avgLossTime = 0;
+    store.lossAvgTime = 0;
+    store._1LifeWins = 0;
+    store._1LifeAvgTime = 0;
+    store._2LifeWins = 0;
+    store._2LifeAvgTime = 0;
+    store._3LifeWins = 0;
+    store._3LifeAvgTime = 0;
+    store._4LifeWins = 0;
+    store._4LifeAvgTime = 0;
+    store.prevTime = 0;
+    store.prevLives = 0;
+    store.prevOutcome = false;
+    store.prevGameArray = [];
+    store.currentGameArray = "";
+    store.blankArray = "[[2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2], [2,2,2,2,2,2,2,2]]";
+    store.lastPlayed = 0;
+    store.todayDate = '';
+    store.whatIsIt = '';
+    store.todayDate = '';
 }
 
 const onGameOver = (numLives, win, prevGameArray, puzzleReference, whatIsIt) => {  
@@ -100,4 +100,14 @@ const todayDate = () => {
     return today
 }
 
-export {storageInit, onGameOver, handleWinStats, handleLoseStats, gameArrayChunker, checkDate, todayDate}
+function compareStorageKeys(currentStorage) {
+    const initStorage = {};
+    storageInit(initStorage)
+    // console.log(initStorage)
+    // console.log(currentStorage)
+    var aKeys = Object.keys(initStorage).sort();
+    var bKeys = Object.keys(currentStorage).sort();
+    return JSON.stringify(aKeys) === JSON.stringify(bKeys);
+  }
+
+export {storageInit, onGameOver, handleWinStats, handleLoseStats, gameArrayChunker, checkDate, todayDate, compareStorageKeys}
