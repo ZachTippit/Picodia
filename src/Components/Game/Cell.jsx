@@ -4,7 +4,7 @@ import { Grid } from '@mui/material'
 
 const Cell = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
 
-  const {isDarkMode, playedToday} = useSelector(state => state.gameConfig)
+  const {isDarkMode, isRBBlind, playedToday} = useSelector(state => state.gameConfig)
   const { isStarted, didWin, markUp } = useSelector(state => state.gameState)
 
   const [guessed, setGuessed] = useState(playedToday);
@@ -49,12 +49,13 @@ const Cell = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
     <Grid item xs={1} 
       className={'cell '
                 + (isDarkMode ? 'light-' : 'dark-') 
-                + (playedToday ? ((cell === 1 ? 'right pulsate-fwd ' : cell === 0 ? ' wrong pulsate-fwd ' : ' flagged pulsate-fwd ')) : 
-                  (guessed ? (cell ? 'right pulsate-fwd ' : ' wrong pulsate-fwd ') : ' '))
+                + (playedToday ? ((cell === 1 ? 'right pulsate-fwd ' : cell === 0 ? (isRBBlind ? ' color-blind-wrong pulsate-fwd ' : ' wrong pulsate-fwd ') : ' flagged pulsate-fwd ')) : 
+                  (guessed ? (cell ? 'right pulsate-fwd ' : (isRBBlind ? ' color-blind-wrong pulsate-fwd ' : ' wrong pulsate-fwd ')) : ' '))
                 + (flagged ? (isDarkMode ? ' flagged-dark ' : 'flagged ') : ' ')
                 + (winAnimation ? ' win-animation': '')
                 + ((isStarted && parseInt(cellNum/gridSize) === 5) ? ' horz-mid-thick ' : ' ' )
                 + ((isStarted && cellNum%gridSize === 5) ? ' vert-mid-thick ' : ' ')
+                + ((isRBBlind && cell === 0 && guessed) ? ' color-blind-wrong ': ' ')
               }
       onMouseUp={(e) => handleClick(e)}
       onContextMenu={(e) => { e.preventDefault(); setFlagged(!flagged)}}

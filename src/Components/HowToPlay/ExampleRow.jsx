@@ -3,7 +3,7 @@ import { Grid } from '@mui/material'
 import { useSelector } from 'react-redux'
 
 const ExampleRow = ({exClue, exArray, nextStart, onToNext, order}) => {
-    const isDarkMode = useSelector(state => state.gameConfig.isDarkMode)
+    const {isDarkMode, isRBBlind} = useSelector(state => state.gameConfig)
 
     const [nextAnim, setNextAnim] = useState();
 
@@ -29,7 +29,7 @@ const ExampleRow = ({exClue, exArray, nextStart, onToNext, order}) => {
             <p style={{margin: 0, textAlign: 'right', paddingRight: '0.5rem'}}>{exClue}</p>
         </Grid>
         {exArray.map((cell, index) => (
-            <Grid item xs className={'ex-cell ' + (isDarkMode ? 'light-' : 'dark-') + ((nextAnim>=index) ? (cell===1 ? 'right pulsate-fwd ' : cell===0 ? 'wrong pulsate-fwd ' : cell===2 ? 'flagged pulsate-fwd ' : ' pulsate-fwd') : ' ')} onAnimationEnd={() => {setNextAnim(nextAnim + 1)}} />
+            <Grid item xs className={'ex-cell ' + (isDarkMode ? 'light-' : 'dark-') + ((nextAnim>=index) ? (cell===1 ? 'right pulsate-fwd ' : cell===0 ? (isRBBlind ? ' color-blind-wrong pulsate-fwd ' : ' wrong pulsate-fwd ') : cell===2 ? 'flagged pulsate-fwd ' : ' pulsate-fwd') : ' ')} onAnimationEnd={() => {setNextAnim(nextAnim + 1)}} />
         ))}
     </Grid>
   )

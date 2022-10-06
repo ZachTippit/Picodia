@@ -15,7 +15,8 @@ export const gameConfig = {
     dailyPuzzle1: Array(8),
     gridSize: 10,
     winNum: 4,
-    today: ''
+    today: '',
+    isRBBlind: false
 }
 
 export const statState = {

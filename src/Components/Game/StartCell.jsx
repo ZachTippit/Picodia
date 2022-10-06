@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 const StartCell = ({cell, cellNum, gridSize, handleCell, didWin, nextAnim, order}) => {
     
-    const isDarkMode = useSelector(state => state.gameConfig.isDarkMode)
+    const {isDarkMode, isRBBlind} = useSelector(state => state.gameConfig)
 
     const gameState = useSelector(state => state.gameState)
 
@@ -46,7 +46,7 @@ const StartCell = ({cell, cellNum, gridSize, handleCell, didWin, nextAnim, order
         <Grid item xs={1} 
         className={'cell '
                     +   (isDarkMode ? 'light-' : 'dark-') 
-                    +   (guessed ? (cell ? 'right pulsate-fwd ' : ' wrong pulsate-fwd ') : ' ')
+                    +   (guessed ? (cell ? 'right pulsate-fwd ' : (isRBBlind ? ' color-blind-wrong pulsate-fwd ' : ' wrong pulsate-fwd ')) : ' ')
                     +   (flagged ? (isDarkMode ? ' flagged-dark ' : 'flagged ') : ' ')
                     +   (winAnimation ? ' win-animation': '')
                     +   ((gameState.isStarted && parseInt(cellNum/gridSize) == 5) ? ' horz-mid-thick ' : ' ' )

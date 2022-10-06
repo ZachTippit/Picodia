@@ -30,6 +30,9 @@ export const gameConfigSlice = createSlice({
         togglesDarkMode: (gameConfig) => {
             gameConfig.isDarkMode = !gameConfig.isDarkMode;
         },
+        togglesRBColorBlindMode: (gameConfig) => {
+            gameConfig.isRBBlind = !gameConfig.isRBBlind;
+        },
         setLastPlayed: (gameConfig) => {
             gameConfig.lastPlayed = !gameConfig.lastPlayed
         },
@@ -61,6 +64,6 @@ export const gameConfigSlice = createSlice({
     }
 })
 
-export const { togglesDarkMode, hasPlayedToday, setPuzzleRef, puzzleIs } = gameConfigSlice.actions;
+export const { togglesDarkMode, togglesRBColorBlindMode, hasPlayedToday, setPuzzleRef, puzzleIs } = gameConfigSlice.actions;
 
 export default gameConfigSlice.reducer;

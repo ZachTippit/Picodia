@@ -7,7 +7,7 @@ import {default as EmptyHeart} from '../../assets/empty-heart.png'
 
 
 const LoseExampleRow = ({exClue, exArray, nextStart, order}) => {
-    const isDarkMode = useSelector(state => state.gameConfig.isDarkMode)
+    const { isDarkMode, isRBBlind } = useSelector(state => state.gameConfig)
 
     const [nextAnim, setNextAnim] = useState(-1);
 
@@ -26,7 +26,7 @@ const LoseExampleRow = ({exClue, exArray, nextStart, order}) => {
                 <p style={{margin: 0, textAlign: 'right', paddingRight: '0.5rem'}}>{exClue}</p>
             </Grid>
             {exArray.map((cell, index) => (
-                <Grid item xs={2} className={'ex-cell ' + (isDarkMode ? 'light-' : 'dark-') + ((nextAnim>=index) ? (cell===1 ? 'right pulsate-fwd' : cell===0 ? ' wrong pulsate-fwd' : ' flagged pulsate-fwd') : ' ')} onAnimationEnd={() => {setNextAnim(nextAnim + 1)}} />
+                <Grid item xs={2} className={'ex-cell ' + (isDarkMode ? 'light-' : 'dark-') + ((nextAnim>=index) ? (cell===1 ? 'right pulsate-fwd' : cell===0 ? (isRBBlind ? ' color-blind-wrong pulsate-fwd ' : ' wrong pulsate-fwd ') : ' flagged pulsate-fwd') : ' ')} onAnimationEnd={() => {setNextAnim(nextAnim + 1)}} />
             ))}
         </Grid>
         <Grid container width='35%' marginLeft='5%'>

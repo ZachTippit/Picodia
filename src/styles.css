@@ -492,6 +492,10 @@ html {
         background-color: rgb(150,0,20) !important;
     }  
 
+    .color-blind-wrong{
+        background-color: #e67300 !important;
+    }
+
     .flagged {
         transition: all 0.1s ease-in;
         background-color: #ccc
