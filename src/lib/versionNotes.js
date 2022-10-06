@@ -1,7 +1,7 @@
 exports.versionNotes = [
     {
         versionNum: "0.5.4",
-        date: "10/4/22",
+        date: "10/6/22",
         introText: "Added accessibility mode",
         updateList: [
             "Added new feature for red-black color blindness to more easily differentiate wrong squares.",
