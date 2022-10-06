@@ -6,7 +6,7 @@ exports.versionNotes = [
         updateList: [
             "Added new feature for red-black color blindness to more easily differentiate wrong squares.",
             "Still need to replicate accessibility access for button switches. This raises up an idea of recoloring the buttons to align with the 'incorrect' red.",
-            "User raised issue with localStorage access due to changes between versioning. Investigating now."
+            "Created catcher for anyone with old localStorage -- will reinit if using an older storage version"
         ],
         outroText: "Thank you to u/kreuse-tim from Reddit and @rentalsoul from Discord for your bug reports!"
     },
