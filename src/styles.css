@@ -563,7 +563,7 @@ html {
     position: absolute;
     align-self: center;
     width: 100%;
-    height: 100px;
+    height: 100%;
     text-align: center;
     color: black;
     z-index: 3;
@@ -597,11 +597,12 @@ html {
     }
 
 #footer-container{
-    position: relative;
+    position: fixed;
+    bottom: 0;
     border-top: 1px solid lightgray;
     width: 100%;
     justify-content: space-around;
-    margin-bottom: 2rem;
+    padding-bottom: 6rem;
     transition: all 3s;
     overflow-y: none;
 }
