@@ -601,9 +601,10 @@ html {
 #footer-container{
     position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
     border-top: 1px solid lightgray;
     width: 100%;
-    justify-content: space-around;
     padding-bottom: 6rem;
     transition: all 3s;
     overflow-y: none;
@@ -737,6 +738,10 @@ html {
 
     .how-to-play > p {
         margin: 0.75rem 0;
+    }
+
+    #footer-container{
+        bottom: 40%;
     }
     /* #footer {
         padding-top: 0;
