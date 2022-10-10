@@ -601,10 +601,8 @@ html {
 #footer-container{
     position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
     border-top: 1px solid lightgray;
-    width: 100%;
+    width: 450px;
     padding-bottom: 6rem;
     transition: all 3s;
     overflow-y: none;
@@ -688,8 +686,9 @@ html {
         height: 100vh;
     }
 
-    #footer {
-        margin: 0.375rem auto;
+    #footer-container {
+        width: 100%;
+        margin: auto;
         padding-top: 0;
         position: absolute;
         bottom: 0;
