@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { Grid } from '@mui/material'
 
 import {default as Heart} from '../../assets/heart.png'
+import { default as HeartCB} from '../../assets/heart-cb.png'
 import {default as EmptyHeart} from '../../assets/empty-heart.png'
 
 
@@ -33,7 +34,7 @@ const LoseExampleRow = ({exClue, exArray, nextStart, order}) => {
             {[...Array(3)].map((life, index) => (
                 index+2>=nextAnim ?
                 <Grid item xs>
-                    <img className={'life '} src={Heart} alt='Lives' key={index}/>
+                    <img className={'life '} src={isRBBlind ? HeartCB : Heart} alt='Lives' key={index}/>
                 </Grid> 
                 :
                 <Grid item xs>

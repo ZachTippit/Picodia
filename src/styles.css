@@ -163,6 +163,8 @@ html {
     .tutorial-tile{
         position: relative;
         height: 300px;
+        width: 100%;
+        margin: auto;
     }
 
     .tutorial-tile > div {

@@ -32,7 +32,7 @@ const HowToPlay = ({closeMenu}) => {
       <div className={'section-header'}>
         <h2 style={{fontSize: '1.25rem'}}>PICODIA RULES</h2>
         <p>Solve the <b>Nonogram</b> with less than 3 mistakes. You win if you complete puzzle correctly by filling in all of the correct cells.</p>
-        <p><b>{isMobile ? 'Tap' : 'Click'}</b> to fill a cell. Mark up cells {!isMobile && '(you can also right-click or toggle on mobile)'} to help work your way through!</p>
+        <p><b>{isMobile ? 'Tap' : 'Click'}</b> to fill a cell. <b>Mark up</b> cells {!isMobile && '(you can also right-click or toggle on mobile)'} to help work your way through!</p>
         <p>Share your results to see how you stack up!</p>
         <h2 style={{margin: '0.75rem 0', padding: '1rem 0', fontSize: '1.25rem', textAlign: 'center'}}><b>HOW TO PLAY</b></h2>
       </div>
@@ -40,7 +40,8 @@ const HowToPlay = ({closeMenu}) => {
         <Carousel  
           swipeable emulateTouch  
           autoPlay infiniteLoop interval={10000}
-          showStatus={false} showIndicators={false} showThumbs={false}
+          showStatus={true} showIndicators={true} showArrows={true}
+          swipeScrollTolerance={10}
           onChange={onToNext}
         >
           <div className='tutorial-tile'>
