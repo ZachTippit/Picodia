@@ -39,8 +39,8 @@ export const gameConfigSlice = createSlice({
         hasPlayedToday: (gameConfig, action) => {
             gameConfig.playedToday = action.payload
         },
-        setPuzzleRef: (state, action) => {
-            state.gameConfig.puzzleReference = action.payload
+        setPuzzleRef: (gameConfig, action) => {
+            gameConfig.puzzleReference = action.payload
         },
         puzzleIs: (gameConfig, action) => {
             gameConfig.whatIsIt = action.payload

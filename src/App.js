@@ -28,9 +28,10 @@ const App = () => {
 
     // console.log('localStorage on Load: ', localStorage)
 
-    const getDailyPuzzle = async () => {                  // Gets puzzle reference for puzzle fetcher
+    const getDailyPuzzle = async () => {  
+      let picodiaNum = daysSinceLaunch();                // Gets puzzle reference for puzzle fetcher
       await dispatch(fetchDailyPuzzle())
-      dispatch(setPuzzleRef(daysSinceLaunch()))
+      dispatch(setPuzzleRef(picodiaNum))
     }
 
     if(checkDate()){ // Checks if played today

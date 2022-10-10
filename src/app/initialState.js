@@ -6,7 +6,7 @@
 
 export const gameConfig = {
     dailyPuzzle: Array(8),
-    puzzleReference: 0,
+    puzzleReference: '0',
     whatIsIt: '',
     lastPlayed: 0,
     isDarkMode: false,
