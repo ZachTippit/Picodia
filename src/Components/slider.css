@@ -1,8 +1,10 @@
 :root{
-  --off-bg: #fcebeb;
-  --off-box: #f44336;
-  --on-bg: #ebf7fc;
-  --on-box: #03a9f4;
+  --on-bg: #eee;
+  --on-box: #444;
+  --off-bg: rgb(236, 210, 214);
+  --off-box: rgb(150,0,20);
+  --off-cb-bg: #fad9b8;
+  --off-cb-box: #e67300;
 }
 
 
@@ -27,6 +29,16 @@
     display: inline-block;
     height: 30px;
     align-self: center;
+    transform: scale(-1, 1);
+  }
+
+  .setting-switch {
+    position: relative;
+    display: inline-block;
+    height: 30px;
+    top: 50%;
+    align-self: center;
+    transform: scale(-1, 1);
   }
   
   /* Hide default HTML checkbox */
@@ -34,54 +46,6 @@
     opacity: 0;
     width: 0;
     height: 0;
-  }
-  
-  /* The slider */
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .2s;
-    transition: .2s;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 5px;
-    bottom: 5px;
-    background-color: white;
-    -webkit-transition: .2s;
-    transition: .2s;
-  }
-  
-  input:checked + .slider {
-    background-color: var(--on-bg);
-  }
-  
-  input:focus + .slider {
-    box-shadow: 0 0 1px var(--on-bg);
-  }
-  
-  input:checked + .slider:before {
-    -webkit-transform: translateX(20px);
-    -ms-transform: translateX(20px);
-    transform: translateX(20px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
-    border-radius: 30px;
-  }
-  
-  .slider.round:before {
-    border-radius: 50%;
   }
 
   /* Button 11 */
@@ -113,10 +77,23 @@
   padding: 9px 4px;
 }
 
+#button-11 .cb:before {
+  content: "X";
+  left: 8px;
+  top: 2px;
+}
+
+#button-11 .cb:after {
+  transform: scale(-1,1);
+  content: "✓";
+  right: 8px;
+  top: 2px;
+}
+
 #button-11 .knobs span {
   right: 4px;
   width: 33px;
-  height: 28px;
+  height: 22px;
   background-color: var(--off-box);
   transform: rotateY(0);
   transform-origin: 0% 50%;
@@ -127,6 +104,22 @@
 #button-11 .checkbox:checked + .knobs span {
   transform: rotateY(-180deg);
   background-color: var(--on-box);
+}
+
+#button-11 .cb span {
+  background-color: var(--off-cb-box);
+}
+
+#button-11 .cb-layer {
+  background-color: var(--off-cb-bg);
+}
+
+#button-11 .checkbox:not(:checked) .cb span {
+  background-color: var(--off-cb-box) !important;
+}
+
+#button-11 .checkbox:not(:checked) .cb-layer {
+  background-color: var(--off-cb-bg) !important;
 }
 
 #button-11 .checkbox:checked ~ .layer {
@@ -144,9 +137,8 @@
 
 .button {
   position: relative;
-  top: 50%;
   width: 74px;
-  height: 36px;
+  height: 30px;
   margin: -20px auto 0 auto;
   overflow: hidden;
 }

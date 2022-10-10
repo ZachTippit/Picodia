@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { Divider, Grid } from '@mui/material';
+import { daysSinceLaunch } from '../lib/utilities';
 import { toggleAlert } from '../features/windowHandler/windowHandlerSlice';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { default as Heart } from '../assets/heart.png'
+import { default as HeartCB } from '../assets/heart-cb.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
 
 
 const Stats = ({ closeMenu }) => {
   const dispatch = useDispatch()
 
-  const { isDarkMode, playedToday, puzzleReference } = useSelector(state => state.gameConfig)
+  const { isDarkMode, isRBBlind, playedToday, puzzleReference } = useSelector(state => state.gameConfig)
   const { stateOfGame } = useSelector(state => state.gameState)
   
   const [closing, setClosing] = useState(false);
@@ -81,28 +83,28 @@ const Stats = ({ closeMenu }) => {
               <Grid item xs={4} className={'stat-time'}><p><b>Games Finished</b></p></Grid>
               <Grid item xs={4} className={'stat-time'}><p><b>Avg Game</b></p></Grid>
               <Grid item xs={4} alignSelf='center' className={'life-stat'}>
-                <img src={Heart} alt='Lives' />
-                <img src={Heart} alt='Lives' />
-                <img src={Heart} alt='Lives' />
-                <img src={Heart} alt='Lives' />
+                <img src={isRBBlind ? HeartCB : Heart} alt='Lives' />
+                <img src={isRBBlind ? HeartCB : Heart} alt='Lives' />
+                <img src={isRBBlind ? HeartCB : Heart} alt='Lives' />
+                <img src={isRBBlind ? HeartCB : Heart} alt='Lives' />
               </Grid>
               <Grid item xs={4} className={'stat-time'}><p>{localStorage['_4LifeWins'] | 0}</p></Grid>
               <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage['_4LifeAvgTime'])}</p></Grid>
               <Grid item xs={4} alignSelf='center' className={'life-stat'}>
-                <img src={Heart} alt='Lives' />
-                <img src={Heart} alt='Lives' />
-                <img src={Heart} alt='Lives' />
+                <img src={isRBBlind ? HeartCB : Heart} alt='Lives' />
+                <img src={isRBBlind ? HeartCB : Heart} alt='Lives' />
+                <img src={isRBBlind ? HeartCB : Heart} alt='Lives' />
               </Grid>
               <Grid item xs={4} className={'stat-time'}><p>{localStorage['_3LifeWins'] | 0}</p></Grid>
               <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage['_3LifeAvgTime'])}</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
-                <img src={Heart} alt='Lives' />
-                <img src={Heart} alt='Lives' />
+                <img src={isRBBlind ? HeartCB : Heart} alt='Lives' />
+                <img src={isRBBlind ? HeartCB : Heart} alt='Lives' />
               </Grid>
               <Grid item xs={4} className={'stat-time'}><p>{localStorage['_2LifeWins'] | 0}</p></Grid>
               <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage['_2LifeAvgTime'])}</p></Grid>
               <Grid item xs={4} className={'life-stat'}>
-                <img src={Heart} alt='Lives' />
+                <img src={isRBBlind ? HeartCB : Heart} alt='Lives' />
               </Grid>
               <Grid item xs={4} className={'stat-time'}><p>{localStorage['_1LifeWins'] | 0}</p></Grid>
               <Grid item xs={4} className={'stat-time'}><p>{timeParser(localStorage['_1LifeAvgTime'])}</p></Grid>

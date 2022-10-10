@@ -38,7 +38,8 @@ export const gameState = {
     stateOfGame: 'starting',
     preGameAnimation: false,
     currentGameArray: [],
-    prevGameArray: []
+    prevGameArray: [],
+    markUp: false
 }
 
 export const windowHandler = {

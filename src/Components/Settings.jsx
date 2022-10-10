@@ -4,10 +4,11 @@ import {default as CloseDark} from '../assets/close-dark.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { togglesDarkMode, togglesRBColorBlindMode } from '../features/gameConfig/gameConfigSlice';
 import { toggleHardMode } from '../features/gameState/gameStateSlice';
+import Toggle from './Toggle';
 
 const Settings = ({closeMenu, version}) => {
   const dispatch = useDispatch();
-  const { isDarkMode, isRBBlind } = useSelector(state => state.gameConfig)
+  const { isDarkMode, isRBBlind, puzzleReference } = useSelector(state => state.gameConfig)
   const { hardMode } = useSelector(state => state.gameState)
 
   const [closing, setClosing] = useState(false);
@@ -32,39 +33,21 @@ const Settings = ({closeMenu, version}) => {
             <h3>HARD MODE</h3>
             <p>Lowers lives to 1! Don't make a mistake :)</p>
           </div>
-          <label className=" switch">
-            <div class="button b2" id="button-11">
-              <input type="checkbox" class="checkbox" onClick={() =>dispatch(toggleHardMode())} defaultChecked={hardMode}/>
-              <div class="knobs"><span></span></div> 
-              <div class="layer"></div>
-            </div>
-          </label>
+          <Toggle clickHandler='hard mode' defVal={hardMode} />
         </div>
         <div className={'setting '}>
           <div className={'section-txt'}>
             <h3>DARK THEME</h3>
             <p>Toggle to turn dark mode on and off.</p>
           </div>
-          <label className=" switch">
-            <div class="button b2" id="button-11">
-              <input type="checkbox" class="checkbox" onClick={() => dispatch(togglesDarkMode())} defaultChecked={isDarkMode}/>
-              <div class="knobs"><span></span></div>
-              <div class="layer"></div>
-            </div>
-          </label>
+          <Toggle clickHandler='dark mode' defVal={isDarkMode} />
         </div>
         <div className={'setting '}>
           <div className={'section-txt'}>
             <h3>ACCESSIBILITY MODE</h3>
             <p>Changes color palate for red-black color blind.</p>
           </div>
-          <label className=" switch">
-            <div class="button b2" id="button-11">
-              <input type="checkbox" class="checkbox" onClick={() => dispatch(togglesRBColorBlindMode())} defaultChecked={isRBBlind}/>
-              <div class="knobs"><span></span></div>
-              <div class="layer"></div>
-            </div>
-          </label>
+          <Toggle clickHandler='color blind mode' defVal={isRBBlind} />
         </div>
         <div className={'setting '}>
           <div className={'section-txt'}>

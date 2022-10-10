@@ -1,5 +1,17 @@
 exports.versionNotes = [
     {
+        versionNum: "0.6.0",
+        date: "10/10/22",
+        introText: "Expanded accessibility, fixing mobile issues",
+        updateList: [
+            "Replaced all button/cell colors with easier signifiers for color blind mode (including ✓ and X).",
+            "Moved markup button into footer for cleaner screen space and for mobile rendering on older phones",
+            "Fixed version # showing up accurately",
+            "Moved all user pings/alerts to the footer to clean up screen real estate"
+        ],
+        outroText: "One last beta round before launch! Hoping to not need many more updates."
+    },
+    {
         versionNum: "0.5.4",
         date: "10/6/22",
         introText: "Added accessibility mode",

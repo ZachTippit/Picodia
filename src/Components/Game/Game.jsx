@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleMarkup } from '../../features/gameState/gameStateSlice';
 import { changeGameState, loseLife, setDidWin, setCurrentGameArray } from '../../features/gameState/gameStateSlice.js';
 import { Grid } from '@mui/material';
 import Clues from './Clues.jsx';
@@ -11,7 +10,7 @@ const Game = () => {
 
     const isMobile = useSelector(state => state.windowHandler.isMobile);
     const { dailyPuzzle, gridSize, winNum, playedToday } = useSelector(state => state.gameConfig)
-    const {didWin, stateOfGame, isStarted, lives, markUp, currentGameArray} = useSelector(state => state.gameState);
+    const {didWin, stateOfGame, isStarted, lives, currentGameArray} = useSelector(state => state.gameState);
 
     const [correctCellCount, setCorrectCellCount] = useState(0);
     const [nextAnim, setNextAnim] = useState(0);
@@ -70,22 +69,6 @@ const Game = () => {
                     }</>}</>}</>}</>))} {/* <-- LOL THIS IS AWFUL */}
                 </Grid> 
             </div>
-            { !playedToday && 
-            <div className={(isStarted ? ' move-on-start ' : ' ') + ' markup-btn '}>
-                <div className={'section-txt'}>
-                    <h3>Markup - {markUp ? "On" : "Off"}</h3>
-                    <p>Toggle to make notes on puzzle{!isMobile ? ' (or right-click on a computer)' : '.'}</p>
-                </div>
-            
-                <label className=" switch">
-                    <div class="button b2" id="button-11">
-                        <input type="checkbox" class="checkbox" onClick={() => dispatch(toggleMarkup())} defaultChecked={false}/>
-                        <div class="knobs"><span></span></div>
-                        <div class="layer"></div>
-                    </div>
-                </label>
-            </div>  
-            } 
         </div>
     )
 }

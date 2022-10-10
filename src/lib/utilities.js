@@ -99,6 +99,13 @@ const todayDate = () => {
     return today
 }
 
+const daysSinceLaunch = () => {
+    const launchDay = new Date('September 30, 2022 20:00:00')
+    const today = new Date();
+    const daysBetween = Math.ceil((today - launchDay) / (1000 * 3600 * 24)) - 1;
+    return daysBetween
+  }
+
 function compareStorageKeys(currentStorage) {
     const initStorage = {};
     storageInit(initStorage)
@@ -109,4 +116,4 @@ function compareStorageKeys(currentStorage) {
     return JSON.stringify(aKeys) === JSON.stringify(bKeys);
   }
 
-export {storageInit, onGameOver, handleWinStats, handleLoseStats, gameArrayChunker, checkDate, todayDate, compareStorageKeys}
+export {storageInit, onGameOver, handleWinStats, handleLoseStats, gameArrayChunker, checkDate, todayDate, compareStorageKeys, daysSinceLaunch}

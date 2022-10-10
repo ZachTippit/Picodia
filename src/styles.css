@@ -3,6 +3,8 @@
     --light-txt: #111;
     --dark-bg: #111;
     --dark-txt: #eee;
+    --wrong: rgb(150,0,20); 
+    --cb: #e67300;
 }
 
 .light-theme {
@@ -201,7 +203,7 @@ html {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1;
+    z-index: 4;
     min-height: 90vh;
     padding: 2rem 0;
     overflow-y: none;
@@ -302,7 +304,7 @@ html {
     left: 0;
     bottom: 0;
     background-color: rgba(10, 10, 10, 0.5);
-    z-index: 2;
+    z-index: 4;
     overflow-y: none;
 }
 
@@ -493,7 +495,7 @@ html {
     }  
 
     .color-blind-wrong{
-        background-color: #e67300 !important;
+        background-color: var(--cb) !important;
     }
 
     .flagged {
@@ -557,53 +559,75 @@ html {
         border-right: solid 4px;
     }
 
-    #clip-ping {
-        width: 200px;
-        padding: 1rem;
+#clip-ping {
+    position: absolute;
+    align-self: center;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    color: black;
+    z-index: 3;
+}
+
+    #clip-ping p {
         position: absolute;
-        margin-top: 3.5rem;
-        margin-left: auto;
-        margin-right: auto;
-        left: 0;
-        right: 0;
-        text-align: center;
-        top: 10%;
-        color: black;
-        border-radius: 4%;
-        z-index: 3;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
     .win-ping{
-        background-color: rgba(100,220,100,0.8);
+        background-color: rgba(100,220,100,1);
     }
 
     .lose-ping{
-        background-color: rgba(220,100,100,0.85);
+        background-color: rgba(220,100,100,1);
     }
 
     .copy-ping{
-        background-color: rgba(100,100,220,0.8);
+        background-color: rgba(100,100,220,1);
     }
     
     .played-ping{
-        background-color: rgba(204,204,204,0.3);
+        background-color: rgba(204,204,204,1) !important;
     }
 
     .mt{
         padding-top: 6rem;
     }
 
-
-#footer {
+#footer-container{
+    position: relative;
     border-top: 1px solid lightgray;
-    display: flex;
     width: 100%;
     justify-content: space-around;
     margin-bottom: 2rem;
-    padding-top: 1rem;
     transition: all 3s;
     overflow-y: none;
 }
+
+#footer {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    padding-top: 1rem;
+    top: 0;
+    justify-content: space-around;
+    transition: all 3s;
+    overflow-y: none;
+}
+
+    .footer-stat p {
+        text-align: center;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+
+    .footer-stat div {
+        margin: auto;
+        text-align: center;
+    }
+
     #lives {
         align-self: center;
     }
@@ -611,11 +635,6 @@ html {
     .life {
         width: 30px;
     }
-
-    #maxLives {
-        text-align: center;
-    }
-
 
 /*              Responsiveness           */
 /*                                       */

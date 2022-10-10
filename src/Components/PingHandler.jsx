@@ -16,14 +16,14 @@ const PingHandler = () => {
           case 'gameOver':
             return <Ping note={didWin ? `Nice! It's ${localStorage.whatIsIt}.` : 'Bummer...'}/>
           case 'playedToday':
-            return <Ping note={`You have already played today. It was ${whatIsIt}!`} />
+            return <Ping note={`You have already played today. It was ${whatIsIt}!`} pingType='played'/>
           default:
             return
         }
       }
 
   return (
-    <div> 
+    <div id='clip-container'> 
         { (playedToday && !isOpen) && showPing('playedToday') }
         { (startPing && !playedToday) && showPing('goodLuck')}
         { goAlert && showPing('gameOver') }

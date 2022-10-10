@@ -2,10 +2,9 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import ReactGA from 'react-ga';
 import { Footer, Game, HowToPlay, Navbar, PingHandler, Settings, SolveToStart, Stats, VersionNotes } from './Components'
-
-import { onGameOver, handleWinStats, handleLoseStats, storageInit, checkDate, compareStorageKeys } from './lib/utilities'
+import { onGameOver, handleWinStats, handleLoseStats, storageInit, checkDate, compareStorageKeys, daysSinceLaunch } from './lib/utilities'
 import { _startGame, togglePreGameAnimation, setCurrentGameArray } from './features/gameState/gameStateSlice'
-import { fetchDailyPuzzle, hasPlayedToday, puzzleIs } from './features/gameConfig/gameConfigSlice';
+import { fetchDailyPuzzle, hasPlayedToday, puzzleIs, setPuzzleRef } from './features/gameConfig/gameConfigSlice';
 import { toggleGameOverAlert, toggleOpen, toggleStartPing, setPath } from './features/windowHandler/windowHandlerSlice'
 
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
@@ -27,10 +26,11 @@ const App = () => {
     localStorage.length === 0 && storageInit(localStorage);          // Checks storage length, if empty, create storage object.
     !compareStorageKeys(localStorage) && storageInit(localStorage)   // Compares current localStorage to init values. If properties are not the same, update keys. (This is to assist in version control).
 
-    console.log('localStorage on Load: ', localStorage)
+    // console.log('localStorage on Load: ', localStorage)
 
     const getDailyPuzzle = async () => {                  // Gets puzzle reference for puzzle fetcher
       await dispatch(fetchDailyPuzzle())
+      dispatch(setPuzzleRef(daysSinceLaunch()))
     }
 
     if(checkDate()){ // Checks if played today
@@ -42,7 +42,6 @@ const App = () => {
       dispatch(hasPlayedToday(true));
       
       if(JSON.parse(localStorage.prevGameArray) !== currentGameArray){
-        console.log(JSON.parse(localStorage.prevGameArray))
         dispatch(setCurrentGameArray(JSON.parse(localStorage.prevGameArray)))
       }
     } else {
@@ -96,7 +95,7 @@ const App = () => {
       setTimeout(() => {
         dispatch(toggleOpen())
         dispatch(setPath(path))
-      }, 500);  
+      }, 200);  
     }
   }
 
@@ -138,7 +137,6 @@ const App = () => {
         { isOpen && showWindow(path)}
         { !isStarted ? <SolveToStart /> : <Game /> }
         <Footer openMenu={isSeen} />
-        <PingHandler />
       </div>
     </div>
   );
