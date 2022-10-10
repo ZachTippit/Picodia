@@ -40,7 +40,7 @@ const HowToPlay = ({closeMenu}) => {
         <Carousel  
           swipeable emulateTouch  
           autoPlay infiniteLoop interval={10000}
-          showStatus={true} showIndicators={true} showArrows={true}
+          showStatus={true} showIndicators={false} showArrows={true}
           swipeScrollTolerance={10}
           onChange={onToNext}
         >
