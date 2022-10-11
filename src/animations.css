@@ -525,6 +525,7 @@
   }
   
   .solve-to-start-txt {
+        cursor: pointer;
 	-webkit-animation: solve-to-start-txt 4s ease-in-out infinite both;
 	        animation: solve-to-start-txt 4s ease-in-out infinite both;
 }

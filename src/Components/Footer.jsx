@@ -51,7 +51,7 @@ const Footer = ({openMenu}) => {
         {!isStarted ? 
           <div className={(preGameAnimation ? 'fade-out-right ' : ' ')}>
             {localStorage.playedPicodia=='false' ? 
-              <div onClick={() => openMenu('about')}>
+              <div onClick={() => openMenu('how-to-play')}>
                 <p className={'solve-to-start-txt '}><b>{isMobile ? 'Tap ' : 'Click here '} to learn how to play!</b></p>
               </div>  
               :

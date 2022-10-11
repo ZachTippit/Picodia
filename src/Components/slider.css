@@ -25,6 +25,7 @@
 }
 
 .switch {
+    cursor: pointer;
     position: relative;
     display: inline-block;
     height: 30px;
@@ -33,6 +34,7 @@
   }
 
   .setting-switch {
+    cursor: pointer;
     position: relative;
     display: inline-block;
     height: 30px;
