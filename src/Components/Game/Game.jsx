@@ -10,7 +10,7 @@ const Game = () => {
 
     const isMobile = useSelector(state => state.windowHandler.isMobile);
     const { dailyPuzzle, gridSize, winNum, playedToday } = useSelector(state => state.gameConfig)
-    const {didWin, stateOfGame, isStarted, lives, currentGameArray} = useSelector(state => state.gameState);
+    const { didWin, stateOfGame, isStarted, lives, currentGameArray } = useSelector(state => state.gameState);
 
     const [correctCellCount, setCorrectCellCount] = useState(0);
     const [nextAnim, setNextAnim] = useState(0);

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import ReactGA from 'react-ga';
-import { Footer, Game, HowToPlay, Navbar, PingHandler, Settings, SolveToStart, Stats, VersionNotes } from './Components'
+import { Footer, Game, HowToPlay, Navbar, Settings, SolveToStart, Stats, VersionNotes } from './Components'
 import { onGameOver, handleWinStats, handleLoseStats, storageInit, checkDate, compareStorageKeys, daysSinceLaunch } from './lib/utilities'
 import { _startGame, togglePreGameAnimation, setCurrentGameArray } from './features/gameState/gameStateSlice'
 import { fetchDailyPuzzle, hasPlayedToday, puzzleIs, setPuzzleRef } from './features/gameConfig/gameConfigSlice';
@@ -35,10 +35,6 @@ const App = () => {
     }
 
     if(checkDate()){ // Checks if played today
-      // Set values if played today already
-      // Set gameState.currentArray = localStorage.currentArray
-      // 
-      // 
       dispatch(puzzleIs(localStorage.whatIsIt))
       dispatch(hasPlayedToday(true));
       

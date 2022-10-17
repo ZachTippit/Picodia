@@ -33,6 +33,15 @@
     transform: scale(-1, 1);
   }
 
+  .tutorial-switch {
+    position: absolute;
+    display: block;
+    margin: 0 auto;
+    left: 0%;
+    right: 0%;
+    top: 70%;
+  }
+
   .setting-switch {
     cursor: pointer;
     position: relative;
