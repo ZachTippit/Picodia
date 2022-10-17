@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Grid } from '@mui/material'
+import useLongPress from '../../lib/useLongPress'
 
 const Cell = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
 
@@ -10,6 +11,20 @@ const Cell = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
   const [guessed, setGuessed] = useState(playedToday);
   const [flagged, setFlagged] = useState(false);
   const [winAnimation, setWinAnimation] = useState(false);
+
+  const onLongPress = () => {
+    setFlagged(!flagged)
+  }
+
+const onClick = () => {
+    setGuessed(true)
+}
+
+const defaultOptions = {
+  shouldPreventDefault: true,
+  delay: 500,
+};
+const longPressEvent = useLongPress(onLongPress, onClick, defaultOptions);
 
   const handleGuess = () => {
     if (markUp){
@@ -57,8 +72,10 @@ const Cell = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
                 + ((isStarted && cellNum%gridSize === 5) ? ' vert-mid-thick ' : ' ')
                 + ((isRBBlind && cell === 0 && guessed) ? ' color-blind-wrong ': ' ')
               }
+      {...longPressEvent}
       onMouseUp={(e) => handleClick(e)}
       onContextMenu={(e) => { e.preventDefault(); setFlagged(!flagged)}}
+
       // {...swipeCheck}
       >
     </Grid>

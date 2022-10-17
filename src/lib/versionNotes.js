@@ -1,5 +1,16 @@
 exports.versionNotes = [
     {
+        versionNum: "0.6.1",
+        date: "10/17/22",
+        introText: "Added touch hold, Tutorial fixups",
+        updateList: [
+            "Added ability to press and hold to mark cell due to user feedback",
+            "Cleaned up tutorial animations on slide change",
+            "Minor formatting fixes"
+        ],
+        outroText: "Small, quality of life updates."
+    },
+    {
         versionNum: "0.6.0",
         date: "10/10/22",
         introText: "Expanded accessibility, fixing mobile issues",
