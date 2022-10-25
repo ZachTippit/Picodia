@@ -1,3 +1,4 @@
+import React from 'react';
 import {default as Question } from '../assets/question.png'
 import {default as Stats } from '../assets/graph.png'
 import {default as Settings } from '../assets/setting.png'
@@ -6,9 +7,13 @@ import {default as StatsDark } from '../assets/graph-dark.png'
 import {default as SettingsDark } from '../assets/setting-dark.png'
 import { useSelector } from 'react-redux';
 
-const Navbar = ({openMenu}) => {
-  const isDarkMode = useSelector(state => state.gameConfig.isDarkMode)
-  const pingHowTo = useSelector(state => state.windowHandler.pingHowTo)
+type NavbarProps = {
+  openMenu: any;
+}
+
+const Navbar: React.FunctionComponent<NavbarProps> = ({openMenu}) => {
+  const isDarkMode = useSelector((state: any) => state.gameConfig.isDarkMode)
+  const pingHowTo = useSelector((state: any) => state.windowHandler.pingHowTo)
 
   return (
     <div id={'nav'}>

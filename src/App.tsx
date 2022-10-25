@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import ReactGA from 'react-ga';
 import { Footer, Game, HowToPlay, Navbar, Settings, SolveToStart, Stats, VersionNotes } from './Components'
@@ -6,16 +6,21 @@ import { onGameOver, handleWinStats, handleLoseStats, storageInit, checkDate, co
 import { _startGame, togglePreGameAnimation, setCurrentGameArray } from './features/gameState/gameStateSlice'
 import { fetchDailyPuzzle, hasPlayedToday, puzzleIs, setPuzzleRef } from './features/gameConfig/gameConfigSlice';
 import { toggleGameOverAlert, toggleOpen, toggleStartPing, setPath } from './features/windowHandler/windowHandlerSlice'
+import { AppDispatch } from './app/store';
 
-ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
+const googleAnalyticsID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
+
+if(googleAnalyticsID !== undefined){
+  ReactGA.initialize(googleAnalyticsID)
+}
 
 const App = () => {
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const { puzzleReference, isDarkMode, whatIsIt } = useSelector(state => state.gameConfig)
-  const { isStarted, lives, didWin, currentGameArray, stateOfGame } = useSelector(state => state.gameState)
-  const { isOpen, path } = useSelector(state => state.windowHandler)
+  const { puzzleReference, isDarkMode, whatIsIt } = useSelector((state: any) => state.gameConfig)
+  const { isStarted, lives, didWin, currentGameArray, stateOfGame } = useSelector((state: any) => state.gameState)
+  const { isOpen, path } = useSelector((state: any) => state.windowHandler)
 
   // App initializer
   useEffect(() => {
@@ -49,9 +54,9 @@ const App = () => {
     getDailyPuzzle();
   }, [])
 
-  const handleGameOver = (win, numLives) => { 
+  const handleGameOver = (win: boolean, numLives: number) => { 
     onGameOver(numLives, win, currentGameArray, puzzleReference, whatIsIt)
-    win ? handleWinStats(numLives) : handleLoseStats(numLives);
+    win ? handleWinStats(numLives) : handleLoseStats();
   }
   
   const gameOverAlerts = () => {
@@ -83,7 +88,7 @@ const App = () => {
   
   }
 
-  const isSeen = (path) => {
+  const isSeen = (path: string) => {
     if(path === 'version-notes'){
       setTimeout(() => {
         dispatch(setPath(path))
@@ -96,7 +101,7 @@ const App = () => {
     }
   }
 
-  const showWindow = (path) => {
+  const showWindow = (path: string) => {
     switch(path){
       case 'how-to-play':
         return <HowToPlay closeMenu={isSeen}/>
@@ -119,7 +124,7 @@ const App = () => {
         startGame();
         return;
       case 'game over':
-        handleGameOver(didWin, lives, localStorage.prevTime);
+        handleGameOver(didWin, lives);
         gameOverAlerts();
         return;
       default:

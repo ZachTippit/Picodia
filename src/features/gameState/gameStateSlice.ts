@@ -14,13 +14,13 @@ export const gameStateSlice = createSlice({
         setDidWin: (gameState, action) => {
             gameState.didWin = action.payload
         },
-        toggleHardMode: (gameState, action) => {
+        toggleHardMode: (gameState) => {
             gameState.hardMode = !gameState.hardMode
 
             if(gameState.hardMode){
                 gameState.lives = 2
                 gameState.maxLives = 2
-            } else if (!gameState.hardMode && !action.payload){
+            } else if (!gameState.hardMode){
                 if(!gameState.isStarted){
                     gameState.lives = 4
                 }

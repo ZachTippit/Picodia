@@ -1,6 +1,36 @@
 // Local Storage Handlers
 
-const storageInit = (store) => {
+interface LocalStorage {
+    totalGames: any;
+    wonGames: any;
+    winPercent: any;
+    lostGames: number;
+    currentStreak: number;
+    maxStreak: number;
+    playedPicodia: boolean;
+    playedToday: boolean;
+    avgLossTime: number;
+    lossAvgTime: number;
+    _1LifeWins: number;
+    _1LifeAvgTime: number;
+    _2LifeWins: number;
+    _2LifeAvgTime: number;
+    _3LifeWins: number;
+    _3LifeAvgTime: number;
+    _4LifeWins: number;
+    _4LifeAvgTime: number;
+    prevTime: number;
+    prevLives: number;
+    prevOutcome: boolean;
+    prevGameArray: any[];
+    currentGameArray: any;
+    blankArray: string;
+    lastPlayed: any;
+    todayDate: any;
+    whatIsIt: string;
+}
+
+const storageInit = (store: LocalStorage | any) => {
     store.totalGames = 0;        // Total games played
     store.wonGames = 0;          // Games won
     store.winPercent = 0;        // Percentage of games won   
@@ -30,7 +60,7 @@ const storageInit = (store) => {
     store.whatIsIt = '';
 }
 
-const onGameOver = (numLives, win, prevGameArray, puzzleReference, whatIsIt) => {  
+const onGameOver = (numLives: any, win: any, prevGameArray: any, puzzleReference: any, whatIsIt: any) => {  
         // SAVES CURRENT DAY'S GAME (# lives and T/F for win)
     localStorage.prevLives = numLives
     localStorage.todayDate = todayDate()
@@ -44,7 +74,7 @@ const onGameOver = (numLives, win, prevGameArray, puzzleReference, whatIsIt) => 
     localStorage.totalGames = parseInt(localStorage.totalGames) + 1;
 }
 
-const gameArrayChunker = (gameArray, puzzleSize) => {
+const gameArrayChunker = (gameArray: string | null, puzzleSize: number) => {
     if(gameArray == null){
         return
     }
@@ -59,9 +89,9 @@ const gameArrayChunker = (gameArray, puzzleSize) => {
     return res
 }
 
-const handleWinStats = (numLives) => {
-    let lifeWins = parseInt(localStorage.getItem(`_${numLives}LifeWins`))
-    let avgTimes = parseInt(localStorage.getItem(`_${numLives}LifeAvgTime`))
+const handleWinStats = (numLives: any) => {
+    let lifeWins = localStorage.getItem(`_${numLives}LifeWins`)
+    let avgTimes = localStorage.getItem(`_${numLives}LifeAvgTime`)
       // ++ won games
     localStorage.wonGames = parseInt(localStorage.wonGames) + 1;
     localStorage.currentStreak = parseInt(localStorage.currentStreak) + 1;
@@ -69,10 +99,11 @@ const handleWinStats = (numLives) => {
     if((localStorage.currentStreak + 1) > localStorage.maxStreak){
       localStorage.maxStreak = parseInt(localStorage.maxStreak) + 1;
     }
-
-    localStorage.winPercent = (parseInt(localStorage.wonGames)/parseInt(localStorage.totalGames) * 100).toFixed(1) | 0
-
+// @ts-ignore
+    localStorage.winPercent = (localStorage.wonGames/localStorage.totalGames * 100).toFixed(1) | 0
+// @ts-ignore
     localStorage.setItem(`_${[numLives]}LifeWins`, parseInt(localStorage.getItem(`_${numLives}LifeWins`)) + 1);
+    // @ts-ignore
     localStorage.setItem(`_${numLives}LifeAvgTime`, ((lifeWins*avgTimes + localStorage.prevTime)/(lifeWins + 1)))
 }
 
@@ -100,13 +131,13 @@ const todayDate = () => {
 }
 
 const daysSinceLaunch = () => {
-    const launchDay = new Date('September 30, 2022 20:00:00')
-    const today = new Date();
-    const daysBetween = Math.ceil((today - launchDay) / (1000 * 3600 * 24)) - 1;
+    const launchDay: Date = new Date('September 30, 2022 20:00:00')
+    const today: Date = new Date();
+    const daysBetween = Math.ceil((today.valueOf() - launchDay.valueOf()) / (1000 * 3600 * 24)) - 1;
     return daysBetween
   }
 
-function compareStorageKeys(currentStorage) {
+function compareStorageKeys(currentStorage: {}) {
     const initStorage = {};
     storageInit(initStorage)
     // console.log(initStorage)

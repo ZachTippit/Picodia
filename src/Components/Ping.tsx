@@ -1,11 +1,17 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 
-const Ping = ({note, startPing=false, pingType}) => {
+type PingProps = {
+  note: string;
+  startPing: boolean;
+  pingType: string;
+}
 
-    const [close, setClose] = useState(false);
-    const gameConfig = useSelector(state => state.gameConfig)
-    const gameState = useSelector(state => state.gameState)
+const Ping: React.FunctionComponent<PingProps> = ({note, startPing=false, pingType}) => {
+
+    const [close, setClose] = useState<boolean>(false);
+    const gameConfig = useSelector((state: any) => state.gameConfig)
+    const gameState = useSelector((state: any) => state.gameState)
 
     const closePing = () => {
       switch(pingType){

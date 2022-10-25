@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux'
 import { Carousel } from 'react-responsive-carousel'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -11,21 +11,25 @@ import {default as Close} from '../../assets/close.png'
 import {default as CloseDark} from '../../assets/close-dark.png'
 import { useEffect } from 'react';
 
-const HowToPlay = ({closeMenu}) => {
-  const isDarkMode = useSelector(state => state.gameConfig.isDarkMode)
-  const isRBBlind = useSelector(state => state.gameConfig.isRBBlind)
-  const isMobile = useSelector(state => state.windowHandler.isMobile)
+type HowToPlayProps = {
+  closeMenu: any;
+}
 
-  const [closing, setClosing] = useState(false);
-  const [activeTutorial, setActiveTutorial] = useState(1)
-  const [checked, setChecked] = useState(false)
+const HowToPlay: React.FunctionComponent<HowToPlayProps> = ({closeMenu}) => {
+  const isDarkMode = useSelector((state: any) => state.gameConfig.isDarkMode)
+  const isRBBlind = useSelector((state: any) => state.gameConfig.isRBBlind)
+  const isMobile = useSelector((state: any) => state.windowHandler.isMobile)
+
+  const [closing, setClosing] = useState<boolean>(false);
+  const [activeTutorial, setActiveTutorial] = useState<number>(1)
+  const [checked, setChecked] = useState<boolean>(false)
 
   const closeWindow = () => {
     setClosing(true)
     closeMenu('')
   }
 
-  const displayStatus = (curr, total) => {
+  const displayStatus = (curr: React.SetStateAction<number>, total: number) => {
     setActiveTutorial(curr)
   }
 
@@ -41,7 +45,7 @@ const HowToPlay = ({closeMenu}) => {
 
   return (
     <div id={'about'} className={'fade-in-bottom ' + (isDarkMode ? 'dark-theme ' : 'light-theme ') + (closing && ' fade-out-bottom')}>
-      <img className={'close-btn-about'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeWindow('')}/>
+      <img className={'close-btn-about'} src={(isDarkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeWindow()}/>
       <div className={'section-header'}>
         <h2 style={{fontSize: '1.25rem'}}>PICODIA RULES</h2>
         <p>Solve the <b>Nonogram</b> with less than 4 mistakes. You win if you complete puzzle correctly by filling in all of the correct cells.</p>
@@ -55,7 +59,7 @@ const HowToPlay = ({closeMenu}) => {
           autoPlay infiniteLoop interval={7500}
           showStatus={true} showIndicators={false} showArrows={true}
           swipeScrollTolerance={10}
-          statusFormatter={(current, total) => displayStatus(current, total)}
+          statusFormatter={(current, total) =>{ return (`${current} of ${total}`)}}
         >
           <div className='tutorial-tile'>
             <h3>The Basics</h3>
@@ -64,36 +68,36 @@ const HowToPlay = ({closeMenu}) => {
           </div>
           <div className='tutorial-tile'>
             <h3>Reading the Clues</h3>
-            <ExampleRow exClue={"5"} exArray={[1,1,1,1,1]} order={2} activeCard={activeTutorial} />
+            <ExampleRow exClue={"5"} exArray={[1, 1, 1, 1, 1]} order={2} activeCard={activeTutorial} checked={false} onToNext={undefined} />
             <p>Some clues are obvious and can be figured out from context (ex: 5 blocks long and a space between each number...)</p>
           </div>
           <div className='tutorial-tile'>
             <h3>Consecutive Numbers</h3>
-            <ExampleRow exClue={"4"} exArray={[1,1,1,1,'']} order={3} activeCard={activeTutorial} />
-            <ExampleRow exClue={"4"} exArray={['',1,1,1,1]} order={3} activeCard={activeTutorial} />
+            <ExampleRow exClue={"4"} exArray={[1, 1, 1, 1, '']} order={3} activeCard={activeTutorial} checked={false} onToNext={undefined} />
+            <ExampleRow exClue={"4"} exArray={['', 1, 1, 1, 1]} order={3} activeCard={activeTutorial} checked={false} onToNext={undefined} />
             <p ><b>Careful!</b> Even if the numbers are consecutive, you must use the other clues to determine where it goes.</p>
           </div>
           <div className='tutorial-tile'>
             <h3>Mind the gaps!</h3>
-            <ExampleRow exClue={"2 2"} exArray={[1,1,'',1,1]} order={4} activeCard={activeTutorial} />
+            <ExampleRow exClue={"2 2"} exArray={[1, 1, '', 1, 1]} order={4} activeCard={activeTutorial} onToNext={undefined} checked={false} />
             <p>Some clues are obvious and can be figured out from context (ex: "2 2" in a 5 block long row with a required space between each clue...)</p>
           </div>
           <div className='tutorial-tile'>
             <h3>Inferring Empty Blocks</h3>
-            <ExampleRow exClue={"2 1"} exArray={[1,1,'',1,'']} order={5} activeCard={activeTutorial} />
-            <ExampleRow exClue={"2 1"} exArray={[1,1,'','',1]} order={5} activeCard={activeTutorial} />
-            <ExampleRow exClue={"2 1"} exArray={['',1,1,'',1]} order={5} activeCard={activeTutorial} />
+            <ExampleRow exClue={"2 1"} exArray={[1, 1, '', 1, '']} order={5} activeCard={activeTutorial} onToNext={undefined} checked={false} />
+            <ExampleRow exClue={"2 1"} exArray={[1, 1, '', '', 1]} order={5} activeCard={activeTutorial} onToNext={undefined} checked={false} />
+            <ExampleRow exClue={"2 1"} exArray={['', 1, 1, '', 1]} order={5} activeCard={activeTutorial} onToNext={undefined} checked={false} />
             <p>If there is more than one number in the clue, there must be at least one empty block between them (but there could be more).</p>
           </div>
           <div className='tutorial-tile'>
             <h3>Don't Forget to Mark Up!</h3>
-            <ExampleRow exClue={"2 1"} exArray={[1,1,2,1,2]} order={6} activeCard={activeTutorial} checked={checked} />
-            <ExampleRow exClue={"2 1"} exArray={[1,1,2,2,1]} order={6} activeCard={activeTutorial} checked={checked} />
+            <ExampleRow exClue={"2 1"} exArray={[1, 1, 2, 1, 2]} order={6} activeCard={activeTutorial} checked={checked} onToNext={undefined} />
+            <ExampleRow exClue={"2 1"} exArray={[1, 1, 2, 2, 1]} order={6} activeCard={activeTutorial} checked={checked} onToNext={undefined} />
             <label className=" tutorial-switch">
-              <div class="button b2" id="button-11">
-                  <input type="checkbox" class="checkbox" defaultChecked={false} checked={checked} activeCard={activeTutorial}/>
-                  <div class={isRBBlind ? 'knobs cb ' : 'knobs'}><span></span></div>
-                  <div class={isRBBlind ? 'layer cb-layer' : 'layer'}></div>
+              <div className="button b2" id="button-11">
+                  <input type="checkbox" className="checkbox" defaultChecked={false} checked={checked}/>
+                  <div className={isRBBlind ? 'knobs cb ' : 'knobs'}><span></span></div>
+                  <div className={isRBBlind ? 'layer cb-layer' : 'layer'}></div>
               </div>
             </label>
             <p>As you fill in cells, don't forget to mark the cells around them to help you solve the rest of the puzzle.</p>

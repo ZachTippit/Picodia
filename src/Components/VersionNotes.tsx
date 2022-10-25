@@ -1,11 +1,23 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { useSelector } from 'react-redux';
 import { versionNotes } from '../lib/versionNotes';
 
-const VersionNotes = ({closeMenu}) => {
-  const darkMode = useSelector(state => state.gameConfig.isDarkMode)
+type VersionNotesProps = {
+  closeMenu: any;
+}
+
+interface VersionNote {
+  date: string;
+  versionNum: string;
+  introText: string;
+  outroText: string;
+  updateList: string[];
+}
+
+const VersionNotes: React.FunctionComponent<VersionNotesProps> = ({closeMenu}) => {
+  const darkMode = useSelector((state: any) => state.gameConfig.isDarkMode)
 
   const [closing, setClosing] = useState(false);
 
@@ -19,12 +31,12 @@ const VersionNotes = ({closeMenu}) => {
       <img className={'close-btn'} src={(darkMode ? Close : CloseDark)} alt='Close settings window' onClick={() => closeWindow()}/>
       <h2 style={{textAlign: 'center', fontSize: '1.25rem'}}>VERSION NOTES</h2>
       <div id={'version-notes'}>
-        { versionNotes.map(vNote => (
+        { versionNotes.map((vNote: VersionNote) => (
           <div className={'version-note '}>
             <div className={'version-txt'}>
               <h3>v{vNote.versionNum} - <i>{vNote.date}</i></h3>
               <p>{vNote.introText}</p>
-              <ul>{ vNote.updateList.map(note => (<li>{note}</li>))}</ul>
+              <ul>{ vNote.updateList.map((note: string) => (<li>{note}</li>))}</ul>
               <p>{vNote.outroText}</p>
             </div>
           </div>

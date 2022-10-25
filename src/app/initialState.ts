@@ -16,7 +16,9 @@ export const gameConfig = {
     gridSize: 10,
     winNum: 4,
     today: '',
-    isRBBlind: false
+    isRBBlind: false,
+    status: '',
+    error: undefined,
 }
 
 export const statState = {
@@ -24,6 +26,8 @@ export const statState = {
     prevLives: 0,
     prevOutcome: '',
     prevTime: '',
+    status: '',
+    error: undefined,
 }
 
 export const gameState = {
@@ -39,7 +43,9 @@ export const gameState = {
     preGameAnimation: false,
     currentGameArray: [],
     prevGameArray: [],
-    markUp: false
+    markUp: false,
+    status: '',
+    error: undefined,
 }
 
 export const windowHandler = {
@@ -52,5 +58,7 @@ export const windowHandler = {
     startPing: false,
     alert: false,
     goAlert: false,
-    isMobile: window.matchMedia("only screen and (max-width: 760px)").matches
+    isMobile: window.matchMedia("only screen and (max-width: 760px)").matches,
+    status: '',
+    error: undefined,
 }

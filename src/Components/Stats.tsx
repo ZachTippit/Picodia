@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { Divider, Grid } from '@mui/material';
 import { daysSinceLaunch } from '../lib/utilities';
@@ -9,12 +9,15 @@ import { default as Heart } from '../assets/heart.png'
 import { default as HeartCB } from '../assets/heart-cb.png'
 import { default as EmptyHeart } from '../assets/empty-heart.png'
 
+type StatsProp = {
+  closeMenu: any;
+}
 
-const Stats = ({ closeMenu }) => {
+const Stats: React.FunctionComponent<StatsProp> = ({ closeMenu }) => {
   const dispatch = useDispatch()
 
-  const { isDarkMode, isRBBlind, playedToday, puzzleReference } = useSelector(state => state.gameConfig)
-  const { stateOfGame } = useSelector(state => state.gameState)
+  const { isDarkMode, isRBBlind, playedToday, puzzleReference } = useSelector((state: any) => state.gameConfig)
+  const { stateOfGame } = useSelector((state: any) => state.gameState)
   
   const [closing, setClosing] = useState(false);
 
@@ -23,26 +26,26 @@ const Stats = ({ closeMenu }) => {
     closeMenu('')
   }
 
-  const timeParser = (avgTime) => {
-    const minutes = parseInt(avgTime/60);
-    const seconds = pad(parseInt(avgTime%60));
+  const timeParser = (avgTime: number): string => {
+    const minutes = avgTime/60;
+    const seconds = pad(avgTime%60);
     return `${minutes}:${seconds}`;
   }
 
-  const pad = (val) => {
+  const pad = (val: any) => {
     let valString = val + '';
     return valString.length < 2 ? "0"+valString : valString;
   }
 
   const copyToClipboard = () => {
-    const pad = (val) => {
+    const pad = (val: any) => {
       let valString = val + '';
       return valString.length < 2 ? "0"+valString : valString;
     }
     const hearts = localStorage.prevOutcome ? '❤️'.repeat(localStorage.prevLives) : '🖤'
     const prefaceText = '⏱'
     const gameTime = localStorage.prevTime
-    const copyText = `Picodia #${puzzleReference} ${hearts} ${prefaceText}${pad(parseInt(gameTime/60))}:${pad(gameTime%60)} -- try it yourself at picodia.app!`
+    const copyText = `Picodia #${puzzleReference} ${hearts} ${prefaceText}${pad(gameTime/60)}:${pad(gameTime%60)} -- try it yourself at picodia.app!`
     navigator.clipboard.writeText(copyText);
     // alert(copyText);
     dispatch(toggleAlert())
@@ -126,7 +129,7 @@ const Stats = ({ closeMenu }) => {
                   <Grid item xs={12}>
                     <p style={{textAlign: 'center'}}><b>Compare with others!</b></p>
                     <button className='share-btn' onClick={() => copyToClipboard()}>Share results</button>
-                    <Divider width='50%' style={{margin: 'auto'}}/>
+                    <Divider style={{margin: 'auto'}}/>
                   </Grid>
                   <Grid item xs={12}>
                     <p style={{fontSize: '0.75rem', textAlign: 'center'}}><b>Check in tomorrow for another game!</b></p>

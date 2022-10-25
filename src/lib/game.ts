@@ -1,10 +1,10 @@
-const rowClues = (answer) => {
+const rowClues = (answer: number[][]): string[][] => {
     
-    let rowClueArray = [];
-    answer.forEach(row => {
-        let consecutive = 0;
-        let rowIndex = [];
-        row.forEach((cell, index) => {
+    let rowClueArray: string[][] = [];
+    answer.forEach((row: number[]) => {
+        let consecutive: number = 0;
+        let rowIndex: string[] = [];
+        row.forEach((cell: number, index: number) => {
             if ((cell === 1) && (index+1 < row.length)){
                 consecutive += 1;
             } else if ((cell === 1) && (index+1 === row.length)){
@@ -17,7 +17,7 @@ const rowClues = (answer) => {
                 rowIndex.push(consecutive.toString())
                 consecutive = 0;
             }
-            if (rowIndex === []) {
+            if (!rowIndex.length) {
                 rowIndex = [' ']
             }
         })   
@@ -25,19 +25,19 @@ const rowClues = (answer) => {
     })
 
     if(rowClueArray.length === 0){
-        rowClueArray.push(' ')
+        rowClueArray.push([' '])
     }
 
     return rowClueArray;
 }
 
-const colClues = (answer) => {
+const colClues = (answer: number[][]): string[][] => {
 
-    let colClueArray = [];
+    let colClueArray: string[][] = [];
     for (let col in [...Array(answer.length).keys()]){
-        let consecutive = 0;
-        let colIndex = [];
-        answer.forEach((row, index) => {
+        let consecutive: number = 0;
+        let colIndex: string[] = [];
+        answer.forEach((row: string | any[], index: number) => {
             if ((row[col] === 1) && (index+1 < row.length)){
                 consecutive += 1;
             } else if ((row[col] === 1) && (index+1 === row.length)){
@@ -52,7 +52,7 @@ const colClues = (answer) => {
             } else {
                 consecutive = 0;
             }
-            if (colIndex === []) {
+            if (!colIndex.length) {
                 colIndex = [' ']
             }
         })
@@ -63,18 +63,18 @@ const colClues = (answer) => {
     } 
 
     if(colClueArray.length === 0){
-        colClueArray.push(' ')
+        colClueArray.push([' '])
     }
 
     return colClueArray;
 }
 
-const gameArray = (answer) => {
+const gameArray = (answer: any[]) => {
 
     // Need value 
-    const flatArr = [];
-    answer.forEach(row => {
-        row.forEach(cell => {
+    const flatArr: number[] = [];
+    answer.forEach((row: any[]) => {
+        row.forEach((cell: number) => {
             if (cell===1){
                 flatArr.push(1);
             } else if (cell===2){
@@ -89,37 +89,12 @@ const gameArray = (answer) => {
     return flatArr;
 }
 
-const createGameObject = (answer) => {
-    const rowClue = rowClues(answer);
-    const colClue = colClues(answer);
-    const gameArr = gameArray(answer);
-    const gridSize = answer.length + 2;
-    const gameArrLength = gridSize*(gridSize-1)-1;
-    let gameObj = [];
-    let offsetter = 0;
-    [...Array(gameArrLength+1).keys()].map((item, index) => {
-        if(index === 0 || index === 1) {
-          return gameObj.push('');
-        } else if(parseInt(index/gridSize) === 0){
-            return gameObj.push(colClue[index-2])
-        } else if(index%gridSize === 0){
-            return gameObj.push(rowClue[parseInt(index/gridSize)-1])
-        } else if(index%gridSize === 1){
-            offsetter+=2;
-            return gameObj.push('')
-        } else {
-            return gameObj.push(gameArr[index-(gridSize)-offsetter])
-        }
-    })
-    return gameObj;
-}
-
-const maxColClueLength = (answer) => {
+const maxColClueLength = (answer: any[]) => {
     let colClueArray = [];
     for (let col in [...Array(answer.length).keys()]){
         let consecutive = 0;
-        let colIndex = [];
-        answer.forEach((row, index) => {
+        let colIndex: string[] = [];
+        answer.forEach((row: string | any[], index: number) => {
             if ((row[col] === 1) && (index+1 < row.length)){
                 consecutive += 1;
             } else if ((row[col] === 1) && (index+1 === row.length)){
@@ -132,7 +107,7 @@ const maxColClueLength = (answer) => {
                 colIndex.push(consecutive.toString())
                 consecutive = 0;
             }
-            if (colIndex === []) {
+            if (!colIndex.length) {
                 colIndex = [' ']
             }
         })
@@ -149,12 +124,12 @@ const maxColClueLength = (answer) => {
     return maxClueLength;
 }
 
-const maxRowClueLength = (answer) => {
-    let rowClueArray = [];
-    answer.forEach(row => {
+const maxRowClueLength = (answer: any[]) => {
+    let rowClueArray: any[][] = [];
+    answer.forEach((row: any[]) => {
         let consecutive = 0;
-        let rowIndex = [];
-        row.forEach((cell, index) => {
+        let rowIndex: string[] = [];
+        row.forEach((cell: number, index: number) => {
             if ((cell === 1) && (index+1 < row.length)){
                 consecutive += 1;
             } else if ((cell === 1) && (index+1 === row.length)){
@@ -167,7 +142,7 @@ const maxRowClueLength = (answer) => {
                 rowIndex.push(consecutive.toString())
                 consecutive = 0;
             }
-            if (rowIndex === []) {
+            if (!rowIndex.length) {
                 rowIndex = [' ']
             }
         })   
@@ -182,6 +157,33 @@ const maxRowClueLength = (answer) => {
     })
 
     return maxClueLength;
+}
+
+const createGameObject = (answer: number[][]) => {
+    const rowClue: string[][] = rowClues(answer);
+    const colClue: string[][] = colClues(answer);
+    const gameArr: number[] = gameArray(answer);
+    const gridSize: number = answer.length + 2;
+    const gameArrLength: number = gridSize*(gridSize-1)-1;
+    let gameObj: any[] = [];
+    let offsetter = 0;
+    [...Array(gameArrLength+1).keys()].map((item, index: number) => {
+        if(index === 0 || index === 1) {
+          return gameObj.push('');
+        } else if(Math.floor(index/gridSize) === 0){
+            console.log(colClue[index-2])
+            return gameObj.push(colClue[index-2])
+        } else if(index%gridSize === 0){
+            return gameObj.push(rowClue[index/gridSize-1])
+        } else if(index%gridSize === 1){
+            offsetter+=2;
+            return gameObj.push('')
+        } else {
+            return gameObj.push(gameArr[index-(gridSize)-offsetter])
+        }
+    })
+    console.log(gameObj)
+    return gameObj;
 }
 
 export { maxRowClueLength, maxColClueLength, gameArray, createGameObject };

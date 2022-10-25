@@ -1,13 +1,13 @@
-import { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 
 const useLongPress = (
-    onLongPress,
-    onClick,
+    onLongPress: { (): void; (arg0: any): void; },
+    onClick: { (): void; (): any; },
     { shouldPreventDefault = true, delay = 300 } = {}
     ) => {
     const [longPressTriggered, setLongPressTriggered] = useState(false);
-    const timeout = useRef();
-    const target = useRef();
+    const timeout = useRef<any>();
+    const target = useRef<any>();
 
     const start = useCallback(
         event => {
@@ -38,19 +38,19 @@ const useLongPress = (
     );
 
     return {
-        onMouseDown: e => start(e),
-        onTouchStart: e => start(e),
-        onMouseUp: e => clear(e),
-        onMouseLeave: e => clear(e, false),
-        onTouchEnd: e => clear(e)
+        onMouseDown: (e: any) => start(e),
+        onTouchStart: (e: any) => start(e),
+        onMouseUp: (e: any) => clear(e),
+        onMouseLeave: (e: any) => clear(e, false),
+        onTouchEnd: (e: any) => clear(e)
     };
 };
 
-const isTouchEvent = event => {
+const isTouchEvent = (event: any) => {
 return "touches" in event;
 };
 
-const preventDefault = event => {
+const preventDefault = (event: { touches: string | any[]; preventDefault: () => void; }) => {
 if (!isTouchEvent(event)) return;
 
 if (event.touches.length < 2 && event.preventDefault) {

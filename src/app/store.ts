@@ -17,5 +17,6 @@ export const store = configureStore({
         gameState: gameStateReducer,
         windowHandler: windowHandlerReducer,
     },
-    initialState
 })
+
+export type AppDispatch = typeof store.dispatch;

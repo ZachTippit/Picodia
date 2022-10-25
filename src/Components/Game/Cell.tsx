@@ -1,12 +1,21 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Grid } from '@mui/material'
 import useLongPress from '../../lib/useLongPress'
 
-const Cell = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
+type CellProps = {
+  cell: number,
+  cellNum: number,
+  gridSize: number,
+  handleCell: any,
+  nextAnim: number,
+  order: number
+}
 
-  const {isDarkMode, isRBBlind, playedToday} = useSelector(state => state.gameConfig)
-  const { isStarted, didWin, markUp } = useSelector(state => state.gameState)
+const Cell: React.FunctionComponent<CellProps> = ({cell, cellNum, gridSize, handleCell, nextAnim, order}) => {
+
+  const {isDarkMode, isRBBlind, playedToday} = useSelector((state: any) => state.gameConfig)
+  const { isStarted, didWin, markUp } = useSelector((state: any) => state.gameState)
 
   const [guessed, setGuessed] = useState(playedToday);
   const [flagged, setFlagged] = useState(false);
@@ -34,7 +43,7 @@ const longPressEvent = useLongPress(onLongPress, onClick, defaultOptions);
     }
   }
 
-  const handleClick = (e) => {
+  const handleClick = (e: any) => {
     e.preventDefault();
     if(e.button===0){
       handleGuess();
@@ -68,13 +77,13 @@ const longPressEvent = useLongPress(onLongPress, onClick, defaultOptions);
                   (guessed ? (cell ? 'right pulsate-fwd ' : (isRBBlind ? ' color-blind-wrong pulsate-fwd ' : ' wrong pulsate-fwd ')) : ' '))
                 + (flagged ? (isDarkMode ? ' flagged-dark ' : 'flagged ') : ' ')
                 + (winAnimation ? ' win-animation': '')
-                + ((isStarted && parseInt(cellNum/gridSize) === 5) ? ' horz-mid-thick ' : ' ' )
+                + ((isStarted && cellNum/gridSize === 5) ? ' horz-mid-thick ' : ' ' )
                 + ((isStarted && cellNum%gridSize === 5) ? ' vert-mid-thick ' : ' ')
                 + ((isRBBlind && cell === 0 && guessed) ? ' color-blind-wrong ': ' ')
               }
       {...longPressEvent}
-      onMouseUp={(e) => handleClick(e)}
-      onContextMenu={(e) => { e.preventDefault(); setFlagged(!flagged)}}
+      onMouseUp={(e: { preventDefault: () => void }) => handleClick(e)}
+      onContextMenu={(e: { preventDefault: () => void }) => { e.preventDefault(); setFlagged(!flagged)}}
 
       // {...swipeCheck}
       >

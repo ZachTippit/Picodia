@@ -10,6 +10,10 @@
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^29.2.0",
+    "@types/node": "^18.11.5",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^18.0.7",
     "googleapis": "^95.0.0",
     "react": "^17.0.2",
     "react-cookie": "^4.1.1",
@@ -19,6 +23,7 @@
     "react-responsive-carousel": "^3.2.23",
     "react-scripts": "5.0.0",
     "react-swipeable": "^6.2.0",
+    "typescript": "^4.8.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

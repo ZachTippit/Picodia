@@ -1,15 +1,15 @@
-import {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Grid } from '@mui/material';
-import ExampleRow from './ExampleRow';
 import { useSelector } from 'react-redux'
 
-const ExampleGrid = ({activeCard, order}) => {
-  const {isDarkMode, isRBBlind} = useSelector(state => state.gameConfig)
-  const [nextAnim, setNextAnim] = useState(-1);
+type ExampleGridProps = {
+  activeCard: any;
+  order: number;
+}
 
-  const onToNext = () => {
-    setNextAnim(nextAnim + 1);
-  }
+const ExampleGrid: React.FunctionComponent<ExampleGridProps> = ({activeCard, order}) => {
+  const {isDarkMode, isRBBlind} = useSelector((state: any) => state.gameConfig)
+  const [nextAnim, setNextAnim] = useState<number>(-1);
 
   useEffect(() => { 
     activeCard === order && setNextAnim(0) 

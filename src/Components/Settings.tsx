@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { togglesDarkMode, togglesRBColorBlindMode } from '../features/gameConfig/gameConfigSlice';
-import { toggleHardMode } from '../features/gameState/gameStateSlice';
 import Toggle from './Toggle';
 
-const Settings = ({closeMenu, version}) => {
+type SettingsProp = {
+  closeMenu: any;
+  version: number;
+}
+
+const Settings: React.FunctionComponent<SettingsProp> = ({closeMenu, version}) => {
   const dispatch = useDispatch();
-  const { isDarkMode, isRBBlind, puzzleReference } = useSelector(state => state.gameConfig)
-  const { hardMode } = useSelector(state => state.gameState)
+  const { isDarkMode, isRBBlind, puzzleReference } = useSelector((state: any) => state.gameConfig)
+  const { hardMode } = useSelector((state: any) => state.gameState)
 
   const [closing, setClosing] = useState(false);
 

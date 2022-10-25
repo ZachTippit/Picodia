@@ -1,4 +1,4 @@
-exports.versionNotes = [
+export const versionNotes = [
     {
         versionNum: "0.6.1",
         date: "10/17/22",
