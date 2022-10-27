@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { togglesDarkMode, togglesRBColorBlindMode } from "../features/gameConfig/gameConfigSlice"
-import { toggleHardMode } from '../features/gameState/gameStateSlice'
+import { togglesDarkMode, togglesRBColorBlindMode } from "../_features/gameConfig/gameConfigSlice"
+import { toggleHardMode } from '../_features/gameState/gameStateSlice'
 
 type ToggleProps = {
     clickHandler: any;

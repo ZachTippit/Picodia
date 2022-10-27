@@ -1,5 +1,15 @@
 export const versionNotes = [
     {
+        versionNum: "0.7.0",
+        date: "10/27/22",
+        introText: "Converted to TypeScript",
+        updateList: [
+            "This is more of a development consideration. App was converted from JavaScript to TypeScript.",
+            "Temporarily removing long press to mark up due to bug introduced with TypeScript refactor."
+        ],
+        outroText: "Interfaces and types defined! Should help eliminate refactoring errors later."
+    },
+    {
         versionNum: "0.6.1",
         date: "10/17/22",
         introText: "Added touch hold, Tutorial fixups",

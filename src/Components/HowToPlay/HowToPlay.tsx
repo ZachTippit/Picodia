@@ -29,10 +29,6 @@ const HowToPlay: React.FunctionComponent<HowToPlayProps> = ({closeMenu}) => {
     closeMenu('')
   }
 
-  const displayStatus = (curr: React.SetStateAction<number>, total: number) => {
-    setActiveTutorial(curr)
-  }
-
   useEffect(() => {
     if(activeTutorial===6){
       setTimeout(() => {
@@ -57,9 +53,11 @@ const HowToPlay: React.FunctionComponent<HowToPlayProps> = ({closeMenu}) => {
         <Carousel  
           swipeable emulateTouch  
           autoPlay infiniteLoop interval={7500}
-          showStatus={true} showIndicators={false} showArrows={true}
+          showStatus={true} showIndicators={false} showArrows={true} showThumbs={false}
           swipeScrollTolerance={10}
-          statusFormatter={(current, total) =>{ return (`${current} of ${total}`)}}
+          statusFormatter={(current, total) =>{ 
+            setActiveTutorial(current)
+            return (`${current} of ${total}`)}}
         >
           <div className='tutorial-tile'>
             <h3>The Basics</h3>

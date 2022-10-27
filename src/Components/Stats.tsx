@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { Divider, Grid } from '@mui/material';
 import { daysSinceLaunch } from '../lib/utilities';
-import { toggleAlert } from '../features/windowHandler/windowHandlerSlice';
+import { toggleAlert } from '../_features/windowHandler/windowHandlerSlice';
 import {default as Close} from '../assets/close.png'
 import {default as CloseDark} from '../assets/close-dark.png'
 import { default as Heart } from '../assets/heart.png'
@@ -27,7 +27,7 @@ const Stats: React.FunctionComponent<StatsProp> = ({ closeMenu }) => {
   }
 
   const timeParser = (avgTime: number): string => {
-    const minutes = avgTime/60;
+    const minutes = Math.floor(avgTime/60);
     const seconds = pad(avgTime%60);
     return `${minutes}:${seconds}`;
   }

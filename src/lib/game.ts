@@ -171,7 +171,6 @@ const createGameObject = (answer: number[][]) => {
         if(index === 0 || index === 1) {
           return gameObj.push('');
         } else if(Math.floor(index/gridSize) === 0){
-            console.log(colClue[index-2])
             return gameObj.push(colClue[index-2])
         } else if(index%gridSize === 0){
             return gameObj.push(rowClue[index/gridSize-1])
@@ -182,7 +181,6 @@ const createGameObject = (answer: number[][]) => {
             return gameObj.push(gameArr[index-(gridSize)-offsetter])
         }
     })
-    console.log(gameObj)
     return gameObj;
 }
 

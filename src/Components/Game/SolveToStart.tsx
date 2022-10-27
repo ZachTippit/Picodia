@@ -4,8 +4,8 @@ import Clues from './Clues'
 import StartCell from './StartCell'
 import { createGameObject } from '../../lib/game';
 import { useDispatch, useSelector } from 'react-redux'
-import { togglePingHowTo } from '../../features/windowHandler/windowHandlerSlice';
-import { changeGameState } from '../../features/gameState/gameStateSlice';
+import { togglePingHowTo } from '../../_features/windowHandler/windowHandlerSlice';
+import { changeGameState } from '../../_features/gameState/gameStateSlice';
 
 
 const answer = createGameObject([[1,1,1],[1,0,0],[1,0,1]])

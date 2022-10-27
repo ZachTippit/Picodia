@@ -17,6 +17,7 @@ const ExampleRow: React.FunctionComponent<ExampleRowProps> = ({exClue, exArray, 
     const [nextAnim, setNextAnim] = useState<number | undefined>(undefined);
 
     useEffect(() => {
+        console.log('Activate card: ', activeCard)
         if(activeCard === order){
             setNextAnim(0)
         }

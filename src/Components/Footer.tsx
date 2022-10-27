@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleMarkup } from '../features/gameState/gameStateSlice';
+import { toggleMarkup } from '../_features/gameState/gameStateSlice';
 import PingHandler from './PingHandler';
 import { default as Heart } from '../assets/heart.png'
 import { default as HeartCB} from '../assets/heart-cb.png'

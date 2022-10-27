@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import ReactGA from 'react-ga';
 import { Footer, Game, HowToPlay, Navbar, Settings, SolveToStart, Stats, VersionNotes } from './Components'
 import { onGameOver, handleWinStats, handleLoseStats, storageInit, checkDate, compareStorageKeys, daysSinceLaunch } from './lib/utilities'
-import { _startGame, togglePreGameAnimation, setCurrentGameArray } from './features/gameState/gameStateSlice'
-import { fetchDailyPuzzle, hasPlayedToday, puzzleIs, setPuzzleRef } from './features/gameConfig/gameConfigSlice';
-import { toggleGameOverAlert, toggleOpen, toggleStartPing, setPath } from './features/windowHandler/windowHandlerSlice'
-import { AppDispatch } from './app/store';
+import { _startGame, togglePreGameAnimation, setCurrentGameArray } from './_features/gameState/gameStateSlice'
+import { fetchDailyPuzzle, hasPlayedToday, puzzleIs, setPuzzleRef } from './_features/gameConfig/gameConfigSlice';
+import { toggleGameOverAlert, toggleOpen, toggleStartPing, setPath } from './_features/windowHandler/windowHandlerSlice'
+import { AppDispatch } from './_app/store';
 
 const googleAnalyticsID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
 
@@ -26,11 +26,11 @@ const App = () => {
   useEffect(() => {
     ReactGA.set({ page: window.location.pathname });     // Google Analytics initializer on window
     ReactGA.pageview(window.location.pathname);
-      
-    // localStorage.clear();                                         // Clears localStorage
+
+    localStorage.clear();                                         // Clears localStorage
     localStorage.length === 0 && storageInit(localStorage);          // Checks storage length, if empty, create storage object.
     !compareStorageKeys(localStorage) && storageInit(localStorage)   // Compares current localStorage to init values. If properties are not the same, update keys. (This is to assist in version control).
-
+    
     // console.log('localStorage on Load: ', localStorage)
 
     const getDailyPuzzle = async () => {  

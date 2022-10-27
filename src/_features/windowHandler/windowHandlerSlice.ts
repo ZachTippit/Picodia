@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { windowHandler } from "../../app/initialState";
+import { windowHandler } from "../../_app/initialState";
 
 export const windowHandlerSlice = createSlice({
     name: 'windowHandler',

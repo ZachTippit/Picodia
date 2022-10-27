@@ -28,6 +28,7 @@ interface LocalStorage {
     lastPlayed: any;
     todayDate: any;
     whatIsIt: string;
+    id_token: string;
 }
 
 const storageInit = (store: LocalStorage | any) => {
@@ -58,6 +59,7 @@ const storageInit = (store: LocalStorage | any) => {
     store.lastPlayed = 0;
     store.todayDate = '';
     store.whatIsIt = '';
+    store.id_token = ' ';
 }
 
 const onGameOver = (numLives: any, win: any, prevGameArray: any, puzzleReference: any, whatIsIt: any) => {  
@@ -72,6 +74,7 @@ const onGameOver = (numLives: any, win: any, prevGameArray: any, puzzleReference
     localStorage.playedToday = puzzleReference;
         // ++ Total games played
     localStorage.totalGames = parseInt(localStorage.totalGames) + 1;
+    console.log(localStorage)
 }
 
 const gameArrayChunker = (gameArray: string | null, puzzleSize: number) => {
@@ -140,8 +143,6 @@ const daysSinceLaunch = () => {
 function compareStorageKeys(currentStorage: {}) {
     const initStorage = {};
     storageInit(initStorage)
-    // console.log(initStorage)
-    // console.log(currentStorage)
     var aKeys = Object.keys(initStorage).sort();
     var bKeys = Object.keys(currentStorage).sort();
     return JSON.stringify(aKeys) === JSON.stringify(bKeys);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { changeGameState, loseLife, setDidWin, setCurrentGameArray } from '../../features/gameState/gameStateSlice';
+import { changeGameState, loseLife, setDidWin, setCurrentGameArray } from '../../_features/gameState/gameStateSlice';
 import { Grid } from '@mui/material';
 import Clues from './Clues';
 import Cell from './Cell';
@@ -11,7 +11,7 @@ const Game = () => {
     const { dailyPuzzle, gridSize, winNum } = useSelector((state: any) => state.gameConfig)
     const { didWin, stateOfGame, isStarted, lives, currentGameArray } = useSelector((state: any) => state.gameState);
 
-    const [correctCellCount, setCorrectCellCount] = useState(0);
+    const [correctCellCount, setCorrectCellCount] = useState<number>(0);
     const [nextAnim, setNextAnim] = useState(0);
     const [answerArray, setAnswerArray] = useState(typeof JSON.parse(currentGameArray) !== 'undefined' ? JSON.parse(currentGameArray) : JSON.parse(localStorage.blankArray));
 
@@ -32,8 +32,9 @@ const Game = () => {
     }, [correctCellCount, lives])
 
     const handleGuess = (isCorrect: boolean, cellNum: number) => {
+        console.log('test')
         let ansArr = [...answerArray];
-        const rowNum = cellNum/gridSize - 1;
+        const rowNum = Math.floor(cellNum/gridSize - 1);
         const colNum = cellNum%gridSize - 2;
 
         if(isCorrect){

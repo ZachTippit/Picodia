@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { gameConfig, statState, gameState, windowHandler } from './initialState'
-import gameConfigReducer from '../features/gameConfig/gameConfigSlice'
-import gameStateReducer from '../features/gameState/gameStateSlice'
-import windowHandlerReducer from '../features/windowHandler/windowHandlerSlice'
+import gameConfigReducer from '../_features/gameConfig/gameConfigSlice'
+import gameStateReducer from '../_features/gameState/gameStateSlice'
+import windowHandlerReducer from '../_features/windowHandler/windowHandlerSlice'
 
 export const initialState = {
     gameConfig,

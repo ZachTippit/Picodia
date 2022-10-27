@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { gameConfig } from '../../app/initialState'
+import { gameConfig } from '../../_app/initialState'
 import { createGameObject } from '../../lib/game'
 
 interface GameConfig {
