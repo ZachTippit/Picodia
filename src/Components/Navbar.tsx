@@ -24,7 +24,7 @@ import { cn } from '../lib/cn';
 const Navbar = () => {
   const { actions: { toggleAbout, toggleStats, toggleSettings}, state: { pingHowTo, darkMode } } = use(GameContext);
   return (
-    <div className="mt-4 py-2 flex w-full border border-t-0 border-x-0 border-b-gray-300 justify-between overflow-y-none">
+    <div className="mt-4 px-4 py-2 flex w-full border border-t-0 border-x-0 border-b-gray-300 justify-between overflow-y-none">
       <img
         src={darkMode ? Question : QuestionDark}
         alt="About icon"
@@ -32,7 +32,7 @@ const Navbar = () => {
         onClick={toggleAbout}
       />
       <h1 className="tracking-widest">PICODIA</h1>
-      <div className="flex items-center gap-x-12">
+      <div className="flex items-center gap-x-4 md:gap-x-12">
         <img
           src={darkMode ? Stats : StatsDark}
           alt="Stats icon"

@@ -61,7 +61,7 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, onSolved }) => {
               key={cell.id}
               onClick={() => handleCellClick(r, c)}
               className={cn(
-                "w-8 h-8 sm:w-10 sm:h-10 border border-gray-600 flex items-center justify-center transition-all select-none",
+                "size-10 border border-gray-600 flex items-center justify-center transition-all select-none",
                 cell.filled
                   ? "bg-gray-800"
                   : cell.incorrect
