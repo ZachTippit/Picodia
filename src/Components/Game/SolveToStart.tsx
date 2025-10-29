@@ -15,9 +15,9 @@ const answer = [
 const SolveToStart = () => {
   const { state: { preGameAnim }, actions: { setPingHowTo, setPreGameAnim, setStartPing, startGame } } = use(GameContext);
   const [correctSquares, setCorrectSquares] = useState(0);
-  const [winNum, setWinNum] = useState(6);
-  const [gridSize, setGridSize] = useState(5);
-  const [gameGrid, setGameGrid] = useState(createGameObject(answer));
+  const winNum = 6
+  const gridSize = 5;
+  const gameGrid = createGameObject(answer);
 
   const handleGuess = (isCorrect) => {
     if (isCorrect) {

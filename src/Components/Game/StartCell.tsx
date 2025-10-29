@@ -1,9 +1,6 @@
 import { useState, useEffect, use } from 'react';
 import { Grid } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { GameContext } from '../../GameContext';
-
-const config = { delta: 1 };
 
 interface StartCellProps {
   cell: number;

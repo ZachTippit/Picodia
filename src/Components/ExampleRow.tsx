@@ -1,6 +1,5 @@
 import { useState, useEffect, use } from 'react';
 import { Grid } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { GameContext } from '../GameContext';
 
 interface ExampleRowProps {

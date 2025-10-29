@@ -1,5 +1,4 @@
 import { useState, useEffect, use } from 'react';
-import { useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
 import { GameContext } from '../../GameContext';
 
@@ -45,19 +44,19 @@ const Cell = ({ cell, cellNum, gridSize, handleCell, nextAnim, order }: CellProp
     if (guessed) {
       cell ? handleCell(true, cellNum) : handleCell(false, cellNum);
     }
-  }, [guessed, cell]);
+  }, [guessed, cell, cellNum]);
 
   useEffect(() => {
     if (nextAnim === order && didWin) {
       setWinAnimation(true);
     }
-  }, [nextAnim]);
+  }, [nextAnim, order, didWin]);
 
   useEffect(() => {
     if (hasPlayedToday && isGameStarted) {
       setGuessed(hasPlayedToday);
     }
-  }, [hasPlayedToday]);
+  }, [hasPlayedToday, isGameStarted]);
 
   return (
     <Grid
