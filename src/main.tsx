@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 import './animations.css';
@@ -23,13 +22,11 @@ if (!container) {
 const root = createRoot(container);
 
 root.render(
-  <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-      <SupabaseProvider>
-        <App />
-      </SupabaseProvider>
-    </ClerkProvider>
-  </StrictMode>
+  <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+    <SupabaseProvider>
+      <App />
+    </SupabaseProvider>
+  </ClerkProvider>
 );
 
 reportWebVitals();

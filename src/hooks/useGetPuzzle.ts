@@ -3,13 +3,15 @@ import { useSupabase } from '../SupabaseProvider';
 
 export interface Puzzle {
   id: string;
-  // add other column fields here
+  day: number;
+  puzzle_name: string;
+  puzzle_array: number[][];
 }
 
 export const useGetPuzzles = () => {
   const supabase = useSupabase();
 
-  return useQuery({
+  return useQuery<Puzzle[]>({
     queryKey: ['puzzles'],
     queryFn: async () => {
       const { data, error } = await supabase.from('puzzles').select('*');

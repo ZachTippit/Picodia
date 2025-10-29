@@ -6,6 +6,7 @@ import { GameContext } from './GameContext';
 import { ProfileProbe } from './Components/ProfileProbe';
 import { useGetPuzzles } from './hooks/useGetPuzzle';
 import { cn } from './lib/cn';
+import Game2 from './Components/Game2/Game2';
 
 const PageContainer = () => {
   const {
@@ -126,8 +127,8 @@ const PageContainer = () => {
         <About />
         <Stats copyToClipboard={copyToClipboard} />
         <Settings version={"fart"} />
-
-        {isGameStarted ? <Game handlePrevGameArray={handlePrevGameArray} /> : <SolveToStart />}
+        <Game2 />
+        {/* {isGameStarted ? <Game handlePrevGameArray={handlePrevGameArray} /> : <SolveToStart />} */}
         <Footer />
       </div>
     </div>
