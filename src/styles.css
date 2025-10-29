@@ -1,546 +1,424 @@
-:root{
-    --light-bg: #fff;
-    --light-txt: #111;
-    --dark-bg: #111;
-    --dark-txt: #eee;
+@import "tailwindcss";
+
+:root {
+  --light-bg: #fff;
+  --light-txt: #111;
+  --dark-bg: #111;
+  --dark-txt: #eee;
 }
 
 .light-theme {
-    background-color: var(--light-bg);
-    color: var(--light-txt);
-    transition: all 0.3s ease-in-out;
+  background-color: var(--light-bg);
+  color: var(--light-txt);
+  transition: all 0.3s ease-in-out;
 }
 
 .dark-theme {
-    background-color: var(--dark-bg);
-    color: var(--dark-txt);
-    transition: all 0.3s ease-in-out;
+  background-color: var(--dark-bg);
+  color: var(--dark-txt);
+  transition: all 0.3s ease-in-out;
 }
 
 html {
-    overflow-x: hidden;
-  }
-
-#cover-screen{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  overflow-x: hidden;
 }
 
- body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: var(--dark-bg);
-    width: 100%;
-  }
-  
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
-  }
-  
-  a {
-    color: inherit;
-  }
-
-#app {
-    max-width: 450px;
-    margin: auto;
-  }
-  
-  .App {
-    text-align: center;
-  }
-  
-  .App-logo {
-    height: 40vmin;
-    pointer-events: none;
-  }
-  
-  @media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-      animation: App-logo-spin infinite 20s linear;
-    }
-  }
-  
-  .App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-  }
-  
-  .App-link {
-    color: #61dafb;
-  }
-  
-  @keyframes App-logo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  
-#nav {
-    margin-top: 1rem;
-    display: flex;
-    border-bottom: 1px solid lightgray;
-    width: 100%;
-    justify-content: space-between;
-    overflow-y: none;
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--dark-bg);
+  width: 100%;
 }
 
-    #nav-about-btn {
-        align-self: center;
-        padding-left: 1rem;
-        width: 30px;
-    }
-
-    #title {
-        align-self: center;
-        letter-spacing: 5px;
-    }
-
-    #nav-right-btns{
-        display: flex;
-    }
-    
-        #nav-stats-btn{
-            align-self: center;
-            padding-right: 1.5rem;
-            width: 30px;
-        }
-
-        #nav-settings-btn{
-            align-self: center;
-            padding-right: 1rem;
-            width: 30px;
-        }
-
-#about {
-    position: absolute;
-    top: 0;
-    z-index: 1;
-    min-height: 96vh;
-    max-width: 450px;
-    margin: auto;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch !important;
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-    .ex-grid3-3 > div{
-        margin: 0 !important;
-    }
-
-    .close-btn-about { /* Used in each settings, about and stats*/
-        position: absolute;
-        right: 0;
-        width: 12px;
-        margin-top: 1.5rem;
-        margin-right: 2rem;
-    }
-
-    .section-header{
-        
-    }
-
-    .section-header > h2 {
-        text-align: center;
-    }
-
-    .section-header > p {
-        font-size: 0.75rem;
-        padding: 0 2rem;
-    }
-
-    .how-to-play {
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-    }
-
-    .how-to-play > p{
-        font-size: 0.6rem;
-    }
-
-#settings {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    min-height: 90vh;
-    padding: 2rem 0;
-    overflow-y: none;
+a {
+  color: inherit;
 }
 
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
-    .close-btn { /* Used in each settings, about and stats*/
-        position: absolute;
-        right: 0;
-        width: 12px;
-        margin-top: 1.5rem;
-        margin-right: 2rem;
-    }
+.ex-grid3-3 > div {
+  margin: 0 !important;
+}
 
-    .setting {
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px #aaa solid;
-        padding: 1rem 0;
-        width: 100%;
-    }
+.close-btn-about {
+  /* Used in each settings, about and stats*/
+  position: absolute;
+  right: 0;
+  width: 12px;
+  margin-top: 1.5rem;
+  margin-right: 2rem;
+}
 
-    .section-txt > h3 {
-        font-weight: bold;
-        margin: 0;
-        padding: 0.5rem 0;
-        font-size: 1rem;
-    }
+.section-header > h2 {
+  text-align: center;
+}
 
-    .section-txt > p {
-        font-size: 0.6rem;
-        margin: 0;
-        padding: 0;
-    }
+.section-header > p {
+  font-size: 0.75rem;
+  padding: 0 2rem;
+}
 
-    #feedback-txt {
-        align-self: center;
-        font-size: 0.6rem;
-        justify-content: space-between;
-    }
+.how-to-play {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
 
-        .feedback-link, .feedback-link:link, .feedback-link:visited, .feedback-link:hover, .feedback-link:active {
-            text-decoration: none !important;
-            padding: 0.25rem;
-            color: #aaa;
-        }
+.how-to-play > p {
+  font-size: 0.6rem;
+}
 
-    #setting-footer{
-        display: flex;
-        justify-content: space-around;
-        position: absolute;
-        bottom: 0;
-        font-size: 0.5rem;
-        width: 300px;
-        left: 0;
-        right: 0;
-        margin: auto;
-        z-index: 2;
-        min-height: 15%;
-    }
+.close-btn {
+  /* Used in each settings, about and stats*/
+  position: absolute;
+  right: 0;
+  width: 12px;
+  margin-top: 1.5rem;
+  margin-right: 2rem;
+}
+
+.setting {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px #aaa solid;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.section-txt > h3 {
+  font-weight: bold;
+  margin: 0;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.section-txt > p {
+  font-size: 0.6rem;
+  margin: 0;
+  padding: 0;
+}
+
+#feedback-txt {
+  align-self: center;
+  font-size: 0.6rem;
+  justify-content: space-between;
+}
+
+.feedback-link,
+.feedback-link:link,
+.feedback-link:visited,
+.feedback-link:hover,
+.feedback-link:active {
+  text-decoration: none !important;
+  padding: 0.25rem;
+  color: #aaa;
+}
+
+#setting-footer {
+  display: flex;
+  justify-content: space-around;
+  position: absolute;
+  bottom: 0;
+  font-size: 0.5rem;
+  width: 300px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 2;
+  min-height: 15%;
+}
 
 .full-screen-cover {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background-color: rgba(10, 10, 10, 0.5);
-    z-index: 2;
-    overflow-y: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(10, 10, 10, 0.5);
+  z-index: 2;
+  overflow-y: none;
 }
 
-    .close-btn-stats { /* Used in each settings, about and stats*/
-        position: absolute;
-        right: 0;
-        width: 12px;
-        margin-top: 1.5rem;
-        margin-right: 2rem;
-    }
+.close-btn-stats {
+  /* Used in each settings, about and stats*/
+  position: absolute;
+  right: 0;
+  width: 12px;
+  margin-top: 1.5rem;
+  margin-right: 2rem;
+}
 
-    .full-screen-container {
-        display: grid;
-        height: 100vh;
-        max-width: 450px;
-        margin: auto;
-    }
+.full-screen-container {
+  display: grid;
+  height: 100vh;
+  max-width: 450px;
+  margin: auto;
+}
 
-    .card {
-        width: 95%;
-        place-self: center;
-        min-height: 200px;
-        margin: auto;
-        border-radius: 4%;
-        border: 1px #222 solid;
-        padding-bottom: 1rem;
-        z-index: 5;
-    }
+.card {
+  width: 95%;
+  place-self: center;
+  min-height: 200px;
+  margin: auto;
+  border-radius: 4%;
+  border: 1px #222 solid;
+  padding-bottom: 1rem;
+  z-index: 5;
+}
 
-    #stat-holder{
-        width: 80%;
-        margin: auto;
-    }
+#stat-holder {
+  width: 80%;
+  margin: auto;
+}
 
-    #stat-summary {
-        display: flex;
-        justify-content: space-between;
-        margin: 1rem 0;
-    }
-        #game-dist-header {
-            margin: 1.25rem 0 0.25rem 0;
-            text-align: center;
-        }
+#stat-summary {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+#game-dist-header {
+  margin: 1.25rem 0 0.25rem 0;
+  text-align: center;
+}
 
-        .stat-block > .stat-num {
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
+.stat-block > .stat-num {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
 
-        .stat-block > .stat-label {
-            text-align: center;
-            padding: 0;
-            margin: 0;
-            font-size: 0.5rem;
-        }
-    
-    .stat-time {
-        text-align: center;
-    }
-    
-        .stat-time > p {
-            font-size: 0.75rem;
-            margin: 0.5rem 0;
-        }
+.stat-block > .stat-label {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  font-size: 0.5rem;
+}
 
-        .life-stat {
-            text-align: center;
-        }
+.stat-time {
+  text-align: center;
+}
 
-        .life-stat > img {
-            width: 15px;
-        }
+.stat-time > p {
+  font-size: 0.75rem;
+  margin: 0.5rem 0;
+}
 
-    .end-game-txt {
-        width: 80%;
-        margin: auto;
-    }
+.life-stat {
+  text-align: center;
+}
 
-    .share-btn {
-        height: 50px;
-        width: 150px;
-        margin: 1rem auto;
-        display: block;
-        text-align: center;
-        background-color: #55c;
-        border-radius: 4px;
-        box-shadow: none;
-        font-weight: bold;
-        color: white;
-    }
+.life-stat > img {
+  width: 15px;
+}
 
-#startPuzz{
-    overflow-y: none;
-    min-height: 550px;
+.end-game-txt {
+  width: 80%;
+  margin: auto;
+}
+
+.share-btn {
+  height: 50px;
+  width: 150px;
+  margin: 1rem auto;
+  display: block;
+  text-align: center;
+  background-color: #55c;
+  border-radius: 4px;
+  box-shadow: none;
+  font-weight: bold;
+  color: white;
 }
 
 #game-box {
-    transition: 2s all;
+  transition: 2s all;
 }
 
 #game {
-    transform: translateX(-35px);
-    overflow-y: none;
-    min-height: 475px;
+  transform: translateX(-35px);
+  overflow-y: none;
+  min-height: 475px;
 }
 
-    .disable-select {
-        pointer-events: none;
-        user-select: none; /* supported by Chrome and Opera */
-        -webkit-user-select: none; /* Safari */
-        -khtml-user-select: none; /* Konqueror HTML */
-        -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-    }
-
-    .start-button {
-        z-index: 0;
-        height: 50px;
-        width: 200px;
-        background-color: #060;
-        font-weight: bold;
-        color: white;
-        transition: all 1s;
-    }
-
-    .start-button:hover {
-        z-index: 0;
-        height: 50px;
-        width: 220px;
-        background-color: #060;
-        color: white;
-        transition: all 3s;
-    }
-
-    .clue-column > p {
-        margin: 0.5rem 0;
-        text-align: center;
-        font-size: 0.75rem;
-    }
-
-    .clue-row-container{
-        padding-right: 0.25rem;
-        transition: 0.5s;
-        max-height: 32px;
-    }
-
-    .clue-row > p {
-        margin: auto;
-        margin-right: 0.25rem;
-        text-align: center;
-        font-size: 0.75rem;
-        align-self: center;
-    }
-
-    .row-clues-txt {
-        margin: auto;
-        margin-right: 0.25rem;
-        text-align: center;
-        font-size: 0.75rem;
-        transition: 0.5s;
-    }
-
-    .cell {
-        background: inherit;
-        transition: all 0.1s ease-in;
-        height: 2rem;
-    }
-
-    .ex-cell{
-        background: inherit;
-        transition: all 0.1s ease-in;
-        height: 2rem;
-        border: #888 1px solid !important;
-    }
-
-    .right {
-        transition: all 0.1s ease-in;
-        background-color: #111 !important;
-    }
-
-    .wrong {
-        transition: all 0.1s ease-in;
-        background-color: rgb(150,0,20) !important;
-    }  
-
-    .flagged {
-        background-color: #ccc
-    }
-
-
-    .hidden { 
-        opacity: 0;
-        transition: all 0.5s;
-    }
-
-    .shown { 
-        opacity: 1;
-        transition: all 3s;
-    }
-
-    .light-{
-        border: #fff 1px solid;
-    }
-
-    .dark-{
-        border: #444 1px solid;
-    }
-
-
-    .light-right{
-        transition: all 0.1s ease-in;
-        background-color: #444 !important;
-        border: 1px #ccc solid;
-    }
-
-    .dark-right{
-        transition: all 0.1s ease-in;
-        background-color: #222 !important;
-        border: 1px #444 solid;
-    }
-
-    .horz-mid-thick {
-        transition: all 1s;
-        border-top: solid 4px;
-    }
-
-    .vert-mid-thick {
-        transition: all 1s;
-        border-right: solid 4px;
-    }
-
-    #clip-ping {
-        width: 200px;
-        padding: 1rem;
-        position: absolute;
-        margin-top: 3.5rem;
-        margin-left: auto;
-        margin-right: auto;
-        left: 0;
-        right: 0;
-        text-align: center;
-        top: 10%;
-        color: black;
-        border-radius: 4%;
-        z-index: 3;
-    }
-
-    .win-ping{
-        background-color: rgba(100,220,100,0.8);
-    }
-
-    .lose-ping{
-        background-color: rgba(220,100,100,0.85);
-    }
-
-    .copy-ping{
-        background-color: rgba(100,100,220,0.8);
-    }
-    
-    .played-ping{
-        background-color: rgba(204,204,204,0.3);
-    }
-
-    .mt{
-        padding-top: 6rem;
-    }
-
-
-#footer {
-    border-top: 1px solid lightgray;
-    display: flex;
-    width: 100%;
-    justify-content: space-around;
-    margin-bottom: 2rem;
-    padding-top: 1rem;
-    transition: all 3s;
-    overflow-y: none;
+.disable-select {
+  pointer-events: none;
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
 }
-    #lives {
-        align-self: center;
-    }
 
-    .life {
-        width: 30px;
-    }
+.start-button {
+  z-index: 0;
+  height: 50px;
+  width: 200px;
+  background-color: #060;
+  font-weight: bold;
+  color: white;
+  transition: all 1s;
+}
 
-    #maxLives {
-        text-align: center;
-    }
+.start-button:hover {
+  z-index: 0;
+  height: 50px;
+  width: 220px;
+  background-color: #060;
+  color: white;
+  transition: all 3s;
+}
 
+.clue-column > p {
+  margin: 0.5rem 0;
+  text-align: center;
+  font-size: 0.75rem;
+}
+
+.clue-row-container {
+  padding-right: 0.25rem;
+  transition: 0.5s;
+  max-height: 32px;
+}
+
+.clue-row > p {
+  margin: auto;
+  margin-right: 0.25rem;
+  text-align: center;
+  font-size: 0.75rem;
+  align-self: center;
+}
+
+.row-clues-txt {
+  margin: auto;
+  margin-right: 0.25rem;
+  text-align: center;
+  font-size: 0.75rem;
+  transition: 0.5s;
+}
+
+.cell {
+  background: inherit;
+  transition: all 0.1s ease-in;
+  height: 2rem;
+}
+
+.ex-cell {
+  background: inherit;
+  transition: all 0.1s ease-in;
+  height: 2rem;
+  border: #888 1px solid !important;
+}
+
+.right {
+  transition: all 0.1s ease-in;
+  background-color: #111 !important;
+}
+
+.wrong {
+  transition: all 0.1s ease-in;
+  background-color: rgb(150, 0, 20) !important;
+}
+
+.flagged {
+  background-color: #ccc;
+}
+
+.hidden {
+  opacity: 0;
+  transition: all 0.5s;
+}
+
+.shown {
+  opacity: 1;
+  transition: all 3s;
+}
+
+.light- {
+  border: #fff 1px solid;
+}
+
+.dark- {
+  border: #444 1px solid;
+}
+
+.light-right {
+  transition: all 0.1s ease-in;
+  background-color: #444 !important;
+  border: 1px #ccc solid;
+}
+
+.dark-right {
+  transition: all 0.1s ease-in;
+  background-color: #222 !important;
+  border: 1px #444 solid;
+}
+
+.horz-mid-thick {
+  transition: all 1s;
+  border-top: solid 4px;
+}
+
+.vert-mid-thick {
+  transition: all 1s;
+  border-right: solid 4px;
+}
+
+#clip-ping {
+  width: 200px;
+  padding: 1rem;
+  position: absolute;
+  margin-top: 3.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  top: 10%;
+  color: black;
+  border-radius: 4%;
+  z-index: 3;
+}
+
+.win-ping {
+  background-color: rgba(100, 220, 100, 0.8);
+}
+
+.lose-ping {
+  background-color: rgba(220, 100, 100, 0.85);
+}
+
+.copy-ping {
+  background-color: rgba(100, 100, 220, 0.8);
+}
+
+.played-ping {
+  background-color: rgba(204, 204, 204, 0.3);
+}
+
+.mt {
+  padding-top: 6rem;
+}
+
+#lives {
+  align-self: center;
+}
+
+.life {
+  width: 30px;
+}
 
 /*              Responsiveness           */
 /*                                       */
@@ -549,99 +427,97 @@ html {
 /*                                       */
 
 @media (hover: hover) {
-    .dark-:hover {
-        transition: all 0.1s ease-in;
-        background-color: rgba(20,20,20,0.2);
-    }
-    .light-:hover {
-        transition: all 0.2s ease-in;
-        background-color: rgba(240,240,240, 0.2);
-    }
-    .right:hover {
-        transition: all 0.1s ease-in;
-        background-color: rgba(0,20,150, 0.7) !important;
-    }
-    .wrong:hover {
-        transition: all 0.1s ease-in;
-        background-color: rgba(120,0,20, 0.7) !important;
-    }
+  .dark-:hover {
+    transition: all 0.1s ease-in;
+    background-color: rgba(20, 20, 20, 0.2);
+  }
+  .light-:hover {
+    transition: all 0.2s ease-in;
+    background-color: rgba(240, 240, 240, 0.2);
+  }
+  .right:hover {
+    transition: all 0.1s ease-in;
+    background-color: rgba(0, 20, 150, 0.7) !important;
+  }
+  .wrong:hover {
+    transition: all 0.1s ease-in;
+    background-color: rgba(120, 0, 20, 0.7) !important;
+  }
 }
 
 @media screen and (max-width: 600px) {
-    #settings {
-        padding: 1.5rem;
-    }
+  #settings {
+    padding: 1.5rem;
+  }
 
-    #about {
-        width: 100%;
-    }
+  #about {
+    width: 100%;
+  }
 
-    #stats-card {
-        width: 85%;
-    }
+  #stats-card {
+    width: 85%;
+  }
 
-    #game {
-        width: 95%;
-    }
-
-    #footer {
-        margin-top: 0.25rem;
-        position: absolute;
-        bottom: 0;
-
-    }
-    #footer > p {
-        margin-top: 0;
-    }
+  #footer {
+    margin-top: 0.25rem;
+    position: absolute;
+    bottom: 0;
+  }
+  #footer > p {
+    margin-top: 0;
+  }
 }
 
 @media screen and (max-width: 361px) {
-    #game, #startPuzz{
-        width: 97%;
-        margin: auto;
-        margin-top: 10%;
-    }
+  #game,
+  #startPuzz {
+    width: 97%;
+    margin: auto;
+    margin-top: 10%;
+  }
 
-    .clue-row > p{
-        font-size: 0.65rem !important;
-    }
-    .clue-column > p{
-        font-size: 0.65rem !important;
-    }
+  .clue-row > p {
+    font-size: 0.65rem !important;
+  }
+  .clue-column > p {
+    font-size: 0.65rem !important;
+  }
 }
 
 @media screen and (max-height: 361px) {
-    #game, #startPuzz{
-        width: 97%;
-        margin: auto;
-        margin-top: 10%;
-    }
+  #game,
+  #startPuzz {
+    width: 97%;
+    margin: auto;
+    margin-top: 10%;
+  }
 
-    .clue-row > p{
-        font-size: 0.65rem !important;
-    }
-    .clue-column > p{
-        font-size: 0.65rem !important;
-    }
+  .clue-row > p {
+    font-size: 0.65rem !important;
+  }
+  .clue-column > p {
+    font-size: 0.65rem !important;
+  }
 }
 
 @media screen and (min-height: 800px) {
-    #game, #startPuzz {
-        margin-top: 20%;
-    }
+  #game,
+  #startPuzz {
+    margin-top: 20%;
+  }
 
-    .how-to-play {
-        padding: 1rem;
-    }
+  .how-to-play {
+    padding: 1rem;
+  }
 
-    .how-to-play > p {
-        margin: 0.75rem 0;
-    }
+  .how-to-play > p {
+    margin: 0.75rem 0;
+  }
 
-    .ex-grid{
-        /* margin: 1rem 0; */
-    }
-    /* #footer {
+  .ex-grid {
+    /* margin: 1rem 0; */
+  }
+  /* #footer {
         padding-top: 0;
         position: absolute;
         bottom: 0;
@@ -651,23 +527,22 @@ html {
 }
 
 @media screen and (min-width: 600px) {
+  #stats-card {
+    width: 100%;
+  }
 
-    #stats-card {
-        width: 100%;
-    }
+  #game,
+  #startPuzz {
+    height: 40vh;
+    margin: auto;
+    margin-top: 22.5%;
+    margin-bottom: 25%;
+    width: 90%;
+  }
 
-    #game, #startPuzz {
-        height: 40vh; 
-        margin: auto;
-        margin-top: 22.5%;
-        margin-bottom: 25%;
-        width: 90%;
-       
-    }
-
-    #footer {
-        padding: 2rem 0;
-        bottom: 0;
-        margin-bottom: 0.25rem;
-    }
+  #footer {
+    padding: 2rem 0;
+    bottom: 0;
+    margin-bottom: 0.25rem;
+  }
 }
