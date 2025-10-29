@@ -93,9 +93,9 @@ const SolveToStart = () => {
         <div />
 
         {/* Column clues */}
-        <div className="grid grid-cols-3 gap-x-0.5">
+        <div className="grid grid-cols-3 gap-x-0.5 mb-2">
           {colClues.map((clue, c) => (
-            <div key={c} className="flex flex-col items-center justify-end h-10">
+            <div key={c} className="flex flex-col items-center justify-end h-10 gap-y-2">
               {clue
                 .slice()
                 .reverse()
@@ -109,11 +109,11 @@ const SolveToStart = () => {
         </div>
 
         {/* Row clues */}
-        <div className="grid grid-rows-3 gap-y-0.5">
+        <div className="grid grid-rows-3 gap-y-0.5 mr-2">
           {rowClues.map((clue, r) => (
             <div
               key={r}
-              className="flex justify-end items-center h-8 sm:h-10"
+              className="flex justify-end items-center h-8 sm:h-10 gap-x-2"
             >
               {clue.map((num, i) => (
                 <span key={i} className="text-xs leading-none mr-1">
