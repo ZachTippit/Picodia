@@ -1,8 +1,6 @@
 import { useState, useEffect, use } from "react";
-import { GameContext } from "../../GameContext";
-import { cn } from "../../lib/cn";
-import StartCell from "./StartCell";
-import Clues from "./Clues";
+import { GameContext } from "../GameContext";
+import { cn } from "../lib/cn";;
 
 const answer = [
   [1, 1, 1],
@@ -78,13 +76,13 @@ const SolveToStart = () => {
   };
 
   // Static clues (could be derived automatically if desired)
-  const rowClues = [[3], [1], [2]];
-  const colClues = [[3], [1, 1], [1, 1]];
+  const rowClues = [[3], [1], [1, 1]];
+  const colClues = [[3], [1], [1, 1]];
 
   return (
     <div
       className={cn(
-        "overflow-y-hidden flex flex-col items-center justify-center min-h-[550px] transition-all duration-700",
+        "overflow-y-hidden flex flex-col items-center justify-center min-h-[450px] transition-all duration-700",
         preGameAnim ? "opacity-0 translate-x-12" : "opacity-100 translate-x-0"
       )}
     >
@@ -113,7 +111,7 @@ const SolveToStart = () => {
           {rowClues.map((clue, r) => (
             <div
               key={r}
-              className="flex justify-end items-center h-8 sm:h-10 gap-x-2"
+              className="flex justify-end items-center h-10 gap-x-2"
             >
               {clue.map((num, i) => (
                 <span key={i} className="text-xs leading-none mr-1">

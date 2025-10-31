@@ -10,14 +10,11 @@ import { default as Heart } from '../assets/heart.png';
 import { default as EmptyHeart } from '../assets/empty-heart.png';
 import { GameContext } from '../GameContext';
 import { cn } from '../lib/cn';
+import { copyToClipboard } from '../lib/copyToClipboard';
 
-interface StatsProps {
-  copyToClipboard: () => void;
-}
-
-const Stats = ({ copyToClipboard }: StatsProps ) => {
+const Stats = () => {
   const { 
-    state: { gameOver, showStats, darkMode, hasPlayedToday }, 
+    state: { gameOver, showStats, darkMode, hasPlayedToday, didWin, lives }, 
     actions: { toggleStats } 
   } = use(GameContext);
 
@@ -161,7 +158,7 @@ const Stats = ({ copyToClipboard }: StatsProps ) => {
                       <p className="text-center">
                         <b>Compare with others!</b>
                       </p>
-                      <button className="share-btn" onClick={() => copyToClipboard()}>
+                    <button className="share-btn" onClick={() => copyToClipboard(hasPlayedToday, true, lives, didWin)}>
                         Share results
                       </button>
                       <Divider className="w-1/2 m-auto" />

@@ -2,13 +2,13 @@ import { use } from 'react';
 import { GameContext } from '../../GameContext';
 import { useGetPuzzles } from '../../hooks/useGetPuzzle';
 import { Nonogram } from './Nonogram';
-import SolveToStart from '../Game/SolveToStart';
+import SolveToStart from '../SolveToStart';
 
-const Game2 = () => {
+const Game = () => {
   const { state: { isGameStarted }, actions } = use(GameContext);
 
   const { data: puzzles } = useGetPuzzles();
-  if (!puzzles) return <div>Loading...</div>;
+  if (!puzzles) return <div className="min-h-[450px] flex flex-row items-center justify-center">Loading...</div>;
 
   const dailyPuzzle = puzzles[0];
   console.log('puzzles data in Game2:', puzzles);
@@ -24,4 +24,4 @@ const Game2 = () => {
   );
 };
 
-export default Game2;
+export default Game;

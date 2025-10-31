@@ -11,6 +11,7 @@
     "@supabase/supabase-js": "^2.48.0",
     "@tanstack/react-query": "^5.90.5",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "googleapis": "^95.0.0",
     "react": "^19.2.0",
     "react-cookie": "^8.0.1",

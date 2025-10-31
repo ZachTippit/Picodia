@@ -24,7 +24,7 @@ import { cn } from '../lib/cn';
 const Navbar = () => {
   const { actions: { toggleAbout, toggleStats, toggleSettings}, state: { pingHowTo, darkMode } } = use(GameContext);
   return (
-    <div className="mt-4 px-4 py-2 flex w-full border border-t-0 border-x-0 border-b-gray-300 justify-between overflow-y-none">
+    <div className="flex mt-4 px-4 py-2 w-full border border-t-0 border-x-0 border-b-gray-300 justify-between overflow-y-none">
       <img
         src={darkMode ? Question : QuestionDark}
         alt="About icon"

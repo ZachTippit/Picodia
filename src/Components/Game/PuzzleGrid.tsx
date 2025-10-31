@@ -1,13 +1,14 @@
 import React, { use, useState } from "react";
 import { cn } from "../../lib/cn";
 import { GameContext } from "../../GameContext";
+import { useSavePuzzleProgress } from "../../hooks/useSavePuzzleProgress";
 
 interface PuzzleGridProps {
   solution: number[][];
-  onSolved?: () => void;
 }
 
-const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, onSolved }) => {
+const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution }) => {
+  const { mutate: saveProgress } = useSavePuzzleProgress();
   const { actions: { loseLife } } = use(GameContext);
   const totalCorrect = solution.flat().filter((v) => v === 1).length;
 
@@ -36,7 +37,10 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, onSolved }) => {
         requestAnimationFrame(() =>
           setCorrectCount((count) => {
             const newCount = count + 1;
-            if (newCount === totalCorrect && onSolved) onSolved();
+            if (newCount === totalCorrect){
+              saveProgress({ progress: next, completed: true });
+              onSolved();
+            }
             return newCount;
           })
         );
@@ -45,9 +49,15 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, onSolved }) => {
         loseLife();
       }
 
+      saveProgress({ progress: next });
+
       return next;
     });
   };
+
+  const onSolved = () => {
+    console.log("Puzzle solved!");
+  }
 
   return (
     <div
