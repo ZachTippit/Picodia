@@ -21,15 +21,19 @@ import {
 } from '@clerk/clerk-react';
 import { cn } from '../lib/cn';
 
-const Navbar = () => {
-  const { actions: { toggleAbout, toggleStats, toggleSettings}, state: { pingHowTo, darkMode } } = use(GameContext);
+interface NavbarProps {
+  onShowHowTo?: () => void;
+}
+
+const Navbar = ({ onShowHowTo }: NavbarProps) => {
+  const { actions: { toggleStats, toggleSettings}, state: { pingHowTo, darkMode } } = use(GameContext);
   return (
     <div className="flex mt-4 px-4 py-2 w-full border border-t-0 border-x-0 border-b-gray-300 justify-between overflow-y-none">
       <img
         src={darkMode ? Question : QuestionDark}
         alt="About icon"
         className={cn("w-8", pingHowTo && 'wobble-ver-right')}
-        onClick={toggleAbout}
+        onClick={() => onShowHowTo?.()}
       />
       <h1 className="tracking-widest">PICODIA</h1>
       <div className="flex items-center gap-x-4 md:gap-x-12">

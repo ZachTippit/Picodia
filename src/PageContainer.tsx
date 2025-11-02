@@ -1,7 +1,7 @@
 import { use, useEffect, useState } from 'react';
 import { About, Footer, Game, Navbar, Settings, Stats } from './Components';
 import Pings from './Pings';
-import { handleLoseStats, handleWinStats, onGameOver, storageInit } from './lib/utilities';
+import { handleLoseStats, handleWinStats, onGameOver } from './lib/utilities';
 import { GameContext } from './GameContext';
 import { ProfileProbe } from './Components/ProfileProbe';
 import { useGetPuzzles } from './hooks/useGetPuzzle';
@@ -9,6 +9,7 @@ import { cn } from './lib/cn';
 import { useUser } from '@clerk/clerk-react';
 import MobileNav from './Components/MobileNav';
 import LandingScreen from './Components/LandingScreen/LandingScreen';
+import HowToPlayView from './Components/LandingScreen/HowToPlayView';
 
 const PageContainer = () => {
   const user = useUser();
@@ -25,6 +26,7 @@ const PageContainer = () => {
   const [goAlert, setGOAlert] = useState<boolean>(false);
   const [gameOverNote, setGameOverNote] = useState<string | false>(false);
   const [showLandingScreen, setShowLandingScreen] = useState(true);
+  const [showHowTo, setShowHowTo] = useState(false);
 
   const {data} = useGetPuzzles();
   console.log("puzzles data:", data);
@@ -76,12 +78,21 @@ const PageContainer = () => {
   const handleLandingDismiss = () => {
     setShowLandingScreen(false);
   };
+
+  const openHowTo = () => {
+    setShowHowTo(true);
+  };
+
+  const closeHowTo = () => {
+    setShowHowTo(false);
+  };
   
   return (
     <div className={cn("absolute top-0 right-0 left-0 bottom-0", darkMode ? 'dark-theme' : 'light-theme')}>
-      {showLandingScreen && <LandingScreen onPlay={handleLandingDismiss} />}
+      {showLandingScreen && <LandingScreen onPlay={handleLandingDismiss} onShowHowTo={openHowTo} />}
+      {showHowTo && <HowToPlayView onClose={closeHowTo} />}
       <div className={cn("max-w-[450px] m-auto", darkMode ? 'dark-theme' : 'light-theme')}>
-        <Navbar />
+        <Navbar onShowHowTo={openHowTo} />
         <ProfileProbe />
         <Pings
           gameOverNote={gameOverNote}
