@@ -8,7 +8,7 @@ import { useGetPuzzles } from './hooks/useGetPuzzle';
 import { cn } from './lib/cn';
 import { useUser } from '@clerk/clerk-react';
 import MobileNav from './Components/MobileNav';
-import LandingScreen from './Components/LandingScreen';
+import LandingScreen from './Components/LandingScreen/LandingScreen';
 
 const PageContainer = () => {
   const user = useUser();
