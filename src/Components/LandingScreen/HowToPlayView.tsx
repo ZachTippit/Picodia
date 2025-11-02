@@ -14,29 +14,51 @@ interface HowToPlayViewProps {
 
 const TRANSITION_DURATION = 500;
 
+const GRID_FADE_DURATION = 200;
+
 const HowToPlayView = ({ onClose }: HowToPlayViewProps) => {
   const [activeRule, setActiveRule] = useState(0);
+  const [renderedRule, setRenderedRule] = useState(0);
+  const [gridVisible, setGridVisible] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const overlayTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const gridTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
 
   useEffect(() => {
     setIsVisible(true);
     return () => {
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
+      if (overlayTimeoutRef.current) {
+        window.clearTimeout(overlayTimeoutRef.current);
+      }
+      if (gridTimeoutRef.current) {
+        window.clearTimeout(gridTimeoutRef.current);
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (activeRule === renderedRule) return;
+    setGridVisible(false);
+    if (gridTimeoutRef.current) {
+      window.clearTimeout(gridTimeoutRef.current);
+    }
+    gridTimeoutRef.current = window.setTimeout(() => {
+      setRenderedRule(activeRule);
+      setGridVisible(true);
+      gridTimeoutRef.current = null;
+    }, GRID_FADE_DURATION);
+  }, [activeRule, renderedRule]);
 
   const handlePrevRule = () => setActiveRule((prev) => Math.max(0, prev - 1));
   const handleNextRule = () => setActiveRule((prev) => Math.min(howToPlayRules.length - 1, prev + 1));
   const handleClose = () => {
     setIsVisible(false);
-    if (timeoutRef.current) {
-      window.clearTimeout(timeoutRef.current);
+    if (overlayTimeoutRef.current) {
+      window.clearTimeout(overlayTimeoutRef.current);
     }
-    timeoutRef.current = window.setTimeout(() => {
+    overlayTimeoutRef.current = window.setTimeout(() => {
       setActiveRule(0);
+      setRenderedRule(0);
       onClose();
     }, TRANSITION_DURATION);
   };
@@ -50,7 +72,14 @@ const HowToPlayView = ({ onClose }: HowToPlayViewProps) => {
     >
       <h1 className="mb-4 text-2xl">PICODIA</h1>
       <div className="flex w-full flex-1 flex-col items-center justify-center gap-6 text-center">
-        <HowToPlayGrid activeRule={activeRule} />
+        <div
+          className={cn(
+            'transition-opacity duration-200 ease-in-out',
+            gridVisible ? 'opacity-100' : 'opacity-0'
+          )}
+        >
+          <HowToPlayGrid activeRule={renderedRule} />
+        </div>
         <p className="max-w-xs text-sm leading-snug text-gray-700">{howToPlayRules[activeRule]}</p>
         <div className="flex items-center gap-4">
           <button

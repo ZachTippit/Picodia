@@ -11,8 +11,8 @@ const ruleOneRows = [
 ];
 
 const ruleOneCols = [
-  { clue: '3', cells: [1, 1, 1, 0, 0] },
-  { clue: '3 1', cells: [1, 1, 1, 0, 1] },
+  { clue: ["3"], cells: [1, 1, 1, 0, 0] },
+  { clue: ['3', '1'], cells: [1, 1, 1, 0, 1] },
 ];
 
 const ruleTwoBoard = [
@@ -40,12 +40,12 @@ const previewColClues = [[5], [1, 1], [1, 1], [1, 1], [3]];
 const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
   if (activeRule === 0) {
     return (
-      <div className="flex items-end justify-center gap-6">
+      <div className="flex items-end justify-center gap-6 h-40">
         <div className="flex flex-col gap-3">
           {ruleOneRows.map(({ clue, cells }, idx) => (
             <div key={idx} className="flex items-center gap-2">
               <span className="w-10 text-right text-xs font-semibold text-gray-600">{clue}</span>
-              <div className="flex gap-0.5">
+              <div className="flex rounded-md border-4 border-gray-800 shadow-[0_0_10px_rgba(0,0,0,0.2)]">
                 {cells.map((cell, cellIndex) => (
                   <span
                     key={cellIndex}
@@ -59,11 +59,15 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
             </div>
           ))}
         </div>
-        <div className="flex items-start gap-4">
+        <div className="flex items-end gap-4">
           {ruleOneCols.map(({ clue, cells }, idx) => (
             <div key={idx} className="flex flex-col items-center gap-2">
-              <span className="text-xs font-semibold text-gray-600">{clue}</span>
-              <div className="flex flex-col gap-0.5">
+              {clue.map((clueItem, clueIndex) => (
+                <span key={clueIndex} className="text-xs font-semibold text-gray-600">
+                  {clueItem}
+                </span>
+              ))}
+              <div className="flex flex-col rounded-md border-4 border-gray-800 shadow-[0_0_10px_rgba(0,0,0,0.2)]">
                 {cells.map((cell, cellIndex) => (
                   <span
                     key={cellIndex}
@@ -83,7 +87,7 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
 
   if (activeRule === 1) {
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center h-40">
         <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] gap-0.5">
           <div />
           <div className="grid grid-cols-5 gap-x-0.5">
@@ -122,10 +126,10 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
 
   if (activeRule === 2) {
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center h-40">
         <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] gap-0.5">
           <div />
-          <div className="grid grid-cols-5 gap-x-0.5">
+          <div className="grid grid-cols-5 gap-x-0.5 mb-1">
             {previewColClues.map((clue, idx) => (
               <div key={idx} className="flex h-5 flex-col items-center justify-end gap-y-2">
                 {clue
@@ -139,7 +143,7 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
               </div>
             ))}
           </div>
-          <div className="grid grid-rows-5 gap-y-0.5">
+          <div className="grid grid-rows-5 gap-y-0.5 mr-1">
             {previewRowClues.map((clue, idx) => (
               <div key={idx} className="flex h-5 items-center justify-end gap-x-2">
                 {clue.map((num, clueIdx) => (
