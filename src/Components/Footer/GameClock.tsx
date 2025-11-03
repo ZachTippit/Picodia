@@ -1,69 +1,42 @@
-import { use, useEffect, useState } from 'react'
+import { use, useEffect } from 'react';
 import { GameContext } from '../../GameContext';
 
+const pad = (val: number) => {
+  const value = Math.max(0, val);
+  return value < 10 ? `0${value}` : `${value}`;
+};
+
 const GameClock = () => {
-    const { state: { isGameStarted, hasPlayedToday, gameOver } } = use(GameContext);
-    
-    const [totalTime, setTotalTime] = useState(0);
-    const [seconds, setSeconds] = useState(0);
-    const [minutes, setMinutes] = useState(0);
-    
-    const pad = (val) => {
-        let valString = val + '';
-        return valString.length < 2 ? '0' + valString : valString;
-    };
+  const {
+    state: { isGameStarted, gameOver, elapsedSeconds, startMode },
+    actions: { incrementElapsedSeconds },
+  } = use(GameContext);
 
-    useEffect(() => {
-        if (!gameOver) {
-        setSeconds(totalTime % 60);
-        }
-    }, [totalTime]);
-    
-    useEffect(() => {
-        if (!gameOver) {
-            setMinutes(Math.floor(totalTime / 60));
-        }
-    }, [seconds]);
+  useEffect(() => {
+    if (!isGameStarted || gameOver || startMode === 'results') {
+      return;
+    }
 
-    useEffect(() => {
-        if (gameOver) {
-            handleGameOverTime();
-        }
-    }, [gameOver]);
+    const interval = window.setInterval(() => {
+      incrementElapsedSeconds();
+    }, 1000);
 
-    useEffect(() => {
-        if (isGameStarted && !gameOver) {
-            setTotalTime(0);
-        }
-    }, [isGameStarted]);
+    return () => window.clearInterval(interval);
+  }, [gameOver, incrementElapsedSeconds, isGameStarted, startMode]);
 
-    useEffect(() => {
-        if (!gameOver) {
-            const interval = setInterval(() => {
-                setTotalTime((totalTime) => totalTime + 1);
-            }, 1000);
-            return () => clearInterval(interval);
-        }
-    }, [gameOver]);
+  const minutes = Math.floor(elapsedSeconds / 60);
+  const seconds = elapsedSeconds % 60;
 
-    const handleGameOverTime = () => {
-        localStorage.prevTime = totalTime;
-    };
+  return (
+    <div className="fade-in-fwd move-on-start-footer ">
+      <p className="text-center mb-2 font-bold">TIME</p>
+      <div className="m-auto text-center">
+        <label className="text-sm">{pad(minutes)}</label>
+        <label className="text-sm">:</label>
+        <label className="text-sm">{pad(seconds)}</label>
+      </div>
+    </div>
+  );
+};
 
-    return (
-        <div className="fade-in-fwd move-on-start-footer ">
-            <p className="text-center mb-2 font-bold">TIME</p>
-            <div className="m-auto text-center">
-                <label className="text-sm">
-                    {pad(hasPlayedToday ? Math.floor(localStorage.prevTime / 60) : minutes)}
-                </label>
-                <label className="text-sm">:</label>
-                <label className="text-sm">
-                    {pad(hasPlayedToday ? localStorage.prevTime % 60 : seconds)}
-                </label>
-            </div>
-        </div>
-  )
-}
-
-export default GameClock
+export default GameClock;

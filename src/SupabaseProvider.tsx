@@ -1,8 +1,12 @@
-import { ReactNode, createContext, useContext, useMemo } from 'react';
-import { useAuth } from '@clerk/clerk-react';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { Session, User, createClient, SupabaseClient } from '@supabase/supabase-js';
 
-type SupabaseContextValue = SupabaseClient;
+interface SupabaseContextValue {
+  client: SupabaseClient;
+  session: Session | null;
+  user: User | null;
+  loading: boolean;
+}
 
 const SupabaseContext = createContext<SupabaseContextValue | null>(null);
 
@@ -13,7 +17,6 @@ interface SupabaseProviderProps {
 export const SupabaseProvider = ({ children }: SupabaseProviderProps) => {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
-  const { getToken } = useAuth();
 
   if (!supabaseUrl) {
     throw new Error('Missing VITE_SUPABASE_URL');
@@ -25,37 +28,78 @@ export const SupabaseProvider = ({ children }: SupabaseProviderProps) => {
 
   const client = useMemo(() => {
     return createClient(supabaseUrl, supabaseKey, {
-      accessToken: async () => getToken() ?? null,
       auth: {
-        persistSession: false,
-        detectSessionInUrl: false,
-      },
-      global: {
-        fetch: async (url, options = {} as any) => {
-          const token = await getToken({ template: 'supabase' });
-          const headers = new Headers(options?.headers || {});
-
-          if (token) {
-            headers.set('Authorization', `Bearer ${token}`);
-          } else {
-            headers.delete('Authorization');
-          }
-
-          return fetch(url, { ...options, headers });
-        },
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
       },
     });
-  }, [getToken, supabaseUrl, supabaseKey]);
+  }, [supabaseUrl, supabaseKey]);
 
-  return <SupabaseContext.Provider value={client}>{children}</SupabaseContext.Provider>;
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const init = async () => {
+      const { data } = await client.auth.getSession();
+      if (!isMounted) return;
+      setSession(data.session ?? null);
+      setUser(data.session?.user ?? null);
+      setLoading(false);
+    };
+
+    void init();
+
+    const {
+      data: { subscription },
+    } = client.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession);
+      setUser(nextSession?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, [client]);
+
+  const value = useMemo<SupabaseContextValue>(
+    () => ({
+      client,
+      session,
+      user,
+      loading,
+    }),
+    [client, session, user, loading]
+  );
+
+  return <SupabaseContext.Provider value={value}>{children}</SupabaseContext.Provider>;
 };
 
 export const useSupabase = () => {
-  const client = useContext(SupabaseContext);
+  const context = useContext(SupabaseContext);
 
-  if (!client) {
+  if (!context) {
     throw new Error('useSupabase must be used within a SupabaseProvider');
   }
 
-  return client;
+  return context.client;
+};
+
+export const useSupabaseAuth = () => {
+  const context = useContext(SupabaseContext);
+
+  if (!context) {
+    throw new Error('useSupabase must be used within a SupabaseProvider');
+  }
+
+  return {
+    user: context.user,
+    session: context.session,
+    loading: context.loading,
+  };
 };

@@ -1,4 +1,9 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+.signin-button {
+  width: 210px;
+  height: 40px;
+}
 
 :root {
   --light-bg: #fff;
@@ -49,6 +54,29 @@ a {
   to {
     transform: rotate(360deg);
   }
+}
+
+@keyframes countdown-fade {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  15% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.countdown-number {
+  animation: countdown-fade 1s ease-in-out forwards;
 }
 
 .ex-grid3-3 > div {
@@ -189,6 +217,81 @@ a {
   display: flex;
   justify-content: space-between;
   margin: 1rem 0;
+}
+
+.stats-overlay-base {
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+}
+
+.stats-overlay-enter {
+  animation: stats-overlay-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stats-overlay-entered {
+  opacity: 1;
+}
+
+.stats-overlay-exit {
+  animation: stats-overlay-out 0.4s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+}
+
+@keyframes stats-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes stats-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.stats-panel-base {
+  opacity: 0;
+  transform: translateY(48px);
+}
+
+.stats-panel-enter {
+  animation: stats-panel-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stats-panel-entered {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stats-panel-exit {
+  animation: stats-panel-out 0.4s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+}
+
+@keyframes stats-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stats-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(48px);
+  }
 }
 #game-dist-header {
   margin: 1.25rem 0 0.25rem 0;
@@ -374,38 +477,6 @@ a {
 .vert-mid-thick {
   transition: all 1s;
   border-right: solid 4px;
-}
-
-#clip-ping {
-  width: 200px;
-  padding: 1rem;
-  position: absolute;
-  margin-top: 3.5rem;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
-  text-align: center;
-  top: 10%;
-  color: black;
-  border-radius: 4%;
-  z-index: 3;
-}
-
-.win-ping {
-  background-color: rgba(100, 220, 100, 0.8);
-}
-
-.lose-ping {
-  background-color: rgba(220, 100, 100, 0.85);
-}
-
-.copy-ping {
-  background-color: rgba(100, 100, 220, 0.8);
-}
-
-.played-ping {
-  background-color: rgba(204, 204, 204, 0.3);
 }
 
 .mt {

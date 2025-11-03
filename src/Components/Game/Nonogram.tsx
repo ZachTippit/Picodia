@@ -1,14 +1,16 @@
 import { getColumnClues, getRowClues } from '../../lib/clueUtils';
 import RowClues from './RowClues';
 import ColClues from './ColClues';
-import PuzzleGrid from './PuzzleGrid';
+import PuzzleGrid, { PuzzleCellState } from './PuzzleGrid';
 import { Puzzle } from '../../hooks/useGetPuzzle';
 
 interface NonogramProps {
   puzzle: Puzzle;
+  initialGrid?: PuzzleCellState[][] | null;
+  puzzleId: string;
 }
 
-export const Nonogram = ({ puzzle }: NonogramProps) => {
+export const Nonogram = ({ puzzle, initialGrid = null, puzzleId }: NonogramProps) => {
   const solution = puzzle.puzzle_array;
   const rowClues = getRowClues(solution);
   const colClues = getColumnClues(solution);
@@ -23,7 +25,7 @@ export const Nonogram = ({ puzzle }: NonogramProps) => {
         {/* Row clues */}
         <RowClues rowClues={rowClues} />
         {/* Puzzle grid */}
-        <PuzzleGrid solution={solution} />
+        <PuzzleGrid solution={solution} puzzleId={puzzleId} initialGrid={initialGrid} />
       </div>
 
       {/* <button

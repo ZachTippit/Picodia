@@ -1,6 +1,8 @@
 import { FormEvent, useState } from 'react';
 import { cn } from '../../lib/cn';
 import { useSupabase } from '../../SupabaseProvider';
+import LoginGoogle from './LoginGoogle';
+import LoginApple from './LoginApple';
 
 interface LoginOverlayProps {
   isOpen: boolean;
@@ -12,6 +14,8 @@ const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [appleLoading, setAppleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -37,6 +41,60 @@ const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
     }
 
     setLoading(false);
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    setSuccess(null);
+    setGoogleLoading(true);
+
+    try {
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+
+      if (authError) {
+        throw authError;
+      }
+
+      setSuccess('Redirecting to Google…');
+    } catch (authError) {
+      const message =
+        authError instanceof Error ? authError.message : 'Unable to start Google sign-in.';
+      setError(message);
+      setSuccess(null);
+      setGoogleLoading(false);
+    }
+  };
+
+  const handleAppleSignIn = async () => {
+    setError(null);
+    setSuccess(null);
+    setAppleLoading(true);
+
+    try {
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+
+      if (authError) {
+        throw authError;
+      }
+
+      setSuccess('Redirecting to Apple…');
+    } catch (authError) {
+      const message =
+        authError instanceof Error ? authError.message : 'Unable to start Apple sign-in.';
+      setError(message);
+      setSuccess(null);
+      setAppleLoading(false);
+    }
   };
 
   return (
@@ -75,7 +133,8 @@ const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
                   required
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  className="rounded border border-gray-400 px-3 py-2 text-base text-gray-900 outline-none transition focus:border-gray-900"
+                  disabled={loading || googleLoading || appleLoading}
+                  className="rounded border border-gray-400 px-3 py-2 text-base text-gray-900 outline-none transition focus:border-gray-900 disabled:cursor-not-allowed disabled:bg-gray-100"
                 />
               </label>
               <label className="flex flex-col gap-2 text-sm font-semibold text-gray-700">
@@ -86,17 +145,18 @@ const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
                   required
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  className="rounded border border-gray-400 px-3 py-2 text-base text-gray-900 outline-none transition focus:border-gray-900"
+                  disabled={loading || googleLoading || appleLoading}
+                  className="rounded border border-gray-400 px-3 py-2 text-base text-gray-900 outline-none transition focus:border-gray-900 disabled:cursor-not-allowed disabled:bg-gray-100"
                 />
               </label>
               {error && <p className="text-sm text-red-600">{error}</p>}
               {success && <p className="text-sm text-emerald-600">{success}</p>}
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || googleLoading || appleLoading}
                 className={cn(
                   'mt-2 w-full rounded-sm bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition',
-                  loading ? 'opacity-70' : 'hover:bg-black'
+                  loading || googleLoading || appleLoading ? 'opacity-70' : 'hover:bg-black'
                 )}
               >
                 {loading ? 'Signing in…' : 'Continue'}
@@ -109,6 +169,13 @@ const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
               <span className="h-px flex-1 bg-gray-300" />
             </div>
 
+            <div className="mt-6 space-y-3 text-xs text-gray-500">
+              <LoginGoogle onClick={handleGoogleSignIn} disabled={googleLoading || appleLoading } googleLoading={googleLoading} />
+              <LoginApple onClick={handleAppleSignIn} disabled={appleLoading || googleLoading } appleLoading={appleLoading} />
+            </div>
+          </div>
+
+          <div className="border-t border-gray-200 px-6 py-4 text-center text-xs text-gray-500">
             <p className="mt-4 text-center text-xs text-gray-500">
               By continuing, you agree to our{' '}
               <a href="/terms" className="underline hover:text-gray-700">
@@ -120,27 +187,6 @@ const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
               </a>
               .
             </p>
-
-            <div className="mt-6 space-y-3 text-xs text-gray-500">
-              <button
-                type="button"
-                disabled
-                className="flex w-full items-center justify-center gap-2 rounded border border-gray-400 px-4 py-2 font-semibold text-gray-600"
-              >
-                Continue with Google (coming soon)
-              </button>
-              <button
-                type="button"
-                disabled
-                className="flex w-full items-center justify-center gap-2 rounded border border-gray-400 px-4 py-2 font-semibold text-gray-600"
-              >
-                Continue with Apple (coming soon)
-              </button>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 px-6 py-4 text-center text-xs text-gray-500">
-            Looking for work or school sign-in? Coming soon.
           </div>
         </div>
       </div>

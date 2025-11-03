@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GameProvider } from './GameContext';
-import { ToastContainer } from 'react-toastify';
 import PageContainer from './PageContainer';
 
 // const analyticsId = import.meta.env.VITE_GOOGLE_ANALYTICS_ID;
@@ -20,7 +19,6 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <GameProvider>
         <PageContainer />
-        <ToastContainer />
       </GameProvider>
     </QueryClientProvider>
   );

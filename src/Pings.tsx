@@ -1,6 +1,5 @@
-import React, { use } from 'react'
+import { use } from 'react';
 import { GameContext } from './GameContext';
-import { Ping } from './Components';
 
 interface PingsProps {
     playedToday: boolean;
@@ -10,17 +9,9 @@ interface PingsProps {
     whatIsIt?: string;
 }
 
-const Pings = ({ playedToday, goAlert, alert, gameOverNote, whatIsIt }: PingsProps) => {
-  const { state: { showAbout, showStats, showSettings, startPing } } = use(GameContext);
-  const isModalOpen = showAbout || showStats || showSettings;
-  return (
-    <>
-      {playedToday && !isModalOpen && <Ping note="Good luck!" />}
-      {startPing && !playedToday && <Ping note="Good luck!" />}
-      {goAlert && <Ping note={gameOverNote || undefined} />}
-      {alert && <Ping note={`You have already played today. It was ${whatIsIt}!`} />}
-    </>
-  )
+const Pings = (_props: PingsProps) => {
+  use(GameContext);
+  return null;
 }
 
 export default Pings

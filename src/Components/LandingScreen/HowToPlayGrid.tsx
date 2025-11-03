@@ -49,10 +49,7 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
                 {cells.map((cell, cellIndex) => (
                   <span
                     key={cellIndex}
-                    className={cn(
-                      'h-5 w-5 border border-gray-400 transition-colors duration-300',
-                      cell ? 'bg-gray-800' : 'bg-white'
-                    )}
+                    className={cn('h-5 w-5 border border-gray-400', cell ? 'bg-gray-800' : 'bg-white')}
                   />
                 ))}
               </div>
@@ -71,10 +68,7 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
                 {cells.map((cell, cellIndex) => (
                   <span
                     key={cellIndex}
-                    className={cn(
-                      'h-5 w-5 border border-gray-400 transition-colors duration-300',
-                      cell ? 'bg-gray-800' : 'bg-white'
-                    )}
+                    className={cn('h-5 w-5 border border-gray-400', cell ? 'bg-gray-800' : 'bg-white')}
                   />
                 ))}
               </div>
@@ -110,10 +104,7 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
                 {row.map((cell, cIdx) => (
                   <span
                     key={cIdx}
-                    className={cn(
-                      'h-5 w-5 border border-gray-400 transition-colors duration-300',
-                      cell ? 'bg-gray-800' : 'bg-white'
-                    )}
+                    className={cn('h-5 w-5 border border-gray-400', cell ? 'bg-gray-800' : 'bg-white')}
                   />
                 ))}
               </div>
@@ -160,10 +151,7 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
                 {row.map((cell, cIdx) => (
                   <span
                     key={cIdx}
-                    className={cn(
-                      'h-5 w-5 border border-gray-400 transition-colors duration-300',
-                      cell ? 'bg-gray-800' : 'bg-white'
-                    )}
+                    className={cn('h-5 w-5 border border-gray-400', cell ? 'bg-gray-800' : 'bg-white')}
                   />
                 ))}
               </div>
