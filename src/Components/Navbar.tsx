@@ -86,7 +86,7 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
           aria-haspopup="menu"
           aria-expanded={isMenuOpen}
           className={cn(
-            'flex h-10 w-10 items-center justify-center rounded-full border transition',
+            'relative flex h-10 w-10 items-center justify-center rounded-full border transition',
             darkMode
               ? 'border-gray-600 bg-gray-800 text-gray-100 hover:border-gray-500'
               : 'border-gray-300 bg-white text-gray-800 hover:border-gray-400'
@@ -97,6 +97,12 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
             <span className="block h-0.5 w-5 rounded-full bg-current" />
             <span className="block h-0.5 w-5 rounded-full bg-current" />
           </span>
+          {!user && (
+            <span
+              aria-hidden="true"
+              className="absolute top-0 right-0 block size-2 rounded-full bg-red-600"
+            />
+          )}
         </button>
         {isMenuOpen && (
           <div
@@ -151,17 +157,21 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
             ) : (
               <div className="flex flex-col gap-3">
                 <p className={cn('text-sm', darkMode ? 'text-gray-300' : 'text-gray-600')}>
-                  Log in to track stats and load user preferences.
+                  Log in to save and share your results!
                 </p>
                 <button
                   type="button"
                   onClick={handleOpenLogin}
                   className={cn(
-                    'w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition',
+                    'relative w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition',
                     darkMode ? 'bg-gray-800 text-gray-100 hover:bg-gray-700' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                   )}
                 >
                   Log In / Register
+                  <span
+                    aria-hidden="true"
+                    className="absolute -top-0.5 -right-0.5 block size-2 rounded-full bg-red-600 animate-pulse duration-10000"
+                  />
                 </button>
               </div>
             )}

@@ -15,9 +15,11 @@ interface LandingScreenProps {
 
 const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps) => {
   const { user } = useSupabaseAuth();
-  const { data: profile, isPending: profileLoading } = useProfileQuery();
+  const profileQuery = useProfileQuery();
+  const profile = profileQuery.data;
+  const profileLoading = Boolean(user) && (profileQuery.isPending || profileQuery.isFetching);
   const resetCurrentPuzzle = useResetCurrentPuzzle();
-  const { data: puzzles } = useGetPuzzles();
+  const { data: puzzles, isPending: puzzlesPending } = useGetPuzzles();
   const {
     actions: { beginCountdown, startGame, setStartMode },
   } = use(GameContext);
@@ -42,6 +44,7 @@ const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps)
   const hasTodaysPuzzle =
     Boolean(profile && dailyPuzzle && profile.current_puzzle_id === dailyPuzzle.id) &&
     profile?.current_puzzle_date === todayKey;
+  const isContentLoading = puzzlesPending || profileLoading;
 
   const playMode = useMemo<'new' | 'continue' | 'results'>(() => {
     if (!user || profileLoading || !hasTodaysPuzzle || !profile?.current_puzzle_status) {
@@ -66,12 +69,12 @@ const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps)
       case 'results':
         return 'See Results';
       default:
-        return profileLoading ? 'Loading...' : 'Play';
+        return 'Play';
     }
-  }, [playMode, profileLoading]);
+  }, [playMode]);
 
   const handlePlay = () => {
-    if (isClosing || profileLoading) return;
+    if (isClosing || isContentLoading) return;
 
     setStartMode(playMode);
 
@@ -121,49 +124,46 @@ const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps)
 
         <PreviewGrid />
 
-        <div className="flex w-full flex-col items-center gap-3 text-center">
-          <div className="flex flex-col gap-1">
-            <p className="font-bold">{hasName ? `Welcome back, ${displayName}` : 'Welcome Back'}</p>
-            <p className="text-sm text-gray-700">Solve the Nonogram</p>
-            <p className="text-sm text-gray-700">Click play to start your day with a new puzzle!</p>
+        {isContentLoading ? (
+          <div className="flex w-full flex-1 items-center justify-center text-center">
+            <div className="flex flex-col items-center gap-3 text-gray-600">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-gray-600" />
+              <p className="text-sm font-medium">Loading today&apos;s puzzle…</p>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={handlePlay}
-            disabled={profileLoading}
-            className={cn(
-              'w-32 rounded-full px-4 py-2 text-white transition-opacity duration-500 ease-out disabled:cursor-not-allowed disabled:opacity-80',
-              profileLoading
-                ? 'bg-green-500'
-                : 'bg-green-600 hover:bg-green-700'
-            )}
-          >
-            {primaryActionLabel}
-          </button>
-          {!user && (
+        ) : (
+          <div className="flex w-full flex-col items-center gap-3 text-center">
+            <div className="flex flex-col gap-1">
+              <p className="font-bold">{hasName ? `Welcome back, ${displayName}` : 'Welcome Back'}</p>
+              <p className="text-sm text-gray-700">Solve the Nonogram</p>
+              <p className="text-sm text-gray-700">Click play to start your day with a new puzzle!</p>
+            </div>
             <button
               type="button"
-              onClick={onOpenLogin}
+              onClick={handlePlay}
+              className="w-32 rounded-full bg-green-600 px-4 py-2 text-white transition-opacity duration-500 ease-out hover:bg-green-700"
+            >
+              {primaryActionLabel}
+            </button>
+            {!user && (
+              <button
+                type="button"
+                onClick={onOpenLogin}
+                className="w-32 rounded-full bg-gray-500 px-4 py-2 text-white transition-opacity duration-500 ease-out hover:bg-gray-600"
+              >
+                Log In
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={onShowHowTo}
               className="w-32 rounded-full bg-gray-500 px-4 py-2 text-white transition-opacity duration-500 ease-out hover:bg-gray-600"
             >
-              Log In
+              How to Play
             </button>
-          )}
-          <button
-            type="button"
-            onClick={onShowHowTo}
-            className="w-32 rounded-full bg-gray-500 px-4 py-2 text-white transition-opacity duration-500 ease-out hover:bg-gray-600"
-          >
-            How to Play
-          </button>
-          <div className="mt-4 flex flex-col gap-y-2 text-center">
-            <p className="font-bold">{format(new Date(), 'MMMM dd, yyyy')}</p>
-            {shouldShowStats ? (
-              profileLoading ? (
-                <>
-                  <p className="text-sm text-gray-700">Loading your stats...</p>
-                </>
-              ) : (
+            <div className="mt-4 flex flex-col gap-y-2 text-center">
+              <p className="font-bold">{format(new Date(), 'MMMM dd, yyyy')}</p>
+              {shouldShowStats ? (
                 <>
                   <p className="text-sm text-gray-700">
                     Games played: {gamesPlayed}
@@ -175,23 +175,23 @@ const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps)
                     Longest streak: {longestStreak} day{longestStreak === 1 ? '' : 's'}
                   </p>
                 </>
-              )
-            ) : (
-              <p className="text-sm text-gray-700">Sign in to start tracking your streak.</p>
-            )}
-            <p className="text-xs font-bold text-gray-700">By Zach Tippit</p>
-            {showDevResetButton && (
-              <button
-                type="button"
-                onClick={handleReset}
-                disabled={resetCurrentPuzzle.isPending}
-                className="mt-3 w-32 rounded-full bg-red-500 px-4 py-2 text-white transition-opacity duration-500 ease-out hover:bg-red-600 disabled:opacity-60"
-              >
-                {resetCurrentPuzzle.isPending ? 'Resetting...' : 'Reset (dev)'}
-              </button>
-            )}
+              ) : (
+                <p className="text-sm text-gray-700">Sign in to start tracking your streak.</p>
+              )}
+              <p className="text-xs font-bold text-gray-700">By Zach Tippit</p>
+              {showDevResetButton && (
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  disabled={resetCurrentPuzzle.isPending}
+                  className="mt-3 w-32 rounded-full bg-red-500 px-4 py-2 text-white transition-opacity duration-500 ease-out hover:bg-red-600 disabled:opacity-60"
+                >
+                  {resetCurrentPuzzle.isPending ? 'Resetting...' : 'Reset (dev)'}
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
