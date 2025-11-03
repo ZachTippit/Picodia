@@ -141,10 +141,14 @@ const HowToPlayView = ({ onClose, onOpenLogin, isLoggedIn }: HowToPlayViewProps)
         {rules[activeRule]?.showLoginButton && (
           <button
             type="button"
-            className="w-32 rounded-full bg-gray-500 px-4 py-2 text-white transition hover:bg-gray-600"
+            className="relative w-32 rounded-full bg-white px-4 py-2 text-gray-800 transition hover:bg-gray-300"
             onClick={onOpenLogin}
           >
             Log In
+            <span
+              aria-hidden="true"
+              className="absolute top-0.5 right-0.5 block size-2 rounded-full bg-red-600 animate-pulse"
+            />
           </button>
         )}
         <div className="flex items-center gap-4">
