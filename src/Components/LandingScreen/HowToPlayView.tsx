@@ -79,6 +79,7 @@ const HowToPlayView = ({ onClose, onOpenLogin, isLoggedIn }: HowToPlayViewProps)
     if (gridTimeoutRef.current) {
       window.clearTimeout(gridTimeoutRef.current);
     }
+    // @ts-ignore
     gridTimeoutRef.current = window.setTimeout(() => {
       setRenderedRule(activeRule);
       if (rules[activeRule]?.showGrid !== false) {
@@ -111,6 +112,7 @@ const HowToPlayView = ({ onClose, onOpenLogin, isLoggedIn }: HowToPlayViewProps)
     if (overlayTimeoutRef.current) {
       window.clearTimeout(overlayTimeoutRef.current);
     }
+    // @ts-ignore
     overlayTimeoutRef.current = window.setTimeout(() => {
       setActiveRule(0);
       setRenderedRule(0);
@@ -141,7 +143,7 @@ const HowToPlayView = ({ onClose, onOpenLogin, isLoggedIn }: HowToPlayViewProps)
         {rules[activeRule]?.showLoginButton && (
           <button
             type="button"
-            className="relative w-32 rounded-full bg-white px-4 py-2 text-gray-800 transition hover:bg-gray-300"
+            className="relative w-32 rounded-full bg-white px-4 py-2 text-gray-800 transition hover:bg-gray-300 border border-gray-800"
             onClick={onOpenLogin}
           >
             Log In

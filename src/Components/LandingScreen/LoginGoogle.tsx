@@ -13,7 +13,7 @@ const LoginGoogle = ({ googleLoading, onClick, disabled }: LoginGoogleProps) => 
     onClick={onClick}
     disabled={disabled}
       className={cn(
-        'gsi-material-button',
+        'gsi-material-button !w-full',
         googleLoading
           ? 'cursor-not-allowed bg-gray-100 text-gray-400'
           : 'text-gray-600 hover:border-gray-500 hover:text-gray-800'

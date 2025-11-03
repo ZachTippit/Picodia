@@ -1,8 +1,4 @@
 .gsi-material-button {
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  -webkit-appearance: none;
   background-color: WHITE;
   background-image: none;
   border: 1px solid #747775;
@@ -41,19 +37,18 @@
   -webkit-align-items: center;
   align-items: center;
   display: flex;
+  justify-content: center;
   -webkit-flex-direction: row;
   flex-direction: row;
   -webkit-flex-wrap: nowrap;
   flex-wrap: nowrap;
   height: 100%;
-  justify-content: space-between;
   position: relative;
   width: 100%;
+  gap: 12px;
 }
 
 .gsi-material-button .gsi-material-button-contents {
-  -webkit-flex-grow: 1;
-  flex-grow: 1;
   font-family: 'Roboto', arial, sans-serif;
   font-weight: 500;
   overflow: hidden;
