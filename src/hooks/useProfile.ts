@@ -7,8 +7,6 @@ export type PuzzleOutcome = 'win' | 'loss';
 
 export interface Profile {
   id: string;
-  display_name: string | null;
-  avatar_url: string | null;
   games_played: number | null;
   wins: number | null;
   losses: number | null;
@@ -36,12 +34,6 @@ const buildInsertPayload = (user: User | null): Record<string, unknown> => {
 
   return {
     id: user?.id,
-    display_name:
-      (metadata.full_name as string | undefined) ??
-      (metadata.name as string | undefined) ??
-      user?.email ??
-      null,
-    avatar_url: (metadata.avatar_url as string | undefined) ?? null,
   };
 };
 
