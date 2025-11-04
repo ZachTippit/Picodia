@@ -14,7 +14,7 @@ export const useGetPuzzles = () => {
   return useQuery<Puzzle[]>({
     queryKey: ['puzzles'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('puzzles').select('*');
+      const { data, error } = await supabase.from('puzzles').select('*').order('day', { ascending: true });
 
       if (error) {
         throw error;
