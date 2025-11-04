@@ -160,7 +160,10 @@ export const Nonogram = ({ puzzle, initialGrid = null, puzzleId }: NonogramProps
     [isAreaExpanded]
   );
 
-  const isWin = profile.current_puzzle_outcome === "win";
+  const profileOutcome = profile?.current_puzzle_outcome ?? null;
+  const fallbackOutcome = gameOver ? (didWin ? 'win' : 'loss') : null;
+  const derivedOutcome = profileOutcome ?? fallbackOutcome;
+  const isWin = derivedOutcome === 'win';
   const celebrationClass = isWin ? 'confetti-piece' : 'smiley-piece';
 
   return (
@@ -174,7 +177,7 @@ export const Nonogram = ({ puzzle, initialGrid = null, puzzleId }: NonogramProps
               aria-hidden="true"
               style={particle.style}
             >
-              {isWin ? '<3' : ':('}
+              {isWin ? '' : ':('}
             </span>
           ))}
         </div>
@@ -191,7 +194,7 @@ export const Nonogram = ({ puzzle, initialGrid = null, puzzleId }: NonogramProps
           }
           aria-hidden={!shouldShowSummary}
         >
-          <p className="text-base font-bold uppercase tracking-wide">{profile.current_puzzle_outcome === "win" ? 'You Won!' : 'You Lost'}</p>
+          <p className="text-base font-bold uppercase tracking-wide">{isWin ? 'You Won!' : 'You Lost'}</p>
           <div className="flex flex-row items-center justify-center gap-8">
             <div>
               <p className="text-sm font-semibold">Lives</p>
@@ -231,4 +234,3 @@ export const Nonogram = ({ puzzle, initialGrid = null, puzzleId }: NonogramProps
     </div>
   );
 };
-

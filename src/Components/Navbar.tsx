@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { GameContext } from '../GameContext';
 import { cn } from '../lib/cn';
 import { useSupabase, useSupabaseAuth } from '../SupabaseProvider';
-import { useProfileQuery } from '../hooks/useProfile';
+import { useProfileQuery, useResetCurrentPuzzle } from '../hooks/useProfile';
 import { useGetPuzzles } from '../hooks/useGetPuzzle';
 import { writeAnonProgressSnapshot } from '../hooks/useSavePuzzleProgress';
 
@@ -21,6 +21,7 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
   const supabase = useSupabase();
   const { user } = useSupabaseAuth();
   const { data: profile } = useProfileQuery();
+  const resetCurrentPuzzle = useResetCurrentPuzzle();
   const { data: puzzles } = useGetPuzzles();
   const dailyPuzzle = useMemo(() => puzzles?.[0] ?? null, [puzzles]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -113,6 +114,20 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
       setSigningOut(false);
       onOpenLogin();
       closeMenu();
+    }
+  };
+
+  const handleResetPuzzle = async () => {
+    if (resetCurrentPuzzle.isPending) {
+      return;
+    }
+
+    try {
+      await resetCurrentPuzzle.mutateAsync();
+      closeMenu();
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to reset puzzle', error);
     }
   };
 
@@ -210,6 +225,17 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
                     )}
                   >
                     Other Puzzles
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleResetPuzzle}
+                    disabled={resetCurrentPuzzle.isPending}
+                    className={cn(
+                      'w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition',
+                      'bg-red-500 text-white hover:bg-red-600 disabled:opacity-60'
+                    )}
+                  >
+                    {resetCurrentPuzzle.isPending ? 'Resetting…' : 'Reset Puzzle'}
                   </button>
                 </div>
               </div>
