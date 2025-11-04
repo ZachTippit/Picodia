@@ -10,6 +10,8 @@ interface PuzzleGridProps {
   initialGrid?: PuzzleCellState[][] | null;
 }
 
+type CellSelectionResult = "ignored" | "correct" | "incorrect";
+
 export interface PuzzleCellState {
   correct: boolean;
   filled: boolean;
@@ -18,11 +20,11 @@ export interface PuzzleCellState {
 }
 
 const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid = null }) => {
-  const { mutate: saveProgress } = useSavePuzzleProgress();
-  const completePuzzle = useCompletePuzzle();
+  const { mutate: saveProgress } = useSavePuzzleProgress(puzzleId);
+  const { mutate: completePuzzle } = useCompletePuzzle();
   const {
     state: { lives, elapsedSeconds },
-    actions: { loseLife, winGame },
+    actions: { loseLife, winGame, updatePrevGameArray },
   } = use(GameContext);
   const totalCorrect = solution.flat().filter((v) => v === 1).length;
 
@@ -36,19 +38,34 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
       }))
     );
 
-  const normalizeSavedGrid = (saved: PuzzleCellState[][] | null): PuzzleCellState[][] | null => {
+  const normalizeSavedGrid = (
+    saved: PuzzleCellState[][] | string | null
+  ): PuzzleCellState[][] | null => {
     if (!saved) {
       return null;
     }
 
-    if (!Array.isArray(saved) || saved.length !== solution.length) {
+    let parsed: PuzzleCellState[][];
+
+    if (typeof saved === 'string') {
+      try {
+        parsed = JSON.parse(saved) as PuzzleCellState[][];
+      } catch (error) {
+        console.error('Unable to parse saved puzzle grid.', error);
+        return null;
+      }
+    } else {
+      parsed = saved;
+    }
+
+    if (!Array.isArray(parsed) || parsed.length !== solution.length) {
       return null;
     }
 
     const normalized: PuzzleCellState[][] = [];
 
     for (let r = 0; r < solution.length; r += 1) {
-      const row = saved[r];
+      const row = parsed[r];
       if (!Array.isArray(row) || row.length !== solution[r].length) {
         return null;
       }
@@ -70,7 +87,8 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
   };
 
   const deriveInitialGrid = useMemo(() => {
-    const normalized = normalizeSavedGrid(initialGrid ?? null);
+    const source = (initialGrid as PuzzleCellState[][] | string | null) ?? null;
+    const normalized = normalizeSavedGrid(source);
     return normalized ?? createEmptyGrid();
   }, [initialGrid, solution]);
 
@@ -88,19 +106,33 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     countFilledCorrect(deriveInitialGrid)
   );
   const hasCompletedRef = useRef(false);
+  const activePointerIdRef = useRef<number | null>(null);
+  const isDraggingRef = useRef(false);
+  const draggedCellsRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     setGrid(deriveInitialGrid);
     setCorrectCount(countFilledCorrect(deriveInitialGrid));
+    updatePrevGameArray(deriveInitialGrid);
     hasCompletedRef.current = false;
-  }, [deriveInitialGrid]);
+  }, [deriveInitialGrid, updatePrevGameArray]);
 
-  const handleCellClick = (r: number, c: number) => {
+  const handleCellSelection = (r: number, c: number): CellSelectionResult => {
+    let pendingUpdate: {
+      grid: PuzzleCellState[][];
+      lives: number;
+      completed: boolean;
+      wasCorrect: boolean;
+    } | null = null;
+    let result: CellSelectionResult = "ignored";
+
     setGrid((prev) => {
       const next = prev.map((row) => row.map((cell) => ({ ...cell })));
       const cell = next[r][c];
 
-      if (cell.filled || cell.incorrect) return prev;
+      if (cell.filled || cell.incorrect) {
+        return prev;
+      }
 
       let nextLives = lives;
       let completed = false;
@@ -110,52 +142,154 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
         const filledCount = countFilledCorrect(next);
         setCorrectCount(filledCount);
         completed = filledCount === totalCorrect;
+        result = "correct";
       } else {
         cell.incorrect = true;
         nextLives = Math.max(lives - 1, 0);
         loseLife();
         completed = nextLives <= 0;
+        result = "incorrect";
       }
 
-      saveProgress({
-        progress: next,
+      pendingUpdate = {
+        grid: next,
         lives: nextLives,
-        elapsedSeconds,
         completed,
-      });
+        wasCorrect: cell.correct,
+      };
 
-      if (completed && !hasCompletedRef.current) {
-        hasCompletedRef.current = true;
-        const outcome = cell.correct ? 'win' : 'loss';
-
-        completePuzzle.mutate({
-          puzzleId,
-          outcome,
-          progress: next,
-          livesRemaining: nextLives,
-          elapsedSeconds,
-        });
-
-        if (cell.correct) {
-          winGame?.();
-        }
-      }
+      updatePrevGameArray(next);
 
       return next;
     });
+
+    if (!pendingUpdate) {
+      return result;
+    }
+
+    const { grid: nextGrid, lives: nextLives, completed, wasCorrect } = pendingUpdate;
+
+    saveProgress({
+      progress: nextGrid,
+      lives: nextLives,
+      elapsedSeconds,
+      completed,
+    });
+
+    if (completed && !hasCompletedRef.current) {
+      hasCompletedRef.current = true;
+      const outcome = wasCorrect ? 'win' : 'loss';
+
+      completePuzzle({
+        puzzleId,
+        outcome,
+        progress: nextGrid,
+        livesRemaining: nextLives,
+        elapsedSeconds,
+      });
+
+      if (wasCorrect) {
+        winGame?.();
+      }
+    }
+
+    return result;
+  };
+
+  const resetDragState = () => {
+    activePointerIdRef.current = null;
+    isDraggingRef.current = false;
+    draggedCellsRef.current.clear();
+  };
+
+  const handlePointerDown = (
+    event: React.PointerEvent<HTMLButtonElement>,
+    r: number,
+    c: number
+  ) => {
+    event.preventDefault();
+    const result = handleCellSelection(r, c);
+
+    if (result !== "correct") {
+      resetDragState();
+      return;
+    }
+
+    const cellKey = `${r}-${c}`;
+    draggedCellsRef.current.add(cellKey);
+    activePointerIdRef.current = event.pointerId;
+    isDraggingRef.current = true;
+  };
+
+  const handlePointerEnter = (
+    event: React.PointerEvent<HTMLButtonElement>,
+    r: number,
+    c: number
+  ) => {
+    if (
+      !isDraggingRef.current ||
+      activePointerIdRef.current !== event.pointerId
+    ) {
+      return;
+    }
+
+    const cellKey = `${r}-${c}`;
+    if (draggedCellsRef.current.has(cellKey)) {
+      return;
+    }
+
+    const result = handleCellSelection(r, c);
+
+    if (result === "incorrect") {
+      resetDragState();
+      return;
+    }
+
+    if (result === "correct") {
+      draggedCellsRef.current.add(cellKey);
+    }
+  };
+
+  const handlePointerEnd = (event: React.PointerEvent<Element>) => {
+    if (activePointerIdRef.current === event.pointerId) {
+      resetDragState();
+    }
+  };
+
+  const handlePointerLeaveGrid = (
+    event: React.PointerEvent<HTMLDivElement>
+  ) => {
+    if (!isDraggingRef.current) {
+      return;
+    }
+
+    const relatedTarget = event.relatedTarget as Node | null;
+    if (relatedTarget && event.currentTarget.contains(relatedTarget)) {
+      return;
+    }
+
+    resetDragState();
   };
 
   return (
     <div
       className="inline-block border-4 border-gray-800 rounded-md overflow-hidden 
                  shadow-[0_0_10px_rgba(0,0,0,0.2)]"
+      style={{ touchAction: "none" }}
+      onPointerUp={handlePointerEnd}
+      onPointerCancel={handlePointerEnd}
+      onPointerLeave={handlePointerLeaveGrid}
     >
       {grid.map((row, r) => (
         <div key={r} className="flex">
           {row.map((cell, c) => (
             <button
               key={cell.id}
-              onClick={() => handleCellClick(r, c)}
+              onClick={() => handleCellSelection(r, c)}
+              onPointerDown={(event) => handlePointerDown(event, r, c)}
+              onPointerEnter={(event) => handlePointerEnter(event, r, c)}
+              onPointerUp={handlePointerEnd}
+              onPointerCancel={handlePointerEnd}
               className={cn(
                 "size-10 border border-gray-600 flex items-center justify-center transition-all select-none",
                 cell.filled

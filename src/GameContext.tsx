@@ -11,6 +11,7 @@ interface GameContextProps {
     showAbout: boolean;
     showStats: boolean;
     showSettings: boolean;
+    showOtherPuzzles: boolean;
     pingHowTo: boolean;
     startPing: boolean;
     didWin?: boolean;
@@ -33,6 +34,7 @@ interface GameContextProps {
     toggleAbout: () => void;
     toggleStats: () => void;
     toggleSettings: () => void;
+    toggleOtherPuzzles: () => void;
     setPingHowTo: (value: boolean) => void;
     setStartPing: (value: boolean) => void;
     setMaxLives: (value: number) => void;
@@ -70,6 +72,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [showAbout, setShowAbout] = useState<boolean>(false);
   const [showStats, setShowStats] = useState<boolean>(false);
   const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [showOtherPuzzles, setShowOtherPuzzles] = useState<boolean>(false);
   const [markupMode, setMarkupMode] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [hardMode, setHardMode] = useState<boolean>(false);
@@ -91,11 +94,17 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     setShowSettings(!showSettings);
     setIsOpen(!isOpen);
   }
+  const toggleOtherPuzzles = () => {
+    setShowOtherPuzzles(!showOtherPuzzles);
+    setIsOpen(!isOpen);
+  }
   const toggleOpen = () => setIsOpen(!isOpen);
   const toggleMarkupMode = () => setMarkupMode(!markupMode);
   const toggleDarkMode = () => setDarkMode(!darkMode);
   const updateGameOver = (status: boolean) => setGameOver(status);
-  const updatePrevGameArray = (array: any[]) => setPrevGameArray(array);
+  const updatePrevGameArray = useCallback((array: any[]) => {
+    setPrevGameArray(array);
+  }, [setPrevGameArray]);
 
   const beginCountdown = () => {
     setIsCountdownActive(true);
@@ -160,6 +169,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       showAbout,
       showStats,
       showSettings,
+      showOtherPuzzles,
       pingHowTo,
       startPing,
       maxLives,
@@ -182,6 +192,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       toggleAbout,
       toggleStats,
       toggleSettings,
+      toggleOtherPuzzles,
       setPingHowTo,
       setStartPing,
       setMaxLives,

@@ -6,6 +6,7 @@ import { useSupabaseAuth } from '../../SupabaseProvider';
 import { GameContext } from '../../GameContext';
 import { useProfileQuery, useResetCurrentPuzzle } from '../../hooks/useProfile';
 import { useGetPuzzles } from '../../hooks/useGetPuzzle';
+import { getStoredAnonProgress } from '../../hooks/useSavePuzzleProgress';
 
 interface LandingScreenProps {
   onPlay: () => void;
@@ -46,8 +47,26 @@ const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps)
     profile?.current_puzzle_date === todayKey;
   const isContentLoading = puzzlesPending || profileLoading;
 
+  const anonProgress = useMemo(() => {
+    if (user || !dailyPuzzle) {
+      return null;
+    }
+
+    const stored = getStoredAnonProgress();
+    if (!stored || stored.completed) {
+      return null;
+    }
+
+    const matchesToday = stored.puzzleId === dailyPuzzle.id && stored.puzzleDate === todayKey;
+    return matchesToday ? stored : null;
+  }, [dailyPuzzle, todayKey, user]);
+
   const playMode = useMemo<'new' | 'continue' | 'results'>(() => {
-    if (!user || profileLoading || !hasTodaysPuzzle || !profile?.current_puzzle_status) {
+    if (!user) {
+      return anonProgress ? 'continue' : 'new';
+    }
+
+    if (profileLoading || !hasTodaysPuzzle || !profile?.current_puzzle_status) {
       return 'new';
     }
 
@@ -60,7 +79,7 @@ const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps)
     }
 
     return 'new';
-  }, [hasTodaysPuzzle, profile, profileLoading, user]);
+  }, [anonProgress, hasTodaysPuzzle, profile, profileLoading, user]);
 
   const primaryActionLabel = useMemo(() => {
     switch (playMode) {
@@ -161,7 +180,7 @@ const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps)
             >
               How to Play
             </button>
-            <div className="mt-4 flex flex-col gap-y-2 text-center">
+            <div className="mt-4 flex flex-col gap-y-2 text-center items-center">
               <p className="font-bold">{format(new Date(), 'MMMM dd, yyyy')}</p>
               {shouldShowStats ? (
                 <>

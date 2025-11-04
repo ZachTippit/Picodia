@@ -1,7 +1,11 @@
-import { use, useEffect, useRef, useState } from 'react';
+import { use, useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { GameContext } from '../GameContext';
 import { cn } from '../lib/cn';
 import { useSupabase, useSupabaseAuth } from '../SupabaseProvider';
+import { useProfileQuery } from '../hooks/useProfile';
+import { useGetPuzzles } from '../hooks/useGetPuzzle';
+import { writeAnonProgressSnapshot } from '../hooks/useSavePuzzleProgress';
 
 interface NavbarProps {
   onShowHowTo?: () => void;
@@ -10,11 +14,15 @@ interface NavbarProps {
 
 const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
   const {
-    state: { pingHowTo, darkMode },
-    actions: { toggleStats },
+    state: { pingHowTo, darkMode, prevGameArray, lives, elapsedSeconds, isGameStarted },
+    actions: { toggleStats, toggleOtherPuzzles },
   } = use(GameContext);
+  const queryClient = useQueryClient();
   const supabase = useSupabase();
   const { user } = useSupabaseAuth();
+  const { data: profile } = useProfileQuery();
+  const { data: puzzles } = useGetPuzzles();
+  const dailyPuzzle = useMemo(() => puzzles?.[0] ?? null, [puzzles]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const menuContainerRef = useRef<HTMLDivElement | null>(null);
@@ -49,13 +57,59 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
     closeMenu();
   };
 
+  const persistSessionToLocal = () => {
+    const puzzleId = profile?.current_puzzle_id ?? dailyPuzzle?.id ?? null;
+    if (!puzzleId) {
+      return;
+    }
+
+    const puzzleDate =
+      profile?.current_puzzle_date ?? new Date().toISOString().split('T')[0];
+
+    const progress =
+      profile?.current_puzzle_progress ??
+      (Array.isArray(prevGameArray) && prevGameArray.length > 0 ? prevGameArray : null);
+
+    const livesSnapshot =
+      typeof profile?.current_puzzle_lives === 'number'
+        ? profile.current_puzzle_lives
+        : isGameStarted
+        ? lives
+        : null;
+
+    const elapsedSnapshot =
+      typeof profile?.current_puzzle_elapsed_seconds === 'number'
+        ? profile.current_puzzle_elapsed_seconds
+        : isGameStarted
+        ? elapsedSeconds
+        : null;
+
+    const completed = profile?.current_puzzle_status === 'completed';
+
+    writeAnonProgressSnapshot({
+      puzzleId,
+      puzzleDate,
+      progress,
+      lives: livesSnapshot,
+      elapsedSeconds: elapsedSnapshot,
+      completed,
+      shouldSync: true,
+    });
+  };
+
   const handleSignOut = async () => {
     setSigningOut(true);
+    let didSignOut = false;
     try {
+      persistSessionToLocal();
       await supabase.auth.signOut();
+      didSignOut = true;
     } catch (error) {
       console.error('Failed to sign out', error);
     } finally {
+      if (didSignOut) {
+        queryClient.removeQueries({ queryKey: ['profile'] });
+      }
       setSigningOut(false);
       onOpenLogin();
       closeMenu();
@@ -144,10 +198,15 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
                   </button>
                   <button
                     type="button"
-                    disabled
+                    onClick={() => {
+                      toggleOtherPuzzles();
+                      closeMenu();
+                    }}
                     className={cn(
-                      'w-full rounded-md px-3 py-2 text-left text-sm font-medium opacity-60',
-                      darkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-600'
+                      'w-full rounded-md px-3 py-2 text-left text-sm font-medium transition',
+                      darkMode
+                        ? 'bg-gray-800 text-gray-100 hover:bg-gray-700'
+                        : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                     )}
                   >
                     Other Puzzles

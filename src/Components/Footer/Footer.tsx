@@ -26,12 +26,10 @@ const Footer = ({ onOpenLogin, onOpenLoginForResults }: FooterProps) => {
     let hearts = Array(maxLives).fill(EmptyHeart);
     hearts = hearts.map((heart, index) => {
       if (index < lives) {
-        console.log('setting heart at index', index);
         heart = Heart;
       }
       return heart;
     });
-    console.log('hearts array:', hearts);
     return hearts;
   }
 
@@ -39,11 +37,11 @@ const Footer = ({ onOpenLogin, onOpenLoginForResults }: FooterProps) => {
     <div className="w-full mb-8 pt-4 overflow-y-hidden border border-b-0 border-x-0 border-t-gray-300">
       <div
         className={cn(
-          'flex min-h-16 w-full flex-col items-center transition-opacity duration-500',
+          'flex min-h-16 w-full flex-row items-center justify-center transition-opacity duration-500',
           isGameStarted ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         )}
       >
-        <div className="flex flex-col items-center gap-y-4 sm:flex-row sm:items-start sm:justify-center sm:gap-x-24">
+        <div className="flex flex-row items-center gap-y-4 sm:flex-row sm:items-start sm:justify-center gap-x-24">
           <div className="move-on-start-footer">
             <p className="text-center mb-2 font-bold">LIVES</p>
             <div className="flex flex-row gap-x-1">
@@ -56,7 +54,7 @@ const Footer = ({ onOpenLogin, onOpenLoginForResults }: FooterProps) => {
         </div>
       </div>
       {isGameStarted && gameOver && (
-        <div className="mt-4 flex flex-col items-center gap-3">
+        <div className="mt-4 flex flex-row items-center justify-center gap-3">
           <button
             type="button"
             onClick={toggleStats}

@@ -1,5 +1,5 @@
 import { use, useEffect, useMemo, useState } from 'react';
-import { About, Footer, Game, Navbar, Settings, Stats } from './Components';
+import { About, Footer, Game, Navbar, OtherPuzzles, Settings, Stats } from './Components';
 import Pings from './Pings';
 import { handleLoseStats, handleWinStats, onGameOver } from './lib/utilities';
 import { GameContext } from './GameContext';
@@ -11,6 +11,7 @@ import HowToPlayView from './Components/LandingScreen/HowToPlayView';
 import LoginOverlay from './Components/LandingScreen/LoginOverlay';
 import { useSupabaseAuth } from './SupabaseProvider';
 import { useCompletePuzzle } from './hooks/useProfile';
+import { clearStoredAnonProgress, getStoredAnonProgress, useSavePuzzleProgress } from './hooks/useSavePuzzleProgress';
 
 const PageContainer = () => {
   const {
@@ -48,10 +49,10 @@ const PageContainer = () => {
 
   const { user } = useSupabaseAuth();
   const completePuzzle = useCompletePuzzle();
+  const { mutate: saveProgressMutation, isPending: isSavingProgress } = useSavePuzzleProgress();
 
   const { data } = useGetPuzzles();
-  console.log("puzzles data:", data);
-
+  
   useEffect(() => {
     if (data) {
       if (!isGameStarted && hasPlayedToday === localStorage.playedToday) {
@@ -147,6 +148,42 @@ const PageContainer = () => {
   const activePuzzleId = useMemo(() => data?.[0]?.id ?? null, [data]);
 
   useEffect(() => {
+    if (!user || !activePuzzleId || isSavingProgress) {
+      return;
+    }
+
+    const storedProgress = getStoredAnonProgress();
+    if (!storedProgress || !storedProgress.shouldSync) {
+      return;
+    }
+
+    if (storedProgress.puzzleId !== activePuzzleId) {
+      clearStoredAnonProgress();
+      return;
+    }
+
+    saveProgressMutation(
+      {
+        progress: storedProgress.progress,
+        lives: storedProgress.lives,
+        elapsedSeconds: storedProgress.elapsedSeconds,
+        completed: storedProgress.completed,
+      },
+      {
+        onSuccess: () => {
+          clearStoredAnonProgress();
+          if (storedProgress.progress) {
+            setPrevGameArray(storedProgress.progress);
+          }
+        },
+        onError: (error) => {
+          console.error('Failed to sync anonymous progress', error);
+        },
+      }
+    );
+  }, [activePuzzleId, isSavingProgress, saveProgressMutation, user]);
+
+  useEffect(() => {
     if (user && localStorage.getItem('pendingResultSync') === 'true') {
       setShouldSyncLocalResult(true);
     }
@@ -223,6 +260,7 @@ const PageContainer = () => {
         />
         <About />
         <Stats />
+        <OtherPuzzles />
         <Settings version={"fart"} />
         <Game />
         <Footer onOpenLogin={openLogin} onOpenLoginForResults={openLoginForResults} />
