@@ -24,7 +24,7 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
   const { mutate: completePuzzle } = useCompletePuzzle();
   const {
     state: { lives, elapsedSeconds },
-    actions: { loseLife, winGame, updatePrevGameArray },
+    actions: { loseLife, winGame, loseGame, updateGameOver, updatePrevGameArray },
   } = use(GameContext);
   const totalCorrect = solution.flat().filter((v) => v === 1).length;
 
@@ -106,9 +106,13 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     countFilledCorrect(deriveInitialGrid)
   );
   const hasCompletedRef = useRef(false);
-  const activePointerIdRef = useRef<number | null>(null);
+  const activePointerIdRef = useRef<number | string | null>(null);
   const isDraggingRef = useRef(false);
   const draggedCellsRef = useRef<Set<string>>(new Set());
+  const supportsPointerEvents = typeof window !== "undefined" && "PointerEvent" in window;
+
+  const isInteractionLocked = () =>
+    hasCompletedRef.current || lives <= 0;
 
   useEffect(() => {
     setGrid(deriveInitialGrid);
@@ -118,6 +122,10 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
   }, [deriveInitialGrid, updatePrevGameArray]);
 
   const handleCellSelection = (r: number, c: number): CellSelectionResult => {
+    if (isInteractionLocked()) {
+      return "ignored";
+    }
+
     let pendingUpdate: {
       grid: PuzzleCellState[][];
       lives: number;
@@ -169,6 +177,10 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
 
     const { grid: nextGrid, lives: nextLives, completed, wasCorrect } = pendingUpdate;
 
+    if (completed) {
+      resetDragState();
+    }
+
     saveProgress({
       progress: nextGrid,
       lives: nextLives,
@@ -188,8 +200,12 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
         elapsedSeconds,
       });
 
+      updateGameOver(true);
+
       if (wasCorrect) {
         winGame?.();
+      } else {
+        loseGame?.();
       }
     }
 
@@ -202,15 +218,100 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     draggedCellsRef.current.clear();
   };
 
+  const getCellFromElement = (element: Element | null) => {
+    if (!element) {
+      return null;
+    }
+
+    const cellButton = (element as HTMLElement).closest<HTMLButtonElement>(
+      "[data-row]"
+    );
+
+    if (!cellButton) {
+      return null;
+    }
+
+    const rowAttr = cellButton.getAttribute("data-row");
+    const colAttr = cellButton.getAttribute("data-col");
+
+    if (rowAttr === null || colAttr === null) {
+      return null;
+    }
+
+    const r = Number(rowAttr);
+    const c = Number(colAttr);
+
+    if (Number.isNaN(r) || Number.isNaN(c)) {
+      return null;
+    }
+
+    return { r, c };
+  };
+
+  const getCellFromPoint = (x: number, y: number) => {
+    if (typeof document === "undefined") {
+      return null;
+    }
+    const element = document.elementFromPoint(x, y);
+    return getCellFromElement(element);
+  };
+
+  const processDragOverCell = (
+    r: number,
+    c: number,
+    pointerId?: number | string | null
+  ) => {
+    if (isInteractionLocked()) {
+      resetDragState();
+      return;
+    }
+
+    if (
+      !isDraggingRef.current ||
+      (pointerId !== undefined &&
+        pointerId !== null &&
+        activePointerIdRef.current !== pointerId)
+    ) {
+      return;
+    }
+
+    const cellKey = `${r}-${c}`;
+    if (draggedCellsRef.current.has(cellKey)) {
+      return;
+    }
+
+    const result = handleCellSelection(r, c);
+
+    if (isInteractionLocked()) {
+      resetDragState();
+      return;
+    }
+
+    if (result === "incorrect") {
+      resetDragState();
+      return;
+    }
+
+    if (result === "correct") {
+      draggedCellsRef.current.add(cellKey);
+    }
+  };
+
   const handlePointerDown = (
     event: React.PointerEvent<HTMLButtonElement>,
     r: number,
     c: number
   ) => {
     event.preventDefault();
+
+    if (isInteractionLocked()) {
+      resetDragState();
+      return;
+    }
+
     const result = handleCellSelection(r, c);
 
-    if (result !== "correct") {
+    if (result !== "correct" || isInteractionLocked()) {
       resetDragState();
       return;
     }
@@ -226,28 +327,12 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     r: number,
     c: number
   ) => {
-    if (
-      !isDraggingRef.current ||
-      activePointerIdRef.current !== event.pointerId
-    ) {
-      return;
-    }
-
-    const cellKey = `${r}-${c}`;
-    if (draggedCellsRef.current.has(cellKey)) {
-      return;
-    }
-
-    const result = handleCellSelection(r, c);
-
-    if (result === "incorrect") {
+    if (isInteractionLocked()) {
       resetDragState();
       return;
     }
 
-    if (result === "correct") {
-      draggedCellsRef.current.add(cellKey);
-    }
+    processDragOverCell(r, c, event.pointerId);
   };
 
   const handlePointerEnd = (event: React.PointerEvent<Element>) => {
@@ -271,6 +356,123 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     resetDragState();
   };
 
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (isInteractionLocked()) {
+      resetDragState();
+      return;
+    }
+
+    if (
+      !isDraggingRef.current ||
+      activePointerIdRef.current !== event.pointerId
+    ) {
+      return;
+    }
+
+    const { clientX, clientY } = event;
+    if (Number.isNaN(clientX) || Number.isNaN(clientY)) {
+      return;
+    }
+
+    const cell = getCellFromPoint(clientX, clientY);
+    if (!cell) {
+      return;
+    }
+
+    processDragOverCell(cell.r, cell.c, event.pointerId);
+  };
+
+  const handleTouchStart = (
+    event: React.TouchEvent<HTMLButtonElement>,
+    r: number,
+    c: number
+  ) => {
+    if (supportsPointerEvents) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (isInteractionLocked()) {
+      resetDragState();
+      return;
+    }
+
+    const primaryTouch = event.changedTouches[0] ?? event.touches[0];
+    if (!primaryTouch) {
+      return;
+    }
+
+    const result = handleCellSelection(r, c);
+
+    if (result !== "correct" || isInteractionLocked()) {
+      resetDragState();
+      return;
+    }
+
+    const cellKey = `${r}-${c}`;
+    draggedCellsRef.current.add(cellKey);
+    activePointerIdRef.current = primaryTouch.identifier;
+    isDraggingRef.current = true;
+  };
+
+  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (supportsPointerEvents) {
+      return;
+    }
+
+    if (isInteractionLocked()) {
+      resetDragState();
+      return;
+    }
+
+    const activeId = activePointerIdRef.current;
+    if (!isDraggingRef.current || activeId === null) {
+      return;
+    }
+
+    let relevantTouch: Touch | null = null;
+    for (let i = 0; i < event.changedTouches.length; i += 1) {
+      const touch = event.changedTouches.item(i);
+      if (touch && touch.identifier === activeId) {
+        relevantTouch = touch;
+        break;
+      }
+    }
+
+    if (!relevantTouch) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const cell = getCellFromPoint(relevantTouch.clientX, relevantTouch.clientY);
+    if (!cell) {
+      return;
+    }
+
+    processDragOverCell(cell.r, cell.c, activeId);
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (supportsPointerEvents) {
+      return;
+    }
+
+    const activeId = activePointerIdRef.current;
+    if (activeId === null) {
+      return;
+    }
+
+    for (let i = 0; i < event.changedTouches.length; i += 1) {
+      const touch = event.changedTouches.item(i);
+      if (touch && touch.identifier === activeId) {
+        resetDragState();
+        return;
+      }
+    }
+  };
+
   return (
     <div
       className="inline-block border-4 border-gray-800 rounded-md overflow-hidden 
@@ -279,6 +481,10 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
       onPointerUp={handlePointerEnd}
       onPointerCancel={handlePointerEnd}
       onPointerLeave={handlePointerLeaveGrid}
+      onPointerMove={handlePointerMove}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
     >
       {grid.map((row, r) => (
         <div key={r} className="flex">
@@ -290,6 +496,10 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
               onPointerEnter={(event) => handlePointerEnter(event, r, c)}
               onPointerUp={handlePointerEnd}
               onPointerCancel={handlePointerEnd}
+              onTouchStart={(event) => handleTouchStart(event, r, c)}
+              data-row={r}
+              data-col={c}
+              disabled={isInteractionLocked()}
               className={cn(
                 "size-10 border border-gray-600 flex items-center justify-center transition-all select-none",
                 cell.filled
