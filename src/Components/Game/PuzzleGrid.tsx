@@ -2,7 +2,7 @@ import React, { use, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "../../lib/cn";
 import { GameContext } from "../../GameContext";
 import { useSavePuzzleProgress } from "../../hooks/useSavePuzzleProgress";
-import { useCompletePuzzle } from "../../hooks/useProfile";
+import { useActiveSession, useFinishPuzzle } from "../../hooks/useProfile";
 
 interface PuzzleGridProps {
   solution: number[][];
@@ -21,10 +21,11 @@ export interface PuzzleCellState {
 
 const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid = null }) => {
   const { mutate: saveProgress } = useSavePuzzleProgress(puzzleId);
-  const { mutate: completePuzzle } = useCompletePuzzle();
+  const { data: activeSession } = useActiveSession();
+  const finishPuzzle = useFinishPuzzle();
   const {
     state: { lives, elapsedSeconds },
-    actions: { loseLife, winGame, loseGame, updateGameOver, updatePrevGameArray },
+    actions: { loseLife, updatePrevGameArray },
   } = use(GameContext);
   const totalCorrect = solution.flat().filter((v) => v === 1).length;
 
@@ -192,20 +193,22 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
       hasCompletedRef.current = true;
       const outcome = wasCorrect ? 'win' : 'loss';
 
-      completePuzzle({
-        puzzleId,
-        outcome,
-        progress: nextGrid,
-        livesRemaining: nextLives,
-        elapsedSeconds,
-      });
+      const attemptId = activeSession?.current_attempt_id ?? null;
+      if (attemptId) {
+        finishPuzzle.mutate({
+          attemptId,
+          wasSuccessful: outcome === 'win',
+          livesRemaining: nextLives,
+        });
+      }
 
-      updateGameOver(true);
+      //updateGameOver(true);
 
       if (wasCorrect) {
-        winGame?.();
+        // add logic to win game
+        //winGame?.();
       } else {
-        loseGame?.();
+        //loseGame?.();
       }
     }
 
@@ -336,6 +339,13 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
   };
 
   const handlePointerEnd = (event: React.PointerEvent<Element>) => {
+    if (!Number.isNaN(event.clientX) && !Number.isNaN(event.clientY)) {
+      const cell = getCellFromPoint(event.clientX, event.clientY);
+      if (cell) {
+        handleCellSelection(cell.r, cell.c);
+      }
+    }
+
     if (activePointerIdRef.current === event.pointerId) {
       resetDragState();
     }
@@ -435,6 +445,7 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     for (let i = 0; i < event.changedTouches.length; i += 1) {
       const touch = event.changedTouches.item(i);
       if (touch && touch.identifier === activeId) {
+        // @ts-ignore
         relevantTouch = touch;
         break;
       }
@@ -467,6 +478,10 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     for (let i = 0; i < event.changedTouches.length; i += 1) {
       const touch = event.changedTouches.item(i);
       if (touch && touch.identifier === activeId) {
+        const cell = getCellFromPoint(touch.clientX, touch.clientY);
+        if (cell) {
+          handleCellSelection(cell.r, cell.c);
+        }
         resetDragState();
         return;
       }

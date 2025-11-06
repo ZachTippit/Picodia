@@ -8,6 +8,7 @@ import { GameContext } from '../../GameContext';
 import GameClock from './GameClock';
 import { cn } from '../../lib/cn';
 import { useSupabaseAuth } from '../../SupabaseProvider';
+import { useActiveSession } from '../../hooks/useProfile';
 
 interface FooterProps {
   onOpenLogin?: () => void;
@@ -16,11 +17,15 @@ interface FooterProps {
 
 const Footer = ({ onOpenLogin, onOpenLoginForResults }: FooterProps) => {
   const {
-    state: { isGameStarted, maxLives, lives, gameOver, didWin },
+    state: { isGameStarted, maxLives, lives },
     actions: { toggleStats },
   } = use(GameContext);
   const { user } = useSupabaseAuth();
   const isLoggedIn = Boolean(user);
+
+  const { data: activeSession } = useActiveSession();
+
+  const isGameOver = activeSession?.puzzle_attempts?.status === "completed";
 
   const displayLives = () => {
     let hearts = Array(maxLives).fill(EmptyHeart);
@@ -33,8 +38,8 @@ const Footer = ({ onOpenLogin, onOpenLoginForResults }: FooterProps) => {
     return hearts;
   }
 
-  const showLiveStats = isGameStarted && !gameOver;
-  const showResultsActions = isGameStarted && gameOver;
+  const showLiveStats = isGameStarted && !isGameOver;
+  const showResultsActions = isGameStarted && isGameOver;
 
   return (
     <div className="w-full mb-8 pt-4 border border-b-0 border-x-0 border-t-gray-300">
@@ -63,7 +68,6 @@ const Footer = ({ onOpenLogin, onOpenLoginForResults }: FooterProps) => {
             showResultsActions ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
           )}
         >
-          <p>{didWin ? 'You Won!' : 'You Lost!'}</p>
           <p>Come back tomorrow for another game</p>
           <div className="flex flex-row items-center justify-center gap-3 mt-2">
             <button

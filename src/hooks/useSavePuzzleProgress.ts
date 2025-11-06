@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useSupabaseAuth } from '../SupabaseProvider';
 import { useGetPuzzles } from './useGetPuzzle';
-import { useSaveCurrentPuzzleProgress } from './useProfile';
+import { AttemptMetadata, useActiveSession, useSaveProgress } from './useProfile';
 
 export interface PuzzleProgressInput {
   progress: unknown;
@@ -115,10 +115,10 @@ export const useSavePuzzleProgress = (overridePuzzleId?: string | null) => {
   const { user } = useSupabaseAuth();
   const { data: puzzleData } = useGetPuzzles();
   const puzzleId = overridePuzzleId ?? (puzzleData ? puzzleData[0]?.id ?? null : null);
-  const saveCurrentPuzzleProgress = useSaveCurrentPuzzleProgress();
+  const { data: activeSession } = useActiveSession();
+  const saveProgress = useSaveProgress();
 
-  type MutationOptions = Parameters<typeof saveCurrentPuzzleProgress.mutate>[1];
-  type MutationVariables = Parameters<typeof saveCurrentPuzzleProgress.mutate>[0];
+  type MutationOptions = Parameters<typeof saveProgress.mutate>[1];
 
   const persistLocalProgress = useCallback(
     (progressData: PuzzleProgressInput) => {
@@ -141,43 +141,55 @@ export const useSavePuzzleProgress = (overridePuzzleId?: string | null) => {
   const mutate = (progressData: PuzzleProgressInput, options?: MutationOptions) => {
     persistLocalProgress(progressData);
 
-    if (!puzzleId || !user) {
+    if (!user) {
       return;
     }
 
-    const variables: MutationVariables = {
-      puzzleId,
+    const attemptId = activeSession?.current_attempt_id ?? null;
+    if (!attemptId) {
+      return;
+    }
+
+    const metadata: AttemptMetadata = {
+      puzzleId: puzzleId ?? null,
       progress: sanitizeProgress(progressData.progress),
-      completed: progressData?.completed ?? false,
       lives: progressData?.lives ?? null,
       elapsedSeconds: progressData?.elapsedSeconds ?? null,
+      completed: progressData?.completed ?? false,
+      updatedAt: new Date().toISOString(),
     };
 
-    saveCurrentPuzzleProgress.mutate(variables, options);
+    saveProgress.mutate({ attemptId, progress: metadata }, options);
   };
 
   const mutateAsync = (progressData: PuzzleProgressInput, options?: MutationOptions) => {
     persistLocalProgress(progressData);
 
-    if (!puzzleId || !user) {
+    if (!user) {
       return Promise.reject(
         new Error('Unable to save progress without an authenticated user and puzzle.')
       );
     }
 
-    const variables: MutationVariables = {
-      puzzleId,
+    const attemptId = activeSession?.current_attempt_id ?? null;
+    if (!attemptId) {
+      return Promise.reject(new Error('Unable to locate an active puzzle attempt to update.'));
+    }
+
+    const metadata: AttemptMetadata = {
+      puzzleId: puzzleId ?? null,
       progress: sanitizeProgress(progressData.progress),
-      completed: progressData?.completed ?? false,
       lives: progressData?.lives ?? null,
       elapsedSeconds: progressData?.elapsedSeconds ?? null,
+      completed: progressData?.completed ?? false,
+      updatedAt: new Date().toISOString(),
     };
 
-    return saveCurrentPuzzleProgress.mutateAsync(variables, options);
+    return saveProgress.mutateAsync({ attemptId, progress: metadata }, options);
   };
 
   return {
-    ...saveCurrentPuzzleProgress,
+    ...saveProgress,
     mutate,
     mutateAsync,
   };

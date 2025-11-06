@@ -11,7 +11,6 @@ const ColClues = ({ colClues }: ColCluesProps) => {
           {/* 👇 reverse order so top aligns with top of grid */}
           {clue
             .slice()
-            .reverse()
             .map((num, i) => (
               <span key={i} className="text-xs leading-none">
                 {num}

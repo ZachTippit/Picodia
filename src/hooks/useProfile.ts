@@ -1,485 +1,300 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSupabase, useSupabaseAuth } from '../SupabaseProvider';
-import type { PostgrestError, User } from '@supabase/supabase-js';
+import type { PostgrestError } from '@supabase/supabase-js';
+import { useSupabase } from '../SupabaseProvider';
 
-export type PuzzleStatus = 'not_started' | 'in_progress' | 'completed';
-export type PuzzleOutcome = 'win' | 'loss';
+/* ============================================================
+   Types
+============================================================ */
+
+export interface AttemptMetadata {
+  puzzleId?: string | null;
+  progress?: unknown;
+  lives?: number | null;
+  elapsedSeconds?: number | null;
+  completed?: boolean;
+  updatedAt?: string;
+}
+
+export interface PuzzleAttempt {
+  id: string;
+  user_id: string;
+  puzzle_id: string;
+  attempt_date: string;
+  started_at: string;
+  completed_at: string | null;
+  was_successful: boolean | null;
+  lives_remaining: number | null;
+  mistakes_made: number | null;
+  status: 'in_progress' | 'completed' | 'voided';
+  metadata: AttemptMetadata | null;
+  duration_seconds: number | null;
+}
 
 export interface Profile {
   id: string;
-  games_played: number | null;
-  wins: number | null;
-  losses: number | null;
-  current_streak: number | null;
-  longest_streak: number | null;
-  updated_at: string | null;
-  current_puzzle_id: string | null;
-  current_puzzle_status: PuzzleStatus | null;
-  current_puzzle_date: string | null;
-  current_puzzle_started_at: string | null;
-  current_puzzle_completed_at: string | null;
-  current_puzzle_outcome: PuzzleOutcome | null;
-  current_puzzle_progress: unknown | null;
-  current_puzzle_lives: number | null;
-  current_puzzle_elapsed_seconds: number | null;
-  total_completed_time_seconds: number | null;
-  total_completed_lives: number | null;
-  total_completed_games: number | null;
+  display_name: string | null;
+  avatar_url: string | null;
+  bio: string | null;
+  settings: Record<string, unknown> | null;
+  created_at: string;
+  updated_at: string;
 }
 
-const buildProfileQueryKey = (userId: string | undefined) => ['profile', userId ?? null] as const;
+export interface ProfileStats {
+  user_id: string;
+  games_played: number;
+  wins: number;
+  losses: number;
+  current_streak: number;
+  longest_streak: number;
+  total_completed_games: number;
+  total_completed_time_seconds: number;
+  total_completed_lives: number;
+  win_rate: number;
+  completion_rate: number;
+  updated_at: string;
+}
 
-const buildInsertPayload = (user: User | null): Record<string, unknown> => {
-  const metadata = (user?.user_metadata ?? {}) as Record<string, unknown>;
+export interface ActiveSession {
+  user_id: string;
+  current_attempt_id: string | null;
+  active_puzzle_id: string | null;
+  started_at: string;
+  updated_at: string;
+  puzzle_attempts: PuzzleAttempt | null;
+}
 
-  return {
-    id: user?.id,
-  };
+/* ============================================================
+   Query Keys
+============================================================ */
+
+const PROFILE_QUERY_KEY = ['profile'] as const;
+const PROFILE_STATS_QUERY_KEY = ['profile-stats'] as const;
+const ACTIVE_SESSION_QUERY_KEY = ['active-session'] as const;
+
+/* ============================================================
+   Helpers
+============================================================ */
+
+const getCurrentUserId = async (supabase: ReturnType<typeof useSupabase>) => {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) throw error;
+  return user?.id ?? null;
 };
 
-export const useProfileQuery = () => {
+/* ============================================================
+   Hooks
+============================================================ */
+
+export const useProfile = () => {
   const supabase = useSupabase();
-  const { user } = useSupabaseAuth();
 
   return useQuery<Profile | null, PostgrestError>({
-    queryKey: buildProfileQueryKey(user?.id),
-    enabled: Boolean(user),
-    staleTime: 30_000,
+    queryKey: PROFILE_QUERY_KEY,
     queryFn: async () => {
-      if (!user) {
-        return null;
-      }
+      const userId = await getCurrentUserId(supabase);
+      if (!userId) return null;
 
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', user.id)
+        .eq('id', userId)
+        .single();
+
+      if (error) throw error;
+      return data as Profile;
+    },
+  });
+};
+
+export const useProfileStats = () => {
+  const supabase = useSupabase();
+
+  return useQuery<ProfileStats | null, PostgrestError>({
+    queryKey: PROFILE_STATS_QUERY_KEY,
+    queryFn: async () => {
+      const userId = await getCurrentUserId(supabase);
+      if (!userId) return null;
+
+      const { data, error } = await supabase
+        .from('profile_stats')
+        .select('*')
+        .eq('user_id', userId)
         .maybeSingle();
 
-      if (error) {
-        throw error;
-      }
-
-      if (data) {
-        return data as Profile;
-      }
-
-      const insertPayload = buildInsertPayload(user);
-
-      const { data: insertData, error: insertError } = await supabase
-        .from('profiles')
-        .insert([insertPayload])
-        .select()
-        .single();
-
-      if (insertError) {
-        throw insertError;
-      }
-
-      return insertData as Profile;
+      if (error) throw error;
+      return data ?? null;
     },
   });
 };
 
-interface RecordGameStartVariables {
-  puzzleId: string;
-  initialLives?: number | null;
-  elapsedSeconds?: number | null;
-}
-
-export const useRecordGameStart = () => {
+export const useActiveSession = () => {
   const supabase = useSupabase();
-  const { user } = useSupabaseAuth();
-  const queryClient = useQueryClient();
 
-  return useMutation<Profile, unknown, RecordGameStartVariables>({
-    mutationFn: async ({ puzzleId, initialLives = null, elapsedSeconds = null }) => {
-      if (!user) {
-        throw new Error('User must be signed in to record a game start.');
-      }
-
-      if (!puzzleId) {
-        throw new Error('Missing puzzle identifier.');
-      }
-
-      const profileCacheKey = buildProfileQueryKey(user.id);
-      const cachedProfile = queryClient.getQueryData<Profile | null>(profileCacheKey);
-
-      let referenceProfile = cachedProfile;
-
-      if (!referenceProfile) {
-        const { data: fetchedProfile, error: fetchError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (fetchError) {
-          throw fetchError;
-        }
-
-        referenceProfile = fetchedProfile as Profile;
-      }
-
-      const today = new Date().toISOString().split('T')[0];
-
-      const isSamePuzzle =
-        referenceProfile?.current_puzzle_id === puzzleId &&
-        referenceProfile?.current_puzzle_date === today;
-
-      const isNewPuzzle = !isSamePuzzle || referenceProfile?.current_puzzle_status === 'completed';
-
-      const nextGamesPlayed =
-        (referenceProfile?.games_played ?? 0) + (isNewPuzzle ? 1 : 0);
+  return useQuery<ActiveSession | null, PostgrestError>({
+    queryKey: ACTIVE_SESSION_QUERY_KEY,
+    queryFn: async () => {
+      const userId = await getCurrentUserId(supabase);
+      if (!userId) return null;
 
       const { data, error } = await supabase
-        .from('profiles')
-        .update({
-          games_played: nextGamesPlayed,
-          current_puzzle_id: puzzleId,
-          current_puzzle_status: 'in_progress',
-          current_puzzle_date: today,
-          current_puzzle_started_at: isNewPuzzle ? new Date().toISOString() : referenceProfile?.current_puzzle_started_at,
-          current_puzzle_completed_at: isNewPuzzle ? null : referenceProfile?.current_puzzle_completed_at,
-          current_puzzle_outcome: isNewPuzzle ? null : referenceProfile?.current_puzzle_outcome,
-          current_puzzle_progress: isNewPuzzle ? null : referenceProfile?.current_puzzle_progress,
-          current_puzzle_lives:
-            isNewPuzzle
-              ? initialLives
-              : (typeof initialLives === 'number' ? initialLives : referenceProfile?.current_puzzle_lives),
-          current_puzzle_elapsed_seconds:
-            isNewPuzzle
-              ? elapsedSeconds ?? 0
-              : (typeof elapsedSeconds === 'number'
-                  ? elapsedSeconds
-                  : referenceProfile?.current_puzzle_elapsed_seconds ?? 0),
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id)
-        .select()
-        .single();
+        .from('profile_sessions')
+        .select('*, puzzle_attempts(*)')
+        .eq('user_id', userId)
+        .maybeSingle();
 
-      if (error) {
-        throw error;
-      }
-
-      return data as Profile;
-    },
-    onSuccess: (data) => {
-      if (!user) {
-        return;
-      }
-
-      queryClient.setQueryData<Profile | null>(buildProfileQueryKey(user.id), data);
-    },
-    onError: (_error) => {
-      // eslint-disable-next-line no-console
-      console.error('Failed to record game start');
+      if (error) throw error;
+      return data ?? null;
     },
   });
 };
 
-interface SaveCurrentPuzzleProgressVariables {
-  puzzleId: string;
-  progress: unknown;
-  completed?: boolean;
-  lives?: number | null;
-  elapsedSeconds?: number | null;
-}
-
-export const useSaveCurrentPuzzleProgress = () => {
+export const useStartPuzzle = () => {
   const supabase = useSupabase();
-  const { user } = useSupabaseAuth();
   const queryClient = useQueryClient();
 
-  return useMutation<Profile, unknown, SaveCurrentPuzzleProgressVariables>({
-    mutationFn: async ({ puzzleId, progress, completed = false, lives = null, elapsedSeconds = null }) => {
-      if (!user) {
-        throw new Error('User must be signed in to save progress.');
+  return useMutation<PuzzleAttempt, PostgrestError, string>({
+    mutationFn: async (puzzleId) => {
+      const userId = await getCurrentUserId(supabase);
+      if (!userId) throw new Error('Not signed in');
+
+      const today = new Date().toISOString().slice(0, 10);
+
+      const { data: existingAttempt, error: existingError } = await supabase
+        .from('puzzle_attempts')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('puzzle_id', puzzleId)
+        .eq('attempt_date', today)
+        .maybeSingle();
+
+      if (existingError) throw existingError;
+      if (existingAttempt) {
+        return existingAttempt as PuzzleAttempt;
       }
 
-      if (!puzzleId) {
-        throw new Error('Missing puzzle identifier.');
-      }
-
-      const profileCacheKey = buildProfileQueryKey(user.id);
-      const cachedProfile = queryClient.getQueryData<Profile | null>(profileCacheKey);
-
-      let referenceProfile = cachedProfile;
-
-      if (!referenceProfile) {
-        const { data: fetchedProfile, error: fetchError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (fetchError) {
-          throw fetchError;
-        }
-
-        referenceProfile = fetchedProfile as Profile;
-      }
-
-      const today = new Date().toISOString().split('T')[0];
-      const isNewPuzzle =
-        referenceProfile?.current_puzzle_id !== puzzleId ||
-        referenceProfile?.current_puzzle_date !== today;
-
-      const updatePayload: Record<string, unknown> = {
-        current_puzzle_id: puzzleId,
-        current_puzzle_date: today,
-        current_puzzle_progress: progress ?? null,
-        current_puzzle_status: completed ? 'completed' : 'in_progress',
-        updated_at: new Date().toISOString(),
-        current_puzzle_lives:
-          typeof lives === 'number'
-            ? lives
-            : referenceProfile?.current_puzzle_lives ?? null,
-        current_puzzle_elapsed_seconds:
-          typeof elapsedSeconds === 'number'
-            ? elapsedSeconds
-            : referenceProfile?.current_puzzle_elapsed_seconds ?? 0,
+      const payload = {
+        user_id: userId,
+        puzzle_id: puzzleId,
+        attempt_date: today,
+        status: 'in_progress' as const,
       };
 
-      if (!referenceProfile?.current_puzzle_started_at || isNewPuzzle) {
-        updatePayload.current_puzzle_started_at = new Date().toISOString();
-      }
-
-      if (isNewPuzzle && !completed) {
-        updatePayload.current_puzzle_completed_at = null;
-        updatePayload.current_puzzle_outcome = null;
-      }
-
-      if (completed) {
-        updatePayload.current_puzzle_completed_at = new Date().toISOString();
-      }
-
       const { data, error } = await supabase
-        .from('profiles')
-        .update(updatePayload)
-        .eq('id', user.id)
+        .from('puzzle_attempts')
+        .insert([payload])
         .select()
         .single();
 
       if (error) {
+        if ('code' in error && error.code === '23505') {
+          const { data: conflictAttempt, error: conflictError } = await supabase
+            .from('puzzle_attempts')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('puzzle_id', puzzleId)
+            .eq('attempt_date', today)
+            .single();
+
+          if (conflictError) throw conflictError;
+          return conflictAttempt as PuzzleAttempt;
+        }
         throw error;
       }
-
-      return data as Profile;
+      return data as PuzzleAttempt;
     },
-    onSuccess: (data) => {
-      if (!user) {
-        return;
-      }
-
-      queryClient.setQueryData<Profile | null>(buildProfileQueryKey(user.id), data);
-    },
-    onError: (_error) => {
-      // eslint-disable-next-line no-console
-      console.error('Failed to save puzzle progress');
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ACTIVE_SESSION_QUERY_KEY });
     },
   });
 };
 
-interface CompletePuzzleVariables {
-  puzzleId: string;
-  outcome: PuzzleOutcome;
-  progress: unknown;
-  livesRemaining: number;
-  elapsedSeconds: number;
+interface SaveProgressInput {
+  attemptId: string;
+  progress: AttemptMetadata | null;
 }
 
-export const useCompletePuzzle = () => {
+export const useSaveProgress = () => {
   const supabase = useSupabase();
-  const { user } = useSupabaseAuth();
-  const queryClient = useQueryClient();
 
-  return useMutation<Profile, unknown, CompletePuzzleVariables>({
-    mutationFn: async ({ puzzleId, outcome, progress, livesRemaining, elapsedSeconds }) => {
-      if (!user) {
-        throw new Error('User must be signed in to complete a puzzle.');
-      }
-
-      if (!puzzleId) {
-        throw new Error('Missing puzzle identifier.');
-      }
-
-      const profileCacheKey = buildProfileQueryKey(user.id);
-      const cachedProfile = queryClient.getQueryData<Profile | null>(profileCacheKey);
-
-      let referenceProfile = cachedProfile;
-
-      if (!referenceProfile) {
-        const { data: fetchedProfile, error: fetchError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (fetchError) {
-          throw fetchError;
-        }
-
-        referenceProfile = fetchedProfile as Profile;
-      }
-
-      const today = new Date().toISOString().split('T')[0];
-      const isSamePuzzle =
-        referenceProfile?.current_puzzle_id === puzzleId &&
-        referenceProfile?.current_puzzle_date === today;
-
-      const alreadyCompletedSamePuzzle = Boolean(
-        isSamePuzzle && referenceProfile?.current_puzzle_status === 'completed'
-      );
-
-      const sanitizedLives = Math.max(0, livesRemaining ?? 0);
-      const sanitizedElapsedSeconds = Math.max(0, elapsedSeconds ?? 0);
-
-      const prevWins = referenceProfile?.wins ?? 0;
-      const prevLosses = referenceProfile?.losses ?? 0;
-      const prevStreak = referenceProfile?.current_streak ?? 0;
-      const prevLongest = referenceProfile?.longest_streak ?? 0;
-      const prevTotalCompletedTime = referenceProfile?.total_completed_time_seconds ?? 0;
-      const prevTotalCompletedLives = referenceProfile?.total_completed_lives ?? 0;
-      const prevTotalCompletedGames = referenceProfile?.total_completed_games ?? 0;
-
-      let nextWins = prevWins;
-      let nextLosses = prevLosses;
-      let nextStreak = prevStreak;
-      let nextLongest = prevLongest;
-      let nextTotalCompletedTime = prevTotalCompletedTime;
-      let nextTotalCompletedLives = prevTotalCompletedLives;
-      let nextTotalCompletedGames = prevTotalCompletedGames;
-
-      if (!alreadyCompletedSamePuzzle) {
-        if (outcome === 'win') {
-          nextWins += 1;
-          nextStreak = prevStreak + 1;
-          nextLongest = Math.max(prevLongest, nextStreak);
-        } else {
-          nextLosses += 1;
-          nextStreak = 0;
-        }
-        if (outcome === 'win') {
-          nextTotalCompletedTime += sanitizedElapsedSeconds;
-          nextTotalCompletedLives += sanitizedLives;
-          nextTotalCompletedGames += 1;
-        }
-      } else if (referenceProfile?.current_puzzle_outcome !== outcome) {
-        // If outcome flips (unlikely), adjust counts accordingly.
-        if (outcome === 'win') {
-          nextWins = prevWins + 1;
-          nextLosses = Math.max(0, prevLosses - 1);
-          nextStreak = prevStreak + 1;
-          nextLongest = Math.max(prevLongest, nextStreak);
-        } else {
-          nextLosses = prevLosses + 1;
-          nextWins = Math.max(0, prevWins - 1);
-          nextStreak = 0;
-        }
-        // Do not adjust totals when flipping outcome; we assume the original completion stats remain authoritative.
-      }
-
+  return useMutation<PuzzleAttempt, PostgrestError, SaveProgressInput>({
+    mutationFn: async ({ attemptId, progress }) => {
       const { data, error } = await supabase
-        .from('profiles')
-        .update({
-          wins: nextWins,
-          losses: nextLosses,
-          current_streak: nextStreak,
-          longest_streak: nextLongest,
-          current_puzzle_id: puzzleId,
-          current_puzzle_date: today,
-          current_puzzle_status: 'completed',
-          current_puzzle_outcome: outcome,
-          current_puzzle_completed_at: new Date().toISOString(),
-          current_puzzle_progress: progress ?? null,
-          current_puzzle_lives: sanitizedLives,
-          current_puzzle_elapsed_seconds: sanitizedElapsedSeconds,
-          total_completed_time_seconds: nextTotalCompletedTime,
-          total_completed_lives: nextTotalCompletedLives,
-          total_completed_games: nextTotalCompletedGames,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id)
+        .from('puzzle_attempts')
+        .update({ metadata: progress })
+        .eq('id', attemptId)
         .select()
         .single();
 
-      if (error) {
-        throw error;
-      }
-
-      return data as Profile;
-    },
-    onSuccess: (data) => {
-      if (!user) {
-        return;
-      }
-
-      queryClient.setQueryData<Profile | null>(buildProfileQueryKey(user.id), data);
-    },
-    onError: (_error) => {
-      // eslint-disable-next-line no-console
-      console.error('Failed to complete puzzle');
+      if (error) throw error;
+      return data as PuzzleAttempt;
     },
   });
 };
 
-export const useResetCurrentPuzzle = () => {
+interface FinishPuzzleInput {
+  attemptId: string;
+  wasSuccessful: boolean;
+  livesRemaining?: number;
+  mistakesMade?: number;
+}
+
+export const useFinishPuzzle = () => {
   const supabase = useSupabase();
-  const { user } = useSupabaseAuth();
   const queryClient = useQueryClient();
 
-  return useMutation<Profile, unknown, void>({
-    mutationFn: async () => {
-      if (!user) {
-        throw new Error('User must be signed in to reset the puzzle state.');
-      }
-
+  return useMutation<PuzzleAttempt, PostgrestError, FinishPuzzleInput>({
+    mutationFn: async ({
+      attemptId,
+      wasSuccessful,
+      livesRemaining = 0,
+      mistakesMade = 0,
+    }) => {
       const { data, error } = await supabase
-        .from('profiles')
+        .from('puzzle_attempts')
         .update({
-          current_puzzle_id: null,
-          current_puzzle_status: 'not_started',
-          current_puzzle_date: null,
-          current_puzzle_started_at: null,
-          current_puzzle_completed_at: null,
-          current_puzzle_outcome: null,
-          current_puzzle_progress: null,
-          current_puzzle_lives: null,
-          current_puzzle_elapsed_seconds: 0,
-          updated_at: new Date().toISOString(),
+          completed_at: new Date().toISOString(),
+          was_successful: wasSuccessful,
+          lives_remaining: livesRemaining,
+          mistakes_made: mistakesMade,
+          status: 'completed',
         })
-        .eq('id', user.id)
+        .eq('id', attemptId)
         .select()
         .single();
 
-      if (error) {
-        throw error;
-      }
-
-      return data as Profile;
+      if (error) throw error;
+      return data as PuzzleAttempt;
     },
-    onSuccess: (data) => {
-      if (!user) {
-        return;
-      }
-
-      queryClient.setQueryData<Profile | null>(buildProfileQueryKey(user.id), data);
-    },
-    onError: (_error) => {
-      // eslint-disable-next-line no-console
-      console.error('Failed to reset puzzle state');
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ACTIVE_SESSION_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: PROFILE_STATS_QUERY_KEY });
     },
   });
 };
 
-export const useProfileHelpers = () => {
-  const { data, isPending, isError, error } = useProfileQuery();
+export const useResumePuzzle = (attemptId: string | null) => {
+  const supabase = useSupabase();
 
-  return {
-    profile: data,
-    profileLoading: isPending,
-    profileError: isError ? error : null,
-  };
+  return useQuery<PuzzleAttempt | null, PostgrestError>({
+    queryKey: ['resume', attemptId],
+    queryFn: async () => {
+      if (!attemptId) {
+        return null;
+      }
+
+      const { data, error } = await supabase
+        .from('puzzle_attempts')
+        .select('*')
+        .eq('id', attemptId)
+        .maybeSingle();
+
+      if (error) throw error;
+      return (data ?? null) as PuzzleAttempt | null;
+    },
+  });
 };

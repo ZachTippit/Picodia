@@ -8,12 +8,12 @@ const pad = (val: number) => {
 
 const GameClock = () => {
   const {
-    state: { isGameStarted, gameOver, elapsedSeconds, startMode },
+    state: { isGameStarted, elapsedSeconds },
     actions: { incrementElapsedSeconds },
   } = use(GameContext);
 
   useEffect(() => {
-    if (!isGameStarted || gameOver || startMode === 'results') {
+    if (!isGameStarted) {
       return;
     }
 
@@ -22,7 +22,7 @@ const GameClock = () => {
     }, 1000);
 
     return () => window.clearInterval(interval);
-  }, [gameOver, incrementElapsedSeconds, isGameStarted, startMode]);
+  }, [incrementElapsedSeconds, isGameStarted]);
 
   const minutes = Math.floor(elapsedSeconds / 60);
   const seconds = elapsedSeconds % 60;

@@ -3,24 +3,49 @@ import { GameContext } from '../../GameContext';
 import { useGetPuzzles } from '../../hooks/useGetPuzzle';
 import { Nonogram } from './Nonogram';
 import { cn } from '../../lib/cn';
-import { useProfileQuery, useRecordGameStart } from '../../hooks/useProfile';
-import { useSupabaseAuth } from '../../SupabaseProvider';
+import { AttemptMetadata, useActiveSession } from '../../hooks/useProfile';;
 import { getStoredAnonProgress } from '../../hooks/useSavePuzzleProgress';
 import type { PuzzleCellState } from './PuzzleGrid';
+import PreGameCountdown from './PreGameCountdown';
+import { useDailyPuzzle } from '../../hooks/useDailyPuzzle';
 
 const Game = () => {
   const {
-    state: { isGameStarted, isCountdownActive, darkMode, lives, maxLives, elapsedSeconds, startMode },
-    actions: { startGame, endCountdown, setStartPing, setLives, resetElapsedSeconds, setElapsedSeconds, updateGameOver },
+    state: { isGameStarted, maxLives },
+    actions: {
+      setLives,
+      resetElapsedSeconds,
+      setElapsedSeconds,
+    },
   } = use(GameContext);
-  const { user } = useSupabaseAuth();
-  const { mutate: recordGameStart } = useRecordGameStart();
-  const { data: profile } = useProfileQuery();
+  const { data: activeSession } = useActiveSession();
+
+  const { data: dailyPuzzle } = useDailyPuzzle();
+  console.log("daily puzzle in Game component:", dailyPuzzle);
 
   const getTodayKey = useCallback(() => new Date().toISOString().split('T')[0], []);
 
-  const { data: puzzles } = useGetPuzzles();
-  const dailyPuzzle = puzzles?.[0];
+  const activeAttemptRaw = activeSession?.puzzle_attempts ?? null;
+  const activeAttempt = Array.isArray(activeAttemptRaw)
+    ? activeAttemptRaw[0] ?? null
+    : activeAttemptRaw;
+  const todayKey = getTodayKey();
+  const isAttemptForToday =
+    Boolean(dailyPuzzle) &&
+    (
+      (activeAttempt?.puzzle_id === dailyPuzzle?.id && activeAttempt?.attempt_date === todayKey) ||
+      activeSession?.active_puzzle_id === dailyPuzzle?.id
+    );
+  const attemptStatus = isAttemptForToday
+    ? activeAttempt?.status ?? (activeSession?.current_attempt_id ? 'in_progress' : null)
+    : null;
+  const attemptMetadata = useMemo<AttemptMetadata | null>(() => {
+    if (!activeAttempt?.metadata || typeof activeAttempt.metadata !== 'object') {
+      return null;
+    }
+    return activeAttempt.metadata;
+  }, [activeAttempt?.metadata]);
+
   const anonProgress = useMemo(() => {
     if (!dailyPuzzle) {
       return null;
@@ -39,63 +64,8 @@ const Game = () => {
     return stored;
   }, [dailyPuzzle, getTodayKey]);
 
-  const [countdownValue, setCountdownValue] = useState<number | null>(null);
-  const [showGo, setShowGo] = useState(false);
   const [puzzleVisible, setPuzzleVisible] = useState(false);
-  const goTimeoutRef = useRef<number | null>(null);
-  const pingTimeoutRef = useRef<number | null>(null);
-  const hasRecordedStartRef = useRef(false);
   const hydrationKeyRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (isCountdownActive) {
-      setShowGo(false);
-      setPuzzleVisible(false);
-      setCountdownValue(3);
-    } else {
-      setCountdownValue(null);
-      setShowGo(false);
-    }
-  }, [isCountdownActive]);
-
-  useEffect(() => {
-    if (countdownValue === null) {
-      return;
-    }
-
-    if (countdownValue === 0) {
-      setShowGo(true);
-      if (goTimeoutRef.current) {
-        clearTimeout(goTimeoutRef.current);
-      }
-      goTimeoutRef.current = window.setTimeout(() => {
-        setShowGo(false);
-        setCountdownValue(null);
-        endCountdown();
-        startGame();
-        setStartPing(true);
-        if (pingTimeoutRef.current) {
-          clearTimeout(pingTimeoutRef.current);
-        }
-        pingTimeoutRef.current = window.setTimeout(() => {
-          setStartPing(false);
-          pingTimeoutRef.current = null;
-        }, 5000);
-      }, 600);
-
-      return () => {
-        if (goTimeoutRef.current) {
-          clearTimeout(goTimeoutRef.current);
-          goTimeoutRef.current = null;
-        }
-      };
-    }
-
-    const timeout = window.setTimeout(() => {
-      setCountdownValue((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [countdownValue, endCountdown, setStartPing, startGame]);
 
   useEffect(() => {
     if (isGameStarted) {
@@ -109,85 +79,43 @@ const Game = () => {
   }, [isGameStarted]);
 
   useEffect(() => {
-    return () => {
-      if (goTimeoutRef.current) {
-        clearTimeout(goTimeoutRef.current);
-      }
-      if (pingTimeoutRef.current) {
-        clearTimeout(pingTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  const shouldShowCountdown = Boolean(
-    isCountdownActive || countdownValue !== null || showGo
-  );
-
-  useEffect(() => {
-    if (!user || !dailyPuzzle) {
-      hasRecordedStartRef.current = false;
-      return;
-    }
-
-    if (startMode === 'results') {
-      hasRecordedStartRef.current = false;
-      return;
-    }
-
-    if (isGameStarted && !hasRecordedStartRef.current) {
-      const normalizedLives = Number.isFinite(lives) ? lives : maxLives;
-      const clampedLives = Math.max(0, Math.min(maxLives, normalizedLives));
-      const initialLives =
-        startMode === 'new' ? maxLives : clampedLives;
-
-      recordGameStart({
-        puzzleId: dailyPuzzle.id,
-        initialLives,
-        elapsedSeconds,
-      });
-      hasRecordedStartRef.current = true;
-    }
-
-    if (!isGameStarted) {
-      hasRecordedStartRef.current = false;
-    }
-  }, [dailyPuzzle, elapsedSeconds, isGameStarted, lives, maxLives, recordGameStart, startMode, user]);
-
-  useEffect(() => {
     if (!dailyPuzzle) {
       return;
     }
 
-    const todayKey = getTodayKey();
-    const profilePuzzleId = profile?.current_puzzle_id ?? null;
-    const profilePuzzleDate = profile?.current_puzzle_date ?? null;
-    const isProfileForToday = profilePuzzleId === dailyPuzzle.id && profilePuzzleDate === todayKey;
+    const hydrationTodayKey = getTodayKey();
     const hasAnonProgress = Boolean(anonProgress);
-    const hydrationKey = `${dailyPuzzle.id}:${todayKey}:${isProfileForToday ? 'profile' : hasAnonProgress ? 'anon' : 'default'}:${anonProgress?.updatedAt ?? 'na'}`;
-    const shouldForceHydration = startMode === 'new' && !isGameStarted;
-
+    const hydrationKey = `${dailyPuzzle.id}:${hydrationTodayKey}:${
+      isAttemptForToday ? `attempt-${attemptStatus ?? 'unknown'}` : hasAnonProgress ? 'anon' : 'default'
+    }:${attemptMetadata?.updatedAt ?? anonProgress?.updatedAt ?? 'na'}`;
+    // const shouldForceHydration = startMode === 'new' && !isGameStarted;
+    const shouldForceHydration = false;
     if (!shouldForceHydration && hydrationKeyRef.current === hydrationKey) {
       return;
     }
 
-    if (isProfileForToday) {
-      if (typeof profile?.current_puzzle_lives === 'number') {
-        setLives(profile.current_puzzle_lives);
+    if (isAttemptForToday && (attemptMetadata || attemptStatus)) {
+      const derivedLives =
+        typeof attemptMetadata?.lives === 'number'
+          ? attemptMetadata.lives
+          : activeAttempt?.lives_remaining ?? null;
+      if (typeof derivedLives === 'number') {
+        setLives(Math.max(0, Math.min(maxLives, derivedLives)));
       } else {
         setLives(maxLives);
       }
 
-      if (typeof profile?.current_puzzle_elapsed_seconds === 'number') {
-        setElapsedSeconds(profile.current_puzzle_elapsed_seconds);
+      const derivedElapsed =
+        typeof attemptMetadata?.elapsedSeconds === 'number'
+          ? attemptMetadata.elapsedSeconds
+          : null;
+      if (typeof derivedElapsed === 'number') {
+        setElapsedSeconds(Math.max(0, derivedElapsed));
       } else {
         setElapsedSeconds(0);
       }
 
-      if (profile?.current_puzzle_status === 'completed') {
-        updateGameOver(true);
-      } else {
-        updateGameOver(false);
-      }
+      // updateGameOver(attemptStatus === 'completed' || Boolean(attemptMetadata?.completed));
     } else if (hasAnonProgress) {
       setLives(
         typeof anonProgress?.lives === 'number'
@@ -195,33 +123,36 @@ const Game = () => {
           : maxLives
       );
       setElapsedSeconds(Math.max(0, anonProgress?.elapsedSeconds ?? 0));
-      updateGameOver(Boolean(anonProgress?.completed));
+      // updateGameOver(Boolean(anonProgress?.completed));
     } else {
       setLives(maxLives);
       resetElapsedSeconds();
-      updateGameOver(false);
+      // updateGameOver(false);
     }
 
     hydrationKeyRef.current = hydrationKey;
-  }, [anonProgress, dailyPuzzle, getTodayKey, isGameStarted, maxLives, profile, resetElapsedSeconds, setElapsedSeconds, setLives, startMode, updateGameOver]);
-
-  useEffect(() => {
-    if (startMode === 'results') {
-      updateGameOver(true);
-    }
-  }, [startMode, updateGameOver]);
+  }, [
+    activeAttempt?.lives_remaining,
+    anonProgress,
+    attemptMetadata,
+    attemptStatus,
+    dailyPuzzle,
+    getTodayKey,
+    isAttemptForToday,
+    isGameStarted,
+    maxLives,
+    resetElapsedSeconds,
+    setElapsedSeconds,
+    setLives,
+  ]);
 
   const initialPuzzleGrid = useMemo<PuzzleCellState[][] | null>(() => {
     if (!dailyPuzzle) {
       return null;
     }
 
-    const isProfileForToday =
-      profile?.current_puzzle_id === dailyPuzzle.id &&
-      profile?.current_puzzle_date === getTodayKey();
-
-    if (isProfileForToday) {
-      return (profile?.current_puzzle_progress as PuzzleCellState[][] | null) ?? null;
+    if (isAttemptForToday && attemptMetadata?.progress) {
+      return attemptMetadata.progress as PuzzleCellState[][] | null;
     }
 
     if (anonProgress?.progress) {
@@ -229,45 +160,20 @@ const Game = () => {
     }
 
     return null;
-  }, [anonProgress, dailyPuzzle, profile, getTodayKey]);
+  }, [activeSession?.active_puzzle_id, anonProgress, attemptMetadata, dailyPuzzle]);
+
+  const activePuzzle = dailyPuzzle;
 
   return (
     <div className="relative min-h-[450px] flex items-center justify-center">
-      {shouldShowCountdown && (
+      <PreGameCountdown setPuzzleVisible={setPuzzleVisible}/>
+      {isGameStarted ? (
         <div
-          className={cn(
-            'absolute inset-0 z-10 flex items-center justify-center transition-opacity duration-300',
-            darkMode ? 'text-gray-100' : 'text-gray-900'
-          )}
-          style={{ backgroundColor: darkMode ? 'var(--dark-bg)' : 'var(--light-bg)' }}
+          className={cn('w-full transition-opacity duration-500', puzzleVisible ? 'opacity-100' : 'opacity-0')}
         >
-          <span
-            key={showGo ? 'go' : countdownValue ?? 'blank'}
-            className="text-6xl font-bold tracking-widest countdown-number"
-          >
-            {showGo ? 'GO!' : countdownValue ?? 3}
-          </span>
-        </div>
-      )}
-
-      {isGameStarted && dailyPuzzle ? (
-        <div
-          className={cn(
-            'w-full transition-opacity duration-500',
-            puzzleVisible ? 'opacity-100' : 'opacity-0'
-          )}
-        >
-          <Nonogram puzzle={dailyPuzzle} puzzleId={dailyPuzzle.id} initialGrid={initialPuzzleGrid} />
+          <Nonogram puzzle={activePuzzle} initialGrid={initialPuzzleGrid} />
         </div>
       ) : null}
-
-      {!isGameStarted && !shouldShowCountdown && (
-        <div className="text-sm text-gray-500">Press Play to start today&apos;s puzzle.</div>
-      )}
-
-      {isGameStarted && !dailyPuzzle && (
-        <div className="text-sm text-gray-500">Loading puzzle…</div>
-      )}
     </div>
   );
 };

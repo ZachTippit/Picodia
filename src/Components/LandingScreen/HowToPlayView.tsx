@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '../../lib/cn';
 import HowToPlayGrid from './HowToPlayGrid';
+import { useSupabaseAuth } from '../../SupabaseProvider';
 
 interface HowToPlayRule {
   id: string;
@@ -12,7 +13,6 @@ interface HowToPlayRule {
 interface HowToPlayViewProps {
   onClose: () => void;
   onOpenLogin: () => void;
-  isLoggedIn: boolean;
 }
 
 const TRANSITION_DURATION = 500;
@@ -37,7 +37,10 @@ const baseRules: HowToPlayRule[] = [
   },
 ];
 
-const HowToPlayView = ({ onClose, onOpenLogin, isLoggedIn }: HowToPlayViewProps) => {
+const HowToPlayView = ({ onClose, onOpenLogin }: HowToPlayViewProps) => {
+  const { user } = useSupabaseAuth();
+  const isLoggedIn = Boolean(user);
+
   const rules = useMemo<HowToPlayRule[]>(() => {
     if (isLoggedIn) {
       return baseRules;

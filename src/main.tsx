@@ -1,7 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 import './animations.css';
-import './Components/toggleSlider.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SupabaseProvider } from './SupabaseProvider';

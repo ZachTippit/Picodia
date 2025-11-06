@@ -6,7 +6,6 @@ interface GameContextProps {
     isOpen: boolean;
     isGameStarted: boolean;
     isCountdownActive: boolean;
-    gameOver: boolean;
     prevGameArray: any[];
     showAbout: boolean;
     showStats: boolean;
@@ -14,22 +13,16 @@ interface GameContextProps {
     showOtherPuzzles: boolean;
     pingHowTo: boolean;
     startPing: boolean;
-    didWin?: boolean;
     maxLives: number;
     lives: number;
-    markupMode: boolean;
-    hardMode: boolean;
-    darkMode: boolean;
     hasPlayedToday: boolean;
     elapsedSeconds: number;
-    startMode: 'idle' | 'new' | 'continue' | 'results';
   },
   actions: {
     toggleOpen: () => void;
     startGame: () => void;
     beginCountdown: () => void;
     endCountdown: () => void;
-    updateGameOver: (status: boolean) => void;
     updatePrevGameArray: (array: any[]) => void;
     toggleAbout: () => void;
     toggleStats: () => void;
@@ -40,16 +33,10 @@ interface GameContextProps {
     setMaxLives: (value: number) => void;
     setLives: (value: number) => void;
     loseLife: () => void;
-    winGame?: () => void;
-    loseGame?: () => void;
-    toggleMarkupMode: () => void;
-    toggleHardMode: () => void;
-    toggleDarkMode: () => void;
     toggleHasPlayedToday: () => void;
     setElapsedSeconds: (value: number) => void;
     incrementElapsedSeconds: () => void;
     resetElapsedSeconds: () => void;
-    setStartMode: (mode: 'idle' | 'new' | 'continue' | 'results') => void;
   }
 }
 
@@ -61,10 +48,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
-  const [didWin, setDidWin] = useState<boolean>(false);
   const [isCountdownActive, setIsCountdownActive] = useState<boolean>(false);
   const [pingHowTo, setPingHowTo] = useState<boolean>(false);
-  const [gameOver, setGameOver] = useState<boolean>(false);
   const [prevGameArray, setPrevGameArray] = useState<any[]>([]);
   const [startPing, setStartPing] = useState<boolean>(false);
   const [maxLives, setMaxLives] = useState<number>(3);
@@ -73,12 +58,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [showStats, setShowStats] = useState<boolean>(false);
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [showOtherPuzzles, setShowOtherPuzzles] = useState<boolean>(false);
-  const [markupMode, setMarkupMode] = useState<boolean>(false);
-  const [darkMode, setDarkMode] = useState<boolean>(false);
-  const [hardMode, setHardMode] = useState<boolean>(false);
   const [hasPlayedToday, setHasPlayedToday] = useState<boolean>(false);
   const [elapsedSeconds, setElapsedSecondsState] = useState<number>(0);
-  const [startMode, setStartModeState] = useState<'idle' | 'new' | 'continue' | 'results'>('idle');
 
   const toggleHasPlayedToday = () => setHasPlayedToday(!hasPlayedToday);
 
@@ -99,9 +80,6 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     setIsOpen(!isOpen);
   }
   const toggleOpen = () => setIsOpen(!isOpen);
-  const toggleMarkupMode = () => setMarkupMode(!markupMode);
-  const toggleDarkMode = () => setDarkMode(!darkMode);
-  const updateGameOver = (status: boolean) => setGameOver(status);
   const updatePrevGameArray = useCallback((array: any[]) => {
     setPrevGameArray(array);
   }, [setPrevGameArray]);
@@ -133,38 +111,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     setElapsedSecondsState(0);
   }, []);
 
-  const setStartMode = useCallback((mode: 'idle' | 'new' | 'continue' | 'results') => {
-    setStartModeState(mode);
-  }, []);
-
-  const winGame = () => {
-    setDidWin(true)
-    setGameOver(true);
-  }
-
-  const loseGame = () => {
-    setDidWin(false)
-    setGameOver(true);
-  }
-  
-  const toggleHardMode = () => {
-    // State sets async, so we set based on current hard mode value
-    if(hardMode) {
-      setMaxLives(3);
-      setLives(3);
-    } else {
-      setMaxLives(1);
-      setLives(1);
-    }
-    setHardMode(!hardMode);
-  }
-
   const context = {
     state: {
       isOpen,
       isGameStarted,
       isCountdownActive,
-      gameOver,
       prevGameArray,
       showAbout,
       showStats,
@@ -174,20 +125,14 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       startPing,
       maxLives,
       lives,
-      didWin,
-      markupMode,
-      hardMode,
-      darkMode,
       hasPlayedToday,
       elapsedSeconds,
-      startMode,
     },
     actions: {
       toggleOpen,
       startGame,
       beginCountdown,
       endCountdown,
-      updateGameOver,
       updatePrevGameArray,
       toggleAbout,
       toggleStats,
@@ -198,16 +143,10 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       setMaxLives,
       setLives,
       loseLife,
-      winGame,
-      loseGame,
-      toggleMarkupMode,
-      toggleHardMode,
-      toggleDarkMode,
       toggleHasPlayedToday,
       setElapsedSeconds,
       incrementElapsedSeconds,
       resetElapsedSeconds,
-      setStartMode,
     }
   }
   return (

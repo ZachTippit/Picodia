@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { GameContext } from '../GameContext';
 import { cn } from '../lib/cn';
 import { useSupabase, useSupabaseAuth } from '../SupabaseProvider';
-import { useProfileQuery, useResetCurrentPuzzle } from '../hooks/useProfile';
+import { AttemptMetadata, useActiveSession, useSaveProgress } from '../hooks/useProfile';
 import { useGetPuzzles } from '../hooks/useGetPuzzle';
 import { writeAnonProgressSnapshot } from '../hooks/useSavePuzzleProgress';
 
@@ -14,19 +14,25 @@ interface NavbarProps {
 
 const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
   const {
-    state: { pingHowTo, darkMode, prevGameArray, lives, elapsedSeconds, isGameStarted },
+    state: { prevGameArray, lives, elapsedSeconds, isGameStarted, maxLives },
     actions: { toggleStats, toggleOtherPuzzles },
   } = use(GameContext);
   const queryClient = useQueryClient();
   const supabase = useSupabase();
   const { user } = useSupabaseAuth();
-  const { data: profile } = useProfileQuery();
-  const resetCurrentPuzzle = useResetCurrentPuzzle();
-  const { data: puzzles } = useGetPuzzles();
-  const dailyPuzzle = useMemo(() => puzzles?.[0] ?? null, [puzzles]);
+  const { data: activeSession } = useActiveSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  
   const menuContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const activeAttemptRaw = activeSession?.puzzle_attempts ?? null;
+  const activeAttempt = Array.isArray(activeAttemptRaw)
+    ? (activeAttemptRaw[0] ?? null)
+    : activeAttemptRaw;
+  const saveProgress = useSaveProgress();
+  const { data: puzzles } = useGetPuzzles();
+  const dailyPuzzle = useMemo(() => puzzles?.[0] ?? null, [puzzles]);
 
   useEffect(() => {
     if (!isMenuOpen) {
@@ -59,33 +65,31 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
   };
 
   const persistSessionToLocal = () => {
-    const puzzleId = profile?.current_puzzle_id ?? dailyPuzzle?.id ?? null;
+    const metadata = activeAttempt?.metadata ?? null;
+
+    const puzzleId =
+      activeSession?.active_puzzle_id ?? activeAttempt?.puzzle_id ?? dailyPuzzle?.id ?? null;
     if (!puzzleId) {
       return;
     }
 
-    const puzzleDate =
-      profile?.current_puzzle_date ?? new Date().toISOString().split('T')[0];
+    const puzzleDate = new Date().toISOString().split('T')[0];
 
     const progress =
-      profile?.current_puzzle_progress ??
+      metadata?.progress ??
       (Array.isArray(prevGameArray) && prevGameArray.length > 0 ? prevGameArray : null);
 
     const livesSnapshot =
-      typeof profile?.current_puzzle_lives === 'number'
-        ? profile.current_puzzle_lives
-        : isGameStarted
-        ? lives
-        : null;
+      typeof metadata?.lives === 'number' ? metadata.lives : isGameStarted ? lives : null;
 
     const elapsedSnapshot =
-      typeof profile?.current_puzzle_elapsed_seconds === 'number'
-        ? profile.current_puzzle_elapsed_seconds
+      typeof metadata?.elapsedSeconds === 'number'
+        ? metadata.elapsedSeconds
         : isGameStarted
-        ? elapsedSeconds
-        : null;
+          ? elapsedSeconds
+          : null;
 
-    const completed = profile?.current_puzzle_status === 'completed';
+    const completed = activeAttempt?.status === 'completed' || Boolean(metadata?.completed);
 
     writeAnonProgressSnapshot({
       puzzleId,
@@ -110,6 +114,8 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
     } finally {
       if (didSignOut) {
         queryClient.removeQueries({ queryKey: ['profile'] });
+        queryClient.removeQueries({ queryKey: ['profile-stats'] });
+        queryClient.removeQueries({ queryKey: ['active-session'] });
       }
       setSigningOut(false);
       onOpenLogin();
@@ -118,12 +124,27 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
   };
 
   const handleResetPuzzle = async () => {
-    if (resetCurrentPuzzle.isPending) {
+    const attemptId = activeSession?.current_attempt_id ?? null;
+    if (!attemptId) {
       return;
     }
 
     try {
-      await resetCurrentPuzzle.mutateAsync();
+      const defaultMetadata: AttemptMetadata = {
+        puzzleId:
+          activeSession?.active_puzzle_id ?? activeAttempt?.puzzle_id ?? dailyPuzzle?.id ?? null,
+        progress: null,
+        lives: maxLives,
+        elapsedSeconds: 0,
+        completed: false,
+        updatedAt: new Date().toISOString(),
+      };
+
+      await saveProgress.mutateAsync({
+        attemptId,
+        progress: defaultMetadata,
+      });
+      await queryClient.invalidateQueries({ queryKey: ['active-session'] });
       closeMenu();
       window.location.reload();
     } catch (error) {
@@ -138,11 +159,7 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
         onClick={() => onShowHowTo?.()}
         aria-label="How to play"
         className={cn(
-          'flex h-10 w-10 items-center justify-center rounded-full border text-2xl font-semibold transition',
-          pingHowTo && 'wobble-ver-right',
-          darkMode
-            ? 'border-gray-600 bg-gray-800 text-gray-100 hover:border-gray-500'
-            : 'border-gray-300 bg-white text-gray-800 hover:border-gray-400'
+          'flex h-10 w-10 items-center justify-center rounded-full border text-2xl font-semibold transition border-gray-300 bg-white text-gray-800 hover:border-gray-400'
         )}
       >
         ?
@@ -155,10 +172,7 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
           aria-haspopup="menu"
           aria-expanded={isMenuOpen}
           className={cn(
-            'relative flex h-10 w-10 items-center justify-center rounded-full border transition',
-            darkMode
-              ? 'border-gray-600 bg-gray-800 text-gray-100 hover:border-gray-500'
-              : 'border-gray-300 bg-white text-gray-800 hover:border-gray-400'
+            'relative flex h-10 w-10 items-center justify-center rounded-full border transitionborder-gray-300 bg-white text-gray-800 hover:border-gray-400'
           )}
         >
           <span className="flex flex-col items-center justify-center gap-1">
@@ -176,8 +190,7 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
         {isMenuOpen && (
           <div
             className={cn(
-              'absolute right-0 top-12 z-50 w-56 rounded-lg border p-4 shadow-lg transition',
-              darkMode ? 'border-gray-700 bg-gray-900 text-gray-200' : 'border-gray-200 bg-white text-gray-800'
+              'absolute right-0 top-12 z-50 w-56 rounded-lg border p-4 shadow-lg transition border-gray-200 bg-white text-gray-800'
             )}
           >
             {user ? (
@@ -187,10 +200,7 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
                   onClick={handleSignOut}
                   disabled={signingOut}
                   className={cn(
-                    'w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition',
-                    darkMode
-                      ? 'bg-gray-800 text-gray-100 hover:bg-gray-700 disabled:opacity-60'
-                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-60'
+                    'w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-60'
                   )}
                 >
                   {signingOut ? 'Logging out…' : 'Log Out'}
@@ -203,10 +213,7 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
                       closeMenu();
                     }}
                     className={cn(
-                      'w-full rounded-md px-3 py-2 text-left text-sm font-medium transition',
-                      darkMode
-                        ? 'bg-gray-800 text-gray-100 hover:bg-gray-700'
-                        : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                      'w-full rounded-md px-3 py-2 text-left text-sm font-medium transition bg-gray-100 text-gray-800 hover:bg-gray-200'
                     )}
                   >
                     Stats
@@ -218,10 +225,7 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
                       closeMenu();
                     }}
                     className={cn(
-                      'w-full rounded-md px-3 py-2 text-left text-sm font-medium transition',
-                      darkMode
-                        ? 'bg-gray-800 text-gray-100 hover:bg-gray-700'
-                        : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                      'w-full rounded-md px-3 py-2 text-left text-sm font-medium transition bg-gray-100 text-gray-800 hover:bg-gray-200'
                     )}
                   >
                     Other Puzzles
@@ -229,27 +233,26 @@ const Navbar = ({ onShowHowTo, onOpenLogin }: NavbarProps) => {
                   <button
                     type="button"
                     onClick={handleResetPuzzle}
-                    disabled={resetCurrentPuzzle.isPending}
+                    disabled={saveProgress.isPending}
                     className={cn(
                       'w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition',
                       'bg-red-500 text-white hover:bg-red-600 disabled:opacity-60'
                     )}
                   >
-                    {resetCurrentPuzzle.isPending ? 'Resetting…' : 'Reset Puzzle'}
+                    {saveProgress.isPending ? 'Resetting…' : 'Reset Puzzle'}
                   </button>
                 </div>
               </div>
             ) : (
               <div className="flex flex-col gap-3">
-                <p className={cn('text-sm', darkMode ? 'text-gray-300' : 'text-gray-600')}>
+                <p className={cn('text-sm text-gray-600')}>
                   Log in to save and share your results!
                 </p>
                 <button
                   type="button"
                   onClick={handleOpenLogin}
                   className={cn(
-                    'relative w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition',
-                    darkMode ? 'bg-gray-800 text-gray-100 hover:bg-gray-700' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                    'relative w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition bg-gray-100 text-gray-800 hover:bg-gray-200'
                   )}
                 >
                   Log In / Register
