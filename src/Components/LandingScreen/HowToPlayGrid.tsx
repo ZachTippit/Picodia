@@ -1,4 +1,4 @@
-import { cn } from '../../lib/cn';
+import { cn } from '@utils/cn';
 
 interface HowToPlayGridProps {
   activeRule: number;
@@ -23,8 +23,8 @@ const ruleTwoBoard = [
   [0, 0, 0, 0, 0],
 ];
 
-const ruleTwoRowClues = ['', '', '3', '', ''];
-const ruleTwoColClues = ['', '', '3', '', ''];
+const tutorialTwoRowRules = ['', '', '3', '', ''];
+const tutorialTwoColRules = ['', '', '3', '', ''];
 
 const previewAnswer = [
   [1, 1, 1, 1, 1],
@@ -34,8 +34,8 @@ const previewAnswer = [
   [1, 0, 0, 0, 0],
 ];
 
-const previewRowClues = [[5], [1, 1], [5], [1], [1]];
-const previewColClues = [[5], [1, 1], [1, 1], [1, 1], [3]];
+const previewRowRules = [[5], [1, 1], [5], [1], [1]];
+const previewColRules = [[5], [1, 1], [1, 1], [1, 1], [3]];
 
 const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
   if (activeRule === 0) {
@@ -85,14 +85,14 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
         <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] gap-0.5">
           <div />
           <div className="grid grid-cols-5 gap-x-0.5">
-            {ruleTwoColClues.map((clue, idx) => (
+            {tutorialTwoColRules.map((clue, idx) => (
               <div key={idx} className="flex h-5 flex-col items-center justify-end gap-y-2">
                 {clue && <span className="text-xs leading-none">{clue}</span>}
               </div>
             ))}
           </div>
           <div className="grid grid-rows-5 gap-y-0.5">
-            {ruleTwoRowClues.map((clue, idx) => (
+            {tutorialTwoRowRules.map((clue, idx) => (
               <div key={idx} className="flex h-5 w-8 items-center justify-end gap-x-2">
                 {clue && <span className="text-xs leading-none">{clue}</span>}
               </div>
@@ -121,7 +121,7 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
         <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] gap-0.5">
           <div />
           <div className="grid grid-cols-5 gap-x-0.5 mb-1">
-            {previewColClues.map((clue, idx) => (
+            {previewColRules.map((clue, idx) => (
               <div key={idx} className="flex h-5 flex-col items-center justify-end gap-y-2">
                 {clue
                   .slice()
@@ -135,7 +135,7 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
             ))}
           </div>
           <div className="grid grid-rows-5 gap-y-0.5 mr-1">
-            {previewRowClues.map((clue, idx) => (
+            {previewRowRules.map((clue, idx) => (
               <div key={idx} className="flex h-5 items-center justify-end gap-x-2">
                 {clue.map((num, clueIdx) => (
                   <span key={clueIdx} className="mr-1 text-xs leading-none">

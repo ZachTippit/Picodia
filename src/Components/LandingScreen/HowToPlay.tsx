@@ -1,18 +1,18 @@
-import { cn } from '../../lib/cn';
+import { cn } from '@utils/cn';
 
 const howToPlayRules = [
   'Look at each row clue to see how many consecutive squares belong in that row.',
-  'Line up matching row and column clues to lock in the cells where they overlap.',
+  'Line up matching row and column rules to lock in the cells where they overlap.',
   'Use temporary marks for blanks so you can track which cells must stay empty.',
 ];
 
 interface HowToPlayProps {
-  showClues: boolean;
+  showRules: boolean;
   activeRule: number;
   onRuleChange: (next: number) => void;
 }
 
-const HowToPlay = ({ showClues, activeRule, onRuleChange }: HowToPlayProps) => {
+const HowToPlay = ({ showRules, activeRule, onRuleChange }: HowToPlayProps) => {
   const handlePrevRule = () => {
     onRuleChange(Math.max(0, activeRule - 1));
   };
@@ -24,7 +24,7 @@ const HowToPlay = ({ showClues, activeRule, onRuleChange }: HowToPlayProps) => {
     <div
       className={cn(
         'mt-5 flex w-full flex-col items-center gap-3 text-center transition-all duration-500 ease-out',
-        showClues ? 'translate-y-0 opacity-100' : '-translate-y-3 pointer-events-none opacity-0'
+        showRules ? 'translate-y-0 opacity-100' : '-translate-y-3 pointer-events-none opacity-0'
       )}
     >
       <p className="min-h-14 text-sm leading-snug text-gray-700">{howToPlayRules[activeRule]}</p>

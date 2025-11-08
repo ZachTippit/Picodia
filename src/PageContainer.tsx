@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Footer, Game, Navbar, OtherPuzzles, Stats } from './Components';
-import { cn } from './lib/cn';
 import LandingScreen from './Components/LandingScreen/LandingScreen';
 import HowToPlayView from './Components/LandingScreen/HowToPlayView';
 import LoginOverlay from './Components/LandingScreen/LoginOverlay';
+import { cn } from '@utils/cn';
 
 const PageContainer = () => {
 

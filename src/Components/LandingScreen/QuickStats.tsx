@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { useProfileStats } from '../../hooks/useProfile';
 import { useSupabaseAuth } from '../../SupabaseProvider';
-import { cn } from '../../lib/cn';
+import { useProfileStats } from '@hooks/useProfileStats';
+import { cn } from '@utils/cn';
 
 const QuickStats = () => {
   const { user } = useSupabaseAuth();

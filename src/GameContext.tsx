@@ -6,13 +6,8 @@ interface GameContextProps {
     isOpen: boolean;
     isGameStarted: boolean;
     isCountdownActive: boolean;
-    prevGameArray: any[];
-    showAbout: boolean;
     showStats: boolean;
-    showSettings: boolean;
     showOtherPuzzles: boolean;
-    pingHowTo: boolean;
-    startPing: boolean;
     maxLives: number;
     lives: number;
     hasPlayedToday: boolean;
@@ -23,13 +18,8 @@ interface GameContextProps {
     startGame: () => void;
     beginCountdown: () => void;
     endCountdown: () => void;
-    updatePrevGameArray: (array: any[]) => void;
-    toggleAbout: () => void;
     toggleStats: () => void;
-    toggleSettings: () => void;
     toggleOtherPuzzles: () => void;
-    setPingHowTo: (value: boolean) => void;
-    setStartPing: (value: boolean) => void;
     setMaxLives: (value: number) => void;
     setLives: (value: number) => void;
     loseLife: () => void;
@@ -49,45 +39,29 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
   const [isCountdownActive, setIsCountdownActive] = useState<boolean>(false);
-  const [pingHowTo, setPingHowTo] = useState<boolean>(false);
-  const [prevGameArray, setPrevGameArray] = useState<any[]>([]);
-  const [startPing, setStartPing] = useState<boolean>(false);
   const [maxLives, setMaxLives] = useState<number>(3);
   const [lives, setLives] = useState<number>(3);
-  const [showAbout, setShowAbout] = useState<boolean>(false);
   const [showStats, setShowStats] = useState<boolean>(false);
-  const [showSettings, setShowSettings] = useState<boolean>(false);
   const [showOtherPuzzles, setShowOtherPuzzles] = useState<boolean>(false);
   const [hasPlayedToday, setHasPlayedToday] = useState<boolean>(false);
   const [elapsedSeconds, setElapsedSecondsState] = useState<number>(0);
 
   const toggleHasPlayedToday = () => setHasPlayedToday(!hasPlayedToday);
 
-  const toggleAbout = () => {
-    setShowAbout(!showAbout);
-    setIsOpen(!isOpen);
-  }
   const toggleStats = () => {
     setShowStats(!showStats);
     setIsOpen(!isOpen);
   }
-  const toggleSettings = () => {
-    setShowSettings(!showSettings);
-    setIsOpen(!isOpen);
-  }
+
   const toggleOtherPuzzles = () => {
     setShowOtherPuzzles(!showOtherPuzzles);
     setIsOpen(!isOpen);
   }
   const toggleOpen = () => setIsOpen(!isOpen);
-  const updatePrevGameArray = useCallback((array: any[]) => {
-    setPrevGameArray(array);
-  }, [setPrevGameArray]);
 
   const beginCountdown = () => {
     setIsCountdownActive(true);
     setIsGameStarted(false);
-    setStartPing(false);
   };
 
   const endCountdown = () => setIsCountdownActive(false);
@@ -116,13 +90,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       isOpen,
       isGameStarted,
       isCountdownActive,
-      prevGameArray,
-      showAbout,
       showStats,
-      showSettings,
       showOtherPuzzles,
-      pingHowTo,
-      startPing,
       maxLives,
       lives,
       hasPlayedToday,
@@ -133,13 +102,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       startGame,
       beginCountdown,
       endCountdown,
-      updatePrevGameArray,
-      toggleAbout,
       toggleStats,
-      toggleSettings,
       toggleOtherPuzzles,
-      setPingHowTo,
-      setStartPing,
       setMaxLives,
       setLives,
       loseLife,

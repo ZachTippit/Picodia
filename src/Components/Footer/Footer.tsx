@@ -1,14 +1,13 @@
 import { use } from 'react';
-
+import { GameContext } from '../../GameContext';
+import GameClock from './GameClock';
+import { useSupabaseAuth } from '../../SupabaseProvider';
+import { useActiveSession } from '@hooks/useActiveSession';
 // @ts-ignore
 import { default as Heart } from '../../assets/heart.png';
 // @ts-ignore
 import { default as EmptyHeart } from '../../assets/empty-heart.png';
-import { GameContext } from '../../GameContext';
-import GameClock from './GameClock';
-import { cn } from '../../lib/cn';
-import { useSupabaseAuth } from '../../SupabaseProvider';
-import { useActiveSession } from '../../hooks/useProfile';
+import { cn } from '@utils/cn';
 
 interface FooterProps {
   onOpenLogin?: () => void;
@@ -24,7 +23,6 @@ const Footer = ({ onOpenLogin, onOpenLoginForResults }: FooterProps) => {
   const isLoggedIn = Boolean(user);
 
   const { data: activeSession } = useActiveSession();
-
   const isGameOver = activeSession?.puzzle_attempts?.status === "completed";
 
   const displayLives = () => {

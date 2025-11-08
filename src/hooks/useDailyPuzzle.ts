@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSupabase } from '../SupabaseProvider';
-import type { Puzzle } from './useGetPuzzle';
+import type { Puzzle } from './useGetPuzzles';
 
 /**
  * Fetches today's puzzle automatically based on the configured launch date

@@ -1,14 +1,7 @@
-import { cn } from '../../lib/cn';
-import { use, useEffect, useMemo, useRef, useState } from 'react';
+import { useState } from 'react';
 import PreviewGrid from './PreviewGrid';
-import { useSupabaseAuth } from '../../SupabaseProvider';
-import { GameContext } from '../../GameContext';
-import { useActiveSession, useProfile } from '../../hooks/useProfile';
-import { useGetPuzzles } from '../../hooks/useGetPuzzle';
-import QuickStats from './QuickStats';
-import Button from './Button';
-import Loading from './Loading';
 import LandingContent from './LandingContent';
+import { cn } from '@utils/cn';
 
 interface LandingScreenProps {
   onPlay: () => void;
@@ -18,11 +11,6 @@ interface LandingScreenProps {
 
 const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps) => {
   const [isClosing, setIsClosing] = useState(false);
-  const { user } = useSupabaseAuth();
-  const { isPending: profilePending } = useProfile();
-  const { isPending: puzzlesPending } = useGetPuzzles();
-  const profileLoading = Boolean(user) && profilePending;
-  const isContentLoading = puzzlesPending || profileLoading;
 
   return (
     <div
@@ -34,18 +22,12 @@ const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps)
       <div className="relative flex h-full w-full max-w-sm flex-col items-center px-4 py-6 gap-y-12">
         <h1 className="mb-4 text-2xl">PICODIA</h1>
         <PreviewGrid />
-
-        {isContentLoading ? (
-          <Loading />
-        ) : (
-          <LandingContent
-            onPlay={onPlay}
-            onShowHowTo={onShowHowTo}
-            onOpenLogin={onOpenLogin}
-            isClosing={isClosing}
-            setIsClosing={setIsClosing}
-          />
-        )}
+        <LandingContent
+          onPlay={onPlay}
+          onShowHowTo={onShowHowTo}
+          onOpenLogin={onOpenLogin}
+          setIsClosing={setIsClosing}
+        />
       </div>
     </div>
   );

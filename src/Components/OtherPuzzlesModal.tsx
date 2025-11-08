@@ -1,7 +1,7 @@
 import { use, useEffect, useMemo, useRef, useState } from 'react';
 import { GameContext } from '../GameContext';
-import { cn } from '../lib/cn';
-import { useGetPuzzles } from '../hooks/useGetPuzzle';
+import { useGetPuzzles } from '@hooks/useGetPuzzles';
+import { cn } from '@utils/cn';
 
 const TRANSITION_DURATION = 400;
 
@@ -14,7 +14,7 @@ const DEFAULT_BEST_DATE = 'Jan 3, 2024';
 
 const OtherPuzzlesModal = () => {
   const {
-    state: { showOtherPuzzles, darkMode },
+    state: { showOtherPuzzles },
     actions: { toggleOtherPuzzles },
   } = use(GameContext);
   const { data: puzzles, isPending } = useGetPuzzles();
@@ -108,7 +108,7 @@ const OtherPuzzlesModal = () => {
           phase === 'entering' && 'stats-panel-enter',
           phase === 'entered' && 'stats-panel-entered',
           phase === 'exiting' && 'stats-panel-exit',
-          darkMode ? 'border-gray-700 bg-gray-900 text-gray-100' : 'border-gray-300 bg-white text-gray-900'
+          'border-gray-300 bg-white text-gray-900'
         )}
         onClick={(event) => event.stopPropagation()}
       >
@@ -118,18 +118,18 @@ const OtherPuzzlesModal = () => {
         <h2
           className={cn(
             'text-lg font-semibold tracking-wide',
-            darkMode ? 'text-gray-200' : 'text-gray-700'
+            'text-gray-700'
           )}
         >
           Other Puzzles
         </h2>
         <div className="mt-6 flex-1 overflow-hidden">
           {isPending ? (
-            <div className={cn('text-sm', darkMode ? 'text-gray-400' : 'text-gray-500')}>
+            <div className={cn('text-smtext-gray-500')}>
               Loading puzzles…
             </div>
           ) : entries.length === 0 ? (
-            <div className={cn('text-sm', darkMode ? 'text-gray-400' : 'text-gray-500')}>
+            <div className={cn('text-sm text-gray-500')}>
               No puzzles available yet.
             </div>
           ) : (
@@ -138,10 +138,7 @@ const OtherPuzzlesModal = () => {
                 <div
                   key={puzzle.id}
                   className={cn(
-                    'flex items-center gap-4 rounded-xl border px-4 py-3 text-left text-sm transition-opacity duration-300',
-                    darkMode
-                      ? 'border-gray-800 bg-gray-800 text-gray-100'
-                      : 'border-gray-200 bg-gray-100 text-gray-800'
+                    'flex items-center gap-4 rounded-xl border px-4 py-3 text-left text-sm transition-opacity duration-300 border-gray-200 bg-gray-100 text-gray-800'
                   )}
                 >
                   <div className="flex-shrink-0">
@@ -155,16 +152,16 @@ const OtherPuzzlesModal = () => {
                       <span
                         className={cn(
                           'inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold uppercase tracking-wide',
-                          darkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-200 text-gray-600'
+                          'bg-gray-200 text-gray-600'
                         )}
                       >
                         {DEFAULT_COMPLETION_STATUS}
                       </span>
                     </div>
-                    <div className={cn('text-xs', darkMode ? 'text-gray-300' : 'text-gray-600')}>
+                    <div className="text-xs text-gray-600">
                       <span className="font-medium">Time to Complete:</span> {DEFAULT_COMPLETION_TIME}
                     </div>
-                    <div className={cn('text-xs', darkMode ? 'text-gray-400' : 'text-gray-500')}>
+                    <div className="text-xs text-gray-600">
                       <span className="font-medium">Best Time:</span>
                       {` ${DEFAULT_BEST_TIME} on ${DEFAULT_BEST_DATE}`}
                     </div>

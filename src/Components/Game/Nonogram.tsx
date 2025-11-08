@@ -1,11 +1,10 @@
-import { getColumnClues, getRowClues } from '../../lib/clueUtils';
-import RowClues from './RowClues';
-import ColClues from './ColClues';
+import { useState } from 'react';
 import PuzzleGrid, { PuzzleCellState } from './PuzzleGrid';
-import { Puzzle } from '../../hooks/useGetPuzzle';
+import {RulesRow, RulesCol } from './Rules';
 import GameSummary from './GameSummary';
 import Confetti from './Confetti';
-import { useState } from 'react';
+import { Puzzle } from '@hooks/useGetPuzzles';
+import { getColumnRules, getRowRules } from '@utils/ruleUtils';
 
 interface NonogramProps {
   puzzle: Puzzle;
@@ -14,8 +13,8 @@ interface NonogramProps {
 
 export const Nonogram = ({ puzzle, initialGrid = null }: NonogramProps) => {
   const solution = puzzle.puzzle_array;
-  const rowClues = getRowClues(solution);
-  const colClues = getColumnClues(solution);
+  const rowRules = getRowRules(solution);
+  const colRules = getColumnRules(solution);
 
   const [isAreaExpanded, setIsAreaExpanded] = useState(false);
   const [shouldShowSummary, setShouldShowSummary] = useState(false);
@@ -31,10 +30,10 @@ export const Nonogram = ({ puzzle, initialGrid = null }: NonogramProps) => {
       <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] gap-0.5 items-start justify-start">
         {/* Top-left corner */}
         <div />
-        {/* Column clues */}
-        <ColClues colClues={colClues} />
-        {/* Row clues */}
-        <RowClues rowClues={rowClues} />
+        {/* Column rules */}
+        <RulesCol rules={colRules} />
+        {/* Row rules */}
+        <RulesRow rules={rowRules} />
         {/* Puzzle grid */}
         <PuzzleGrid solution={solution} puzzleId={puzzle.id} initialGrid={initialGrid} />
       </div>

@@ -1,7 +1,5 @@
-import { useCallback } from 'react';
-import { useSupabaseAuth } from '../SupabaseProvider';
-import { useGetPuzzles } from './useGetPuzzle';
-import { AttemptMetadata, useActiveSession, useSaveProgress } from './useProfile';
+import { useMutation } from '@tanstack/react-query';
+import { useSupabase } from '../SupabaseProvider';
 
 export interface PuzzleProgressInput {
   progress: unknown;
@@ -10,26 +8,8 @@ export interface PuzzleProgressInput {
   elapsedSeconds?: number | null;
 }
 
-export interface StoredAnonProgress {
-  puzzleId: string;
-  puzzleDate: string;
-  progress: unknown;
-  lives: number | null;
-  elapsedSeconds: number | null;
-  shouldSync: boolean;
-  completed: boolean;
-  updatedAt: string;
-}
-
-const LOCAL_PROGRESS_STORAGE_KEY = 'anonProgress';
-
-const todayKey = () => new Date().toISOString().split('T')[0];
-
 const sanitizeProgress = (progress: unknown) => {
-  if (progress === null || progress === undefined) {
-    return null;
-  }
-
+  if (progress === null || progress === undefined) return null;
   try {
     return JSON.parse(JSON.stringify(progress));
   } catch (error) {
@@ -38,159 +18,31 @@ const sanitizeProgress = (progress: unknown) => {
   }
 };
 
-export interface AnonProgressSnapshotInput {
-  puzzleId: string;
-  puzzleDate?: string;
-  progress: unknown;
-  lives?: number | null;
-  elapsedSeconds?: number | null;
-  completed?: boolean;
-  shouldSync?: boolean;
-}
+export const useSavePuzzleProgress = () => {
+  const supabase = useSupabase();
 
-export const getStoredAnonProgress = (): StoredAnonProgress | null => {
-  if (typeof window === 'undefined') {
-    return null;
-  }
+  return useMutation({
+    mutationFn: async ({ attemptId, data }: { attemptId: string; data: PuzzleProgressInput }) => {
+      const sanitized = sanitizeProgress(data.progress);
 
-  const raw = window.localStorage.getItem(LOCAL_PROGRESS_STORAGE_KEY);
-  if (!raw) {
-    return null;
-  }
+      const update: Record<string, any> = {
+        progress: sanitized,
+        lives_remaining: data.lives ?? null,
+        elapsed_seconds: data.elapsedSeconds ?? null,
+        updated_at: new Date().toISOString().slice(0, 10),
+      };
 
-  try {
-    const parsed = JSON.parse(raw) as StoredAnonProgress;
-    if (!parsed?.puzzleId || !parsed?.puzzleDate) {
-      window.localStorage.removeItem(LOCAL_PROGRESS_STORAGE_KEY);
-      return null;
-    }
-    return parsed;
-  } catch (error) {
-    window.localStorage.removeItem(LOCAL_PROGRESS_STORAGE_KEY);
-    return null;
-  }
-};
-
-export const clearStoredAnonProgress = () => {
-  if (typeof window === 'undefined') {
-    return;
-  }
-  window.localStorage.removeItem(LOCAL_PROGRESS_STORAGE_KEY);
-};
-
-export const writeAnonProgressSnapshot = ({
-  puzzleId,
-  puzzleDate,
-  progress,
-  lives = null,
-  elapsedSeconds = null,
-  completed = false,
-  shouldSync = true,
-}: AnonProgressSnapshotInput) => {
-  if (typeof window === 'undefined' || !puzzleId) {
-    return;
-  }
-
-  if (completed) {
-    clearStoredAnonProgress();
-    return;
-  }
-
-  const entry: StoredAnonProgress = {
-    puzzleId,
-    puzzleDate: puzzleDate ?? todayKey(),
-    progress: sanitizeProgress(progress),
-    lives: typeof lives === 'number' ? lives : lives ?? null,
-    elapsedSeconds:
-      typeof elapsedSeconds === 'number' ? elapsedSeconds : elapsedSeconds ?? null,
-    shouldSync,
-    completed: Boolean(completed),
-    updatedAt: new Date().toISOString(),
-  };
-
-  window.localStorage.setItem(LOCAL_PROGRESS_STORAGE_KEY, JSON.stringify(entry));
-};
-
-export const useSavePuzzleProgress = (overridePuzzleId?: string | null) => {
-  const { user } = useSupabaseAuth();
-  const { data: puzzleData } = useGetPuzzles();
-  const puzzleId = overridePuzzleId ?? (puzzleData ? puzzleData[0]?.id ?? null : null);
-  const { data: activeSession } = useActiveSession();
-  const saveProgress = useSaveProgress();
-
-  type MutationOptions = Parameters<typeof saveProgress.mutate>[1];
-
-  const persistLocalProgress = useCallback(
-    (progressData: PuzzleProgressInput) => {
-      if (typeof window === 'undefined' || !puzzleId) {
-        return;
+      if (data.completed) {
+        update.status = 'completed';
+        update.completed_at = new Date().toISOString();
       }
 
-      writeAnonProgressSnapshot({
-        puzzleId,
-        progress: progressData.progress,
-        lives: progressData?.lives ?? null,
-        elapsedSeconds: progressData?.elapsedSeconds ?? null,
-        completed: progressData?.completed ?? false,
-        shouldSync: !user,
-      });
+      const { error } = await supabase.from('puzzle_attempts').update(update).eq('id', attemptId);
+
+      if (error) {
+        console.error('Failed to save puzzle progress:', error);
+        throw error;
+      }
     },
-    [puzzleId, user]
-  );
-
-  const mutate = (progressData: PuzzleProgressInput, options?: MutationOptions) => {
-    persistLocalProgress(progressData);
-
-    if (!user) {
-      return;
-    }
-
-    const attemptId = activeSession?.current_attempt_id ?? null;
-    if (!attemptId) {
-      return;
-    }
-
-    const metadata: AttemptMetadata = {
-      puzzleId: puzzleId ?? null,
-      progress: sanitizeProgress(progressData.progress),
-      lives: progressData?.lives ?? null,
-      elapsedSeconds: progressData?.elapsedSeconds ?? null,
-      completed: progressData?.completed ?? false,
-      updatedAt: new Date().toISOString(),
-    };
-
-    saveProgress.mutate({ attemptId, progress: metadata }, options);
-  };
-
-  const mutateAsync = (progressData: PuzzleProgressInput, options?: MutationOptions) => {
-    persistLocalProgress(progressData);
-
-    if (!user) {
-      return Promise.reject(
-        new Error('Unable to save progress without an authenticated user and puzzle.')
-      );
-    }
-
-    const attemptId = activeSession?.current_attempt_id ?? null;
-    if (!attemptId) {
-      return Promise.reject(new Error('Unable to locate an active puzzle attempt to update.'));
-    }
-
-    const metadata: AttemptMetadata = {
-      puzzleId: puzzleId ?? null,
-      progress: sanitizeProgress(progressData.progress),
-      lives: progressData?.lives ?? null,
-      elapsedSeconds: progressData?.elapsedSeconds ?? null,
-      completed: progressData?.completed ?? false,
-      updatedAt: new Date().toISOString(),
-    };
-
-    return saveProgress.mutateAsync({ attemptId, progress: metadata }, options);
-  };
-
-  return {
-    ...saveProgress,
-    mutate,
-    mutateAsync,
-  };
+  });
 };

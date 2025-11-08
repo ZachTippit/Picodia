@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { cn } from '../../lib/cn';
+import { cn } from '@utils/cn';
 
 const answer = [
   [1, 1, 1, 1, 1],

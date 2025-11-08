@@ -1,7 +1,7 @@
 import { use, useEffect, useMemo, useRef, useState } from 'react';
 import { GameContext } from '../GameContext';
-import { cn } from '../lib/cn';
-import { useProfileStats } from '../hooks/useProfile';
+import { useProfileStats } from '@hooks/useProfileStats';
+import { cn } from '@utils/cn';
 
 const TRANSITION_DURATION = 400;
 

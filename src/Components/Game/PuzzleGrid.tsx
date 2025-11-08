@@ -1,12 +1,14 @@
 import React, { use, useEffect, useMemo, useRef, useState } from "react";
-import { cn } from "../../lib/cn";
 import { GameContext } from "../../GameContext";
-import { useSavePuzzleProgress } from "../../hooks/useSavePuzzleProgress";
-import { useActiveSession, useFinishPuzzle } from "../../hooks/useProfile";
+import { useSavePuzzleProgress } from "@hooks/useSavePuzzleProgress";
+import { useActiveSession } from "@hooks/useActiveSession";
+import { useFinishPuzzle } from "@hooks/useFinishPuzzle";
+import { createEmptyGrid, normalizeSavedGrid } from "@utils/gridHelpers";
+import { cn } from "@utils/cn";
 
 interface PuzzleGridProps {
   solution: number[][];
-  puzzleId: string;
+  puzzleId: number;
   initialGrid?: PuzzleCellState[][] | null;
 }
 
@@ -19,108 +21,43 @@ export interface PuzzleCellState {
   id: string;
 }
 
-const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid = null }) => {
-  const { mutate: saveProgress } = useSavePuzzleProgress(puzzleId);
-  const { data: activeSession } = useActiveSession();
-  const finishPuzzle = useFinishPuzzle();
+const PuzzleGrid = ({ solution, initialGrid = null }: PuzzleGridProps) => {
   const {
     state: { lives, elapsedSeconds },
-    actions: { loseLife, updatePrevGameArray },
+    actions: { loseLife },
   } = use(GameContext);
+  const { mutate: saveProgress } = useSavePuzzleProgress();
+  const { data: activeSession } = useActiveSession();
+  const finishPuzzle = useFinishPuzzle();
+
   const totalCorrect = solution.flat().filter((v) => v === 1).length;
-
-  const createEmptyGrid = () =>
-    solution.map((row, r) =>
-      row.map((value, c) => ({
-        correct: value === 1,
-        filled: false,
-        incorrect: false,
-        id: `${r}-${c}`,
-      }))
-    );
-
-  const normalizeSavedGrid = (
-    saved: PuzzleCellState[][] | string | null
-  ): PuzzleCellState[][] | null => {
-    if (!saved) {
-      return null;
-    }
-
-    let parsed: PuzzleCellState[][];
-
-    if (typeof saved === 'string') {
-      try {
-        parsed = JSON.parse(saved) as PuzzleCellState[][];
-      } catch (error) {
-        console.error('Unable to parse saved puzzle grid.', error);
-        return null;
-      }
-    } else {
-      parsed = saved;
-    }
-
-    if (!Array.isArray(parsed) || parsed.length !== solution.length) {
-      return null;
-    }
-
-    const normalized: PuzzleCellState[][] = [];
-
-    for (let r = 0; r < solution.length; r += 1) {
-      const row = parsed[r];
-      if (!Array.isArray(row) || row.length !== solution[r].length) {
-        return null;
-      }
-
-      const normalizedRow: PuzzleCellState[] = row.map((cell, c) => {
-        const fallbackId = `${r}-${c}`;
-        return {
-          correct: solution[r][c] === 1,
-          filled: Boolean((cell as PuzzleCellState)?.filled),
-          incorrect: Boolean((cell as PuzzleCellState)?.incorrect),
-          id: (cell as PuzzleCellState)?.id ?? fallbackId,
-        };
-      });
-
-      normalized.push(normalizedRow);
-    }
-
-    return normalized;
-  };
 
   const deriveInitialGrid = useMemo(() => {
     const source = (initialGrid as PuzzleCellState[][] | string | null) ?? null;
-    const normalized = normalizeSavedGrid(source);
-    return normalized ?? createEmptyGrid();
+    const normalized = normalizeSavedGrid(source, solution);
+    return normalized ?? createEmptyGrid(solution);
   }, [initialGrid, solution]);
 
   const countFilledCorrect = (gridState: PuzzleCellState[][]) =>
     gridState.reduce(
-      (count, row) =>
-        count +
-        row.filter((cell) => cell.correct && cell.filled).length,
+      (count, row) => count + row.filter((cell) => cell.correct && cell.filled).length,
       0
     );
 
   const [grid, setGrid] = useState<PuzzleCellState[][]>(deriveInitialGrid);
 
-  const [correctCount, setCorrectCount] = useState<number>(() =>
-    countFilledCorrect(deriveInitialGrid)
-  );
   const hasCompletedRef = useRef(false);
   const activePointerIdRef = useRef<number | string | null>(null);
   const isDraggingRef = useRef(false);
   const draggedCellsRef = useRef<Set<string>>(new Set());
   const supportsPointerEvents = typeof window !== "undefined" && "PointerEvent" in window;
 
-  const isInteractionLocked = () =>
-    hasCompletedRef.current || lives <= 0;
+  const isInteractionLocked = () => hasCompletedRef.current || lives <= 0;
 
   useEffect(() => {
     setGrid(deriveInitialGrid);
-    setCorrectCount(countFilledCorrect(deriveInitialGrid));
-    updatePrevGameArray(deriveInitialGrid);
     hasCompletedRef.current = false;
-  }, [deriveInitialGrid, updatePrevGameArray]);
+  }, [deriveInitialGrid]);
 
   const handleCellSelection = (r: number, c: number): CellSelectionResult => {
     if (isInteractionLocked()) {
@@ -149,7 +86,6 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
       if (cell.correct) {
         cell.filled = true;
         const filledCount = countFilledCorrect(next);
-        setCorrectCount(filledCount);
         completed = filledCount === totalCorrect;
         result = "correct";
       } else {
@@ -167,8 +103,6 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
         wasCorrect: cell.correct,
       };
 
-      updatePrevGameArray(next);
-
       return next;
     });
 
@@ -183,21 +117,24 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     }
 
     saveProgress({
-      progress: nextGrid,
-      lives: nextLives,
-      elapsedSeconds,
-      completed,
+      attemptId: activeSession?.current_attempt_id ?? null,
+      data: {
+        progress: nextGrid,
+        lives: nextLives,
+        elapsedSeconds,
+        completed,
+      },
     });
 
     if (completed && !hasCompletedRef.current) {
       hasCompletedRef.current = true;
-      const outcome = wasCorrect ? 'win' : 'loss';
+      const outcome = wasCorrect ? "win" : "loss";
 
       const attemptId = activeSession?.current_attempt_id ?? null;
       if (attemptId) {
         finishPuzzle.mutate({
           attemptId,
-          wasSuccessful: outcome === 'win',
+          wasSuccessful: outcome === "win",
           livesRemaining: nextLives,
         });
       }
@@ -226,9 +163,7 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
       return null;
     }
 
-    const cellButton = (element as HTMLElement).closest<HTMLButtonElement>(
-      "[data-row]"
-    );
+    const cellButton = (element as HTMLElement).closest<HTMLButtonElement>("[data-row]");
 
     if (!cellButton) {
       return null;
@@ -259,11 +194,7 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     return getCellFromElement(element);
   };
 
-  const processDragOverCell = (
-    r: number,
-    c: number,
-    pointerId?: number | string | null
-  ) => {
+  const processDragOverCell = (r: number, c: number, pointerId?: number | string | null) => {
     if (isInteractionLocked()) {
       resetDragState();
       return;
@@ -271,9 +202,7 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
 
     if (
       !isDraggingRef.current ||
-      (pointerId !== undefined &&
-        pointerId !== null &&
-        activePointerIdRef.current !== pointerId)
+      (pointerId !== undefined && pointerId !== null && activePointerIdRef.current !== pointerId)
     ) {
       return;
     }
@@ -351,9 +280,7 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     }
   };
 
-  const handlePointerLeaveGrid = (
-    event: React.PointerEvent<HTMLDivElement>
-  ) => {
+  const handlePointerLeaveGrid = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!isDraggingRef.current) {
       return;
     }
@@ -372,10 +299,7 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
       return;
     }
 
-    if (
-      !isDraggingRef.current ||
-      activePointerIdRef.current !== event.pointerId
-    ) {
+    if (!isDraggingRef.current || activePointerIdRef.current !== event.pointerId) {
       return;
     }
 
@@ -392,11 +316,7 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
     processDragOverCell(cell.r, cell.c, event.pointerId);
   };
 
-  const handleTouchStart = (
-    event: React.TouchEvent<HTMLButtonElement>,
-    r: number,
-    c: number
-  ) => {
+  const handleTouchStart = (event: React.TouchEvent<HTMLButtonElement>, r: number, c: number) => {
     if (supportsPointerEvents) {
       return;
     }
@@ -520,8 +440,8 @@ const PuzzleGrid: React.FC<PuzzleGridProps> = ({ solution, puzzleId, initialGrid
                 cell.filled
                   ? "bg-gray-800"
                   : cell.incorrect
-                  ? "bg-red-200"
-                  : "bg-white hover:bg-gray-200"
+                    ? "bg-red-200"
+                    : "bg-white hover:bg-gray-200"
               )}
             />
           ))}

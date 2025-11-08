@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { cn } from '../../lib/cn';
 import HowToPlayGrid from './HowToPlayGrid';
 import { useSupabaseAuth } from '../../SupabaseProvider';
+import { cn } from '@utils/cn';
 
 interface HowToPlayRule {
   id: string;
@@ -27,7 +27,7 @@ const baseRules: HowToPlayRule[] = [
   },
   {
     id: 'rule-2',
-    text: 'Line up matching row and column clues to lock in the cells where they overlap.',
+    text: 'Line up matching row and column rules to lock in the cells where they overlap.',
     showGrid: true,
   },
   {

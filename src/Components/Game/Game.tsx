@@ -1,44 +1,30 @@
-import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 import { GameContext } from '../../GameContext';
-import { useGetPuzzles } from '../../hooks/useGetPuzzle';
 import { Nonogram } from './Nonogram';
-import { cn } from '../../lib/cn';
-import { AttemptMetadata, useActiveSession } from '../../hooks/useProfile';;
-import { getStoredAnonProgress } from '../../hooks/useSavePuzzleProgress';
 import type { PuzzleCellState } from './PuzzleGrid';
 import PreGameCountdown from './PreGameCountdown';
-import { useDailyPuzzle } from '../../hooks/useDailyPuzzle';
+import { useDailyPuzzle } from '@hooks/useDailyPuzzle';
+import { useCurrentPuzzleAttempt } from '@hooks/useCurrentPuzzleAttempt';
+import { useActiveSession } from '@hooks/useActiveSession';
+import { AttemptMetadata } from '@hooks/useProfile';
+import { cn } from '@utils/cn';
 
 const Game = () => {
   const {
-    state: { isGameStarted, maxLives },
+    state: { isGameStarted },
     actions: {
       setLives,
-      resetElapsedSeconds,
       setElapsedSeconds,
     },
   } = use(GameContext);
+  const { data: activeAttemptData } = useCurrentPuzzleAttempt();
+  
   const { data: activeSession } = useActiveSession();
-
   const { data: dailyPuzzle } = useDailyPuzzle();
-  console.log("daily puzzle in Game component:", dailyPuzzle);
+  
+  const activeAttempt = activeAttemptData;
 
-  const getTodayKey = useCallback(() => new Date().toISOString().split('T')[0], []);
-
-  const activeAttemptRaw = activeSession?.puzzle_attempts ?? null;
-  const activeAttempt = Array.isArray(activeAttemptRaw)
-    ? activeAttemptRaw[0] ?? null
-    : activeAttemptRaw;
-  const todayKey = getTodayKey();
-  const isAttemptForToday =
-    Boolean(dailyPuzzle) &&
-    (
-      (activeAttempt?.puzzle_id === dailyPuzzle?.id && activeAttempt?.attempt_date === todayKey) ||
-      activeSession?.active_puzzle_id === dailyPuzzle?.id
-    );
-  const attemptStatus = isAttemptForToday
-    ? activeAttempt?.status ?? (activeSession?.current_attempt_id ? 'in_progress' : null)
-    : null;
+  const isAttemptForToday = activeAttempt?.puzzle_id === dailyPuzzle?.id;
   const attemptMetadata = useMemo<AttemptMetadata | null>(() => {
     if (!activeAttempt?.metadata || typeof activeAttempt.metadata !== 'object') {
       return null;
@@ -46,26 +32,7 @@ const Game = () => {
     return activeAttempt.metadata;
   }, [activeAttempt?.metadata]);
 
-  const anonProgress = useMemo(() => {
-    if (!dailyPuzzle) {
-      return null;
-    }
-
-    const stored = getStoredAnonProgress();
-    if (!stored) {
-      return null;
-    }
-
-    const today = getTodayKey();
-    if (stored.puzzleId !== dailyPuzzle.id || stored.puzzleDate !== today) {
-      return null;
-    }
-
-    return stored;
-  }, [dailyPuzzle, getTodayKey]);
-
   const [puzzleVisible, setPuzzleVisible] = useState(false);
-  const hydrationKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (isGameStarted) {
@@ -79,88 +46,19 @@ const Game = () => {
   }, [isGameStarted]);
 
   useEffect(() => {
-    if (!dailyPuzzle) {
-      return;
+    if(activeAttemptData){
+      setLives(activeAttemptData.lives_remaining);
+      setElapsedSeconds(Math.max(0, activeAttemptData.metadata?.elapsedSeconds || 0));
     }
-
-    const hydrationTodayKey = getTodayKey();
-    const hasAnonProgress = Boolean(anonProgress);
-    const hydrationKey = `${dailyPuzzle.id}:${hydrationTodayKey}:${
-      isAttemptForToday ? `attempt-${attemptStatus ?? 'unknown'}` : hasAnonProgress ? 'anon' : 'default'
-    }:${attemptMetadata?.updatedAt ?? anonProgress?.updatedAt ?? 'na'}`;
-    // const shouldForceHydration = startMode === 'new' && !isGameStarted;
-    const shouldForceHydration = false;
-    if (!shouldForceHydration && hydrationKeyRef.current === hydrationKey) {
-      return;
-    }
-
-    if (isAttemptForToday && (attemptMetadata || attemptStatus)) {
-      const derivedLives =
-        typeof attemptMetadata?.lives === 'number'
-          ? attemptMetadata.lives
-          : activeAttempt?.lives_remaining ?? null;
-      if (typeof derivedLives === 'number') {
-        setLives(Math.max(0, Math.min(maxLives, derivedLives)));
-      } else {
-        setLives(maxLives);
-      }
-
-      const derivedElapsed =
-        typeof attemptMetadata?.elapsedSeconds === 'number'
-          ? attemptMetadata.elapsedSeconds
-          : null;
-      if (typeof derivedElapsed === 'number') {
-        setElapsedSeconds(Math.max(0, derivedElapsed));
-      } else {
-        setElapsedSeconds(0);
-      }
-
-      // updateGameOver(attemptStatus === 'completed' || Boolean(attemptMetadata?.completed));
-    } else if (hasAnonProgress) {
-      setLives(
-        typeof anonProgress?.lives === 'number'
-          ? Math.max(0, Math.min(maxLives, anonProgress.lives))
-          : maxLives
-      );
-      setElapsedSeconds(Math.max(0, anonProgress?.elapsedSeconds ?? 0));
-      // updateGameOver(Boolean(anonProgress?.completed));
-    } else {
-      setLives(maxLives);
-      resetElapsedSeconds();
-      // updateGameOver(false);
-    }
-
-    hydrationKeyRef.current = hydrationKey;
-  }, [
-    activeAttempt?.lives_remaining,
-    anonProgress,
-    attemptMetadata,
-    attemptStatus,
-    dailyPuzzle,
-    getTodayKey,
-    isAttemptForToday,
-    isGameStarted,
-    maxLives,
-    resetElapsedSeconds,
-    setElapsedSeconds,
-    setLives,
-  ]);
+  }, [activeAttemptData])
 
   const initialPuzzleGrid = useMemo<PuzzleCellState[][] | null>(() => {
-    if (!dailyPuzzle) {
-      return null;
-    }
-
     if (isAttemptForToday && attemptMetadata?.progress) {
       return attemptMetadata.progress as PuzzleCellState[][] | null;
     }
 
-    if (anonProgress?.progress) {
-      return (anonProgress.progress as PuzzleCellState[][] | null) ?? null;
-    }
-
     return null;
-  }, [activeSession?.active_puzzle_id, anonProgress, attemptMetadata, dailyPuzzle]);
+  }, [activeSession?.active_puzzle_id, attemptMetadata, dailyPuzzle]);
 
   const activePuzzle = dailyPuzzle;
 

@@ -1,0 +1,45 @@
+import { useQuery } from '@tanstack/react-query';
+import { useSupabase } from '../SupabaseProvider';
+import { useActiveSession } from './useActiveSession';
+
+interface UseStartPuzzleOptions {
+  enabled?: boolean;
+  attemptId?: string | null;
+}
+
+/**
+ * Marks the current or provided attempt as 'in_progress'.
+ * Use with `enabled: isGameStarted` to auto-run when gameplay begins.
+ */
+export const useStartPuzzle = ({ enabled = false, attemptId }: UseStartPuzzleOptions = {}) => {
+  const supabase = useSupabase();
+  const { data: activeSession } = useActiveSession();
+
+  return useQuery({
+    queryKey: ['startPuzzle', attemptId ?? activeSession?.current_attempt_id],
+    enabled, // <-- only runs when enabled = true
+    queryFn: async () => {
+      const targetId = attemptId ?? activeSession?.current_attempt_id;
+      if (!targetId) return null;
+
+      const { data, error } = await supabase
+        .from('puzzle_attempts')
+        .update({
+          status: 'in_progress',
+          started_at: new Date().toISOString(),
+        })
+        .eq('id', targetId)
+        .select('*')
+        .single();
+
+      if (error) {
+        console.error('Failed to mark attempt as in_progress:', error);
+        throw error;
+      }
+
+      return data;
+    },
+    staleTime: Infinity,
+    gcTime: 0,
+  });
+};

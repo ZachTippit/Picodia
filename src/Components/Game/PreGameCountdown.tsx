@@ -1,30 +1,32 @@
-import React, { use, useEffect, useRef, useState } from 'react';
-import { cn } from '../../lib/cn';
+import { use, useEffect, useRef, useState } from 'react';
 import { GameContext } from '../../GameContext';
+import { useStartPuzzle } from '@hooks/useStartPuzzle';
+import { cn } from '@utils/cn';
 
 interface PreGameCountdownProps {
   setPuzzleVisible: (visible: boolean) => void;
 }
 
 const PreGameCountdown = ({ setPuzzleVisible }: PreGameCountdownProps) => {
+  const COUNTDOWN_STEP_DURATION = 1000;
+  const GO_DISPLAY_DURATION = 1200;
+
   const {
     state: { isCountdownActive },
-    actions: { endCountdown, startGame, setStartPing },
+    actions: { endCountdown, startGame },
   } = use(GameContext);
 
-  const [countdownValue, setCountdownValue] = useState<number | null>(null);
+  
+  const [countdownValue, setCountdownValue] = useState<number>(3);
   const [go, setShowGo] = useState(false);
   const goTimeoutRef = useRef<number | null>(null);
-  const pingTimeoutRef = useRef<number | null>(null);
-
-
+  
+  const { data } = useStartPuzzle({ enabled: go});
+  
   useEffect(() => {
     return () => {
       if (goTimeoutRef.current) {
         clearTimeout(goTimeoutRef.current);
-      }
-      if (pingTimeoutRef.current) {
-        clearTimeout(pingTimeoutRef.current);
       }
     };
   }, []);
@@ -35,7 +37,6 @@ const PreGameCountdown = ({ setPuzzleVisible }: PreGameCountdownProps) => {
       setPuzzleVisible(false);
       setCountdownValue(3);
     } else {
-      setCountdownValue(null);
       setShowGo(false);
     }
   }, [isCountdownActive]);
@@ -55,15 +56,7 @@ const PreGameCountdown = ({ setPuzzleVisible }: PreGameCountdownProps) => {
         setCountdownValue(null);
         endCountdown();
         startGame();
-        setStartPing(true);
-        if (pingTimeoutRef.current) {
-          clearTimeout(pingTimeoutRef.current);
-        }
-        pingTimeoutRef.current = window.setTimeout(() => {
-          setStartPing(false);
-          pingTimeoutRef.current = null;
-        }, 5000);
-      }, 600);
+      }, GO_DISPLAY_DURATION);
 
       return () => {
         if (goTimeoutRef.current) {
@@ -75,9 +68,9 @@ const PreGameCountdown = ({ setPuzzleVisible }: PreGameCountdownProps) => {
 
     const timeout = window.setTimeout(() => {
       setCountdownValue((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
-    }, 1000);
+    }, COUNTDOWN_STEP_DURATION);
     return () => clearTimeout(timeout);
-  }, [countdownValue, endCountdown, setStartPing, startGame]);
+  }, [countdownValue, endCountdown, startGame]);
 
   const shouldShowCountdown = Boolean(isCountdownActive || countdownValue !== null || go);
 
@@ -92,10 +85,10 @@ const PreGameCountdown = ({ setPuzzleVisible }: PreGameCountdownProps) => {
       )}
     >
       <span
-        key={go ? 'go' : (countdownValue ?? 'blank')}
+        key={go ? 'go' : countdownValue}
         className="text-6xl font-bold tracking-widest countdown-number"
       >
-        {go ? 'GO!' : (countdownValue ?? 3)}
+        {go ? 'GO!' : countdownValue}
       </span>
     </div>
   );

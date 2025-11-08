@@ -1,11 +1,18 @@
-import React, { use, useRef } from 'react';
+import React, { use, useEffect, useRef } from 'react';
 import { GameContext } from '../../GameContext';
 import Button from './Button';
+import Loading from './Loading';
 import { useSupabaseAuth } from '../../SupabaseProvider';
-import { useActiveSession, useProfile } from '../../hooks/useProfile';
+import { useProfile } from '@hooks/useProfile';
+import { useCurrentPuzzleAttempt } from '@hooks/useCurrentPuzzleAttempt';
+
+  const primaryActionLabelOptions = {
+    pending: 'Play',
+    in_progress: 'Continue',
+    completed: 'See Results',
+  };
 
 interface LandingContentProps {
-  isClosing: boolean;
   setIsClosing: React.Dispatch<React.SetStateAction<boolean>>;
   onPlay: () => void;
   onShowHowTo: () => void;
@@ -13,7 +20,6 @@ interface LandingContentProps {
 }
 
 const LandingContent = ({
-  isClosing,
   setIsClosing,
   onPlay,
   onShowHowTo,
@@ -23,25 +29,28 @@ const LandingContent = ({
     actions: { beginCountdown, startGame },
   } = use(GameContext);
 
-  const { user } = useSupabaseAuth();
-  const { data: profile } = useProfile();
-  const { data: activeSession } = useActiveSession();
+  const { user, loading: userLoading } = useSupabaseAuth();
+
+  const { data: profile, isLoading: profileLoading } = useProfile();
+  const { data: activeAttempt, isLoading: activeAttemptLoading } = useCurrentPuzzleAttempt();
+
+  const [primaryActionLabel, setPrimaryActionLabel] = React.useState('Play');
 
   const playTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
 
   const displayName = profile?.display_name ?? user?.email;
   const hasName = Boolean(displayName);
 
-  const playMode = activeSession?.puzzle_attempts?.[0].status;
+  const puzzleStatus = activeAttempt?.status ?? null;
 
-  const primaryActionLabel =
-    {
-      in_progress: 'Continue',
-      completed: 'See Results',
-    }[playMode] ?? 'Play';
+  useEffect(() => {
+    setPrimaryActionLabel(
+      primaryActionLabelOptions[puzzleStatus as keyof typeof primaryActionLabelOptions] || 'Play'
+    );
+  }, [puzzleStatus]);
 
   const handlePlay = () => {
-    if (playMode === 'in_progress') {
+    if (puzzleStatus === 'in_progress') {
       startGame();
     } else {
       beginCountdown();
@@ -54,6 +63,11 @@ const LandingContent = ({
       playTimeoutRef.current = null;
     }, 500);
   };
+
+  const isContentLoading = userLoading || profileLoading || activeAttemptLoading;
+  if(isContentLoading){
+    return <Loading />
+  }
 
   return (
     <div className="flex w-full flex-col items-center gap-3 text-center">

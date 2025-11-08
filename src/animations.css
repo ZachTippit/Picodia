@@ -5,6 +5,56 @@
   animation: fade-in-fwd 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
+.countdown-number {
+  display: inline-block;
+  animation: countdown-fade 1s ease-in-out forwards;
+}
+
+@-webkit-keyframes countdown-fade {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.85);
+    transform: scale(0.85);
+  }
+  20% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  80% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+  }
+}
+@keyframes countdown-fade {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.85);
+    transform: scale(0.85);
+  }
+  20% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  80% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+  }
+}
+
 /**
     * ----------------------------------------
     * animation fade-in-fwd

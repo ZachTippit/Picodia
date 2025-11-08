@@ -1,8 +1,8 @@
 import { FormEvent, useState } from 'react';
-import { cn } from '../../lib/cn';
-import { useSupabase } from '../../SupabaseProvider';
 import LoginGoogle from './LoginGoogle';
 import LoginApple from './LoginApple';
+import { useSupabase } from '../../SupabaseProvider';
+import { cn } from '@utils/cn';
 
 interface LoginOverlayProps {
   isOpen: boolean;

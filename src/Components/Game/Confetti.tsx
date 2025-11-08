@@ -1,5 +1,5 @@
-import React, { CSSProperties, useEffect, useState } from 'react';
-import { useActiveSession } from '../../hooks/useProfile';
+import { CSSProperties, useEffect, useState } from 'react';
+import { useActiveSession } from '@hooks/useActiveSession';
 
 type MutableCSSProperties = CSSProperties & Record<string, string | number>;
 

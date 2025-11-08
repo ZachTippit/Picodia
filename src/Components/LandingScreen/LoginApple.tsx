@@ -1,5 +1,5 @@
-import { cn } from '../../lib/cn';
 import './login-buttons.css';
+import { cn } from '@utils/cn';
 
 interface LoginAppleProps {
   appleLoading?: boolean;
