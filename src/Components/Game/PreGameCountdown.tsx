@@ -1,5 +1,5 @@
 import { use, useEffect, useRef, useState } from 'react';
-import { GameContext } from '../../GameContext';
+import { GameContext } from '../../providers/GameContext';
 import { useStartPuzzle } from '@hooks/useStartPuzzle';
 import { cn } from '@utils/cn';
 
@@ -21,7 +21,7 @@ const PreGameCountdown = ({ setPuzzleVisible }: PreGameCountdownProps) => {
   const [go, setShowGo] = useState(false);
   const goTimeoutRef = useRef<number | null>(null);
   
-  const { data } = useStartPuzzle({ enabled: go});
+  useStartPuzzle({ enabled: go});
   
   useEffect(() => {
     return () => {

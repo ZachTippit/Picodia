@@ -1,8 +1,11 @@
-interface RulesProps {
-  rules: number[][];
-}
+import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
+import { getColumnRules, getRowRules } from "@/utils/ruleUtils";
 
-const RulesRow = ({ rules }: RulesProps) => {
+const RulesRow = () => {
+  const { data: dailyPuzzle } = useDailyPuzzle();
+  const solution = dailyPuzzle.puzzle_array;
+  const rules = getRowRules(solution);
+  
   return (
     <div className="grid grid-rows-7 gap-y-0.5 mr-2">
       {rules.map((rule, r) => (
@@ -18,7 +21,11 @@ const RulesRow = ({ rules }: RulesProps) => {
   );
 };
 
-const RulesCol = ({ rules }: RulesProps) => {
+const RulesCol = () => {
+  const { data: dailyPuzzle } = useDailyPuzzle();
+  const solution = dailyPuzzle.puzzle_array;
+  const rules = getColumnRules(solution);
+
   return (
     <div className="grid grid-cols-7 gap-x-0.5 mb-2">
       {rules.map((rule, c) => (

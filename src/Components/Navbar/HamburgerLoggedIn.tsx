@@ -1,6 +1,6 @@
 import { use, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { GameContext } from '../../GameContext';
+import { GameContext } from '../../providers/GameContext';
 import MenuButton from './MenuButton';
 import ResetPuzzleButton from './ResetPuzzleButton';
 import { useSupabase } from '../../SupabaseProvider';

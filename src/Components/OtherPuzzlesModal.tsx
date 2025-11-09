@@ -1,5 +1,5 @@
 import { use, useEffect, useMemo, useRef, useState } from 'react';
-import { GameContext } from '../GameContext';
+import { GameContext } from '../providers/GameContext';
 import { useGetPuzzles } from '@hooks/useGetPuzzles';
 import { cn } from '@utils/cn';
 

@@ -2,17 +2,13 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import HowToPlayGrid from './HowToPlayGrid';
 import { useSupabaseAuth } from '../../SupabaseProvider';
 import { cn } from '@utils/cn';
+import { useUI } from '@/providers/UIProvider';
 
 interface HowToPlayRule {
   id: string;
   text: string;
   showGrid?: boolean;
   showLoginButton?: boolean;
-}
-
-interface HowToPlayViewProps {
-  onClose: () => void;
-  onOpenLogin: () => void;
 }
 
 const TRANSITION_DURATION = 500;
@@ -37,8 +33,9 @@ const baseRules: HowToPlayRule[] = [
   },
 ];
 
-const HowToPlayView = ({ onClose, onOpenLogin }: HowToPlayViewProps) => {
+const HowToPlayView = () => {
   const { user } = useSupabaseAuth();
+  const { openLogin, closeHowTo } = useUI();
   const isLoggedIn = Boolean(user);
 
   const rules = useMemo<HowToPlayRule[]>(() => {
@@ -119,7 +116,7 @@ const HowToPlayView = ({ onClose, onOpenLogin }: HowToPlayViewProps) => {
     overlayTimeoutRef.current = window.setTimeout(() => {
       setActiveRule(0);
       setRenderedRule(0);
-      onClose();
+      closeHowTo();
     }, TRANSITION_DURATION);
   };
 
@@ -147,7 +144,7 @@ const HowToPlayView = ({ onClose, onOpenLogin }: HowToPlayViewProps) => {
           <button
             type="button"
             className="relative w-32 rounded-full bg-white px-4 py-2 text-gray-800 transition hover:bg-gray-300 border border-gray-800"
-            onClick={onOpenLogin}
+            onClick={openLogin}
           >
             Log In
             <span

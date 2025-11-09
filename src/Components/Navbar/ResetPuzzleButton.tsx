@@ -1,6 +1,6 @@
 import { use } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { GameContext } from '../../GameContext';
+import { GameContext } from '../../providers/GameContext';
 import MenuButton from './MenuButton';
 import { AttemptMetadata } from '@hooks/useProfile';
 import { useActiveSession } from '@hooks/useActiveSession';

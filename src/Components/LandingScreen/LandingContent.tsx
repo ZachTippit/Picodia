@@ -1,10 +1,11 @@
 import React, { use, useEffect, useRef } from 'react';
-import { GameContext } from '../../GameContext';
+import { GameContext } from '../../providers/GameContext';
 import Button from './Button';
 import Loading from './Loading';
 import { useSupabaseAuth } from '../../SupabaseProvider';
 import { useProfile } from '@hooks/useProfile';
 import { useCurrentPuzzleAttempt } from '@hooks/useCurrentPuzzleAttempt';
+import { useUI } from '@/providers/UIProvider';
 
   const primaryActionLabelOptions = {
     pending: 'Play',
@@ -14,20 +15,15 @@ import { useCurrentPuzzleAttempt } from '@hooks/useCurrentPuzzleAttempt';
 
 interface LandingContentProps {
   setIsClosing: React.Dispatch<React.SetStateAction<boolean>>;
-  onPlay: () => void;
-  onShowHowTo: () => void;
-  onOpenLogin: () => void;
 }
 
 const LandingContent = ({
   setIsClosing,
-  onPlay,
-  onShowHowTo,
-  onOpenLogin,
 }: LandingContentProps) => {
   const {
     actions: { beginCountdown, startGame },
   } = use(GameContext);
+  const { openLogin, openHowTo, closeLandingScreen } = useUI();
 
   const { user, loading: userLoading } = useSupabaseAuth();
 
@@ -59,7 +55,7 @@ const LandingContent = ({
     setIsClosing(true);
     // @ts-ignore
     playTimeoutRef.current = window.setTimeout(() => {
-      onPlay();
+      closeLandingScreen();
       playTimeoutRef.current = null;
     }, 500);
   };
@@ -80,11 +76,11 @@ const LandingContent = ({
         {primaryActionLabel}
       </Button>
       {!user && (
-        <Button onClick={onOpenLogin} className="bg-blue-600 hover:bg-blue-700">
+        <Button onClick={openLogin} className="bg-blue-600 hover:bg-blue-700">
           Log In
         </Button>
       )}
-      <Button onClick={onShowHowTo} className="bg-gray-600 hover:bg-gray-700">
+      <Button onClick={openHowTo} className="bg-gray-600 hover:bg-gray-700">
         How to Play
       </Button>
 

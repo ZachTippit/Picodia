@@ -3,13 +3,9 @@ import LoginGoogle from './LoginGoogle';
 import LoginApple from './LoginApple';
 import { useSupabase } from '../../SupabaseProvider';
 import { cn } from '@utils/cn';
+import { useUI } from '@/providers/UIProvider';
 
-interface LoginOverlayProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
+const LoginOverlay = () => {
   const supabase = useSupabase();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,6 +14,8 @@ const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
   const [appleLoading, setAppleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  const { showLogin, closeLogin } = useUI();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,7 +33,7 @@ const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
     } else {
       setSuccess('Signed in successfully.');
       setTimeout(() => {
-        onClose();
+        closeLogin();
         setSuccess(null);
       }, 600);
     }
@@ -101,13 +99,13 @@ const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
     <div
       className={cn(
         'fixed inset-0 z-40 transition-opacity duration-300',
-        isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        showLogin ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       )}
     >
       <div
         className={cn(
           'absolute inset-0 flex justify-center bg-gray-900/70 px-4 transition-transform duration-500 ease-out',
-          isOpen ? 'translate-y-0' : 'translate-y-full'
+          showLogin ? 'translate-y-0' : 'translate-y-full'
         )}
       >
         <div className="mt-16 flex w-full max-w-md flex-col bg-white text-gray-900 shadow-xl">
@@ -115,7 +113,7 @@ const LoginOverlay = ({ isOpen, onClose }: LoginOverlayProps) => {
             <h2 className="text-base font-semibold uppercase tracking-wide">Picodia</h2>
             <button
               type="button"
-              onClick={onClose}
+              onClick={closeLogin}
               className="text-sm font-medium text-gray-500 transition hover:text-gray-800"
             >
               Close

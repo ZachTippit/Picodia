@@ -3,13 +3,7 @@ import PreviewGrid from './PreviewGrid';
 import LandingContent from './LandingContent';
 import { cn } from '@utils/cn';
 
-interface LandingScreenProps {
-  onPlay: () => void;
-  onShowHowTo: () => void;
-  onOpenLogin: () => void;
-}
-
-const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps) => {
+const LandingScreen = () => {
   const [isClosing, setIsClosing] = useState(false);
 
   return (
@@ -23,9 +17,6 @@ const LandingScreen = ({ onPlay, onShowHowTo, onOpenLogin }: LandingScreenProps)
         <h1 className="mb-4 text-2xl">PICODIA</h1>
         <PreviewGrid />
         <LandingContent
-          onPlay={onPlay}
-          onShowHowTo={onShowHowTo}
-          onOpenLogin={onOpenLogin}
           setIsClosing={setIsClosing}
         />
       </div>

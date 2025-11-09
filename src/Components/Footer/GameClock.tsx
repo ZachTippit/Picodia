@@ -1,5 +1,5 @@
 import { use, useEffect } from 'react';
-import { GameContext } from '../../GameContext';
+import { GameContext } from '../../providers/GameContext';
 
 const pad = (val: number) => {
   const value = Math.max(0, val);

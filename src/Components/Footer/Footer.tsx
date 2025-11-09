@@ -1,5 +1,5 @@
 import { use } from 'react';
-import { GameContext } from '../../GameContext';
+import { GameContext } from '../../providers/GameContext';
 import GameClock from './GameClock';
 import { useSupabaseAuth } from '../../SupabaseProvider';
 import { useActiveSession } from '@hooks/useActiveSession';
@@ -8,19 +8,21 @@ import { default as Heart } from '../../assets/heart.png';
 // @ts-ignore
 import { default as EmptyHeart } from '../../assets/empty-heart.png';
 import { cn } from '@utils/cn';
+import { useUI } from '@/providers/UIProvider';
 
 interface FooterProps {
-  onOpenLogin?: () => void;
   onOpenLoginForResults?: () => void;
 }
 
-const Footer = ({ onOpenLogin, onOpenLoginForResults }: FooterProps) => {
+const Footer = ({ onOpenLoginForResults }: FooterProps) => {
   const {
     state: { isGameStarted, maxLives, lives },
     actions: { toggleStats },
   } = use(GameContext);
   const { user } = useSupabaseAuth();
   const isLoggedIn = Boolean(user);
+
+  const { openLogin } = useUI();
 
   const { data: activeSession } = useActiveSession();
   const isGameOver = activeSession?.puzzle_attempts?.status === "completed";
@@ -78,7 +80,7 @@ const Footer = ({ onOpenLogin, onOpenLoginForResults }: FooterProps) => {
             {!isLoggedIn && (
               <button
                 type="button"
-                onClick={() => onOpenLoginForResults?.() ?? onOpenLogin?.()}
+                onClick={openLogin}
                 className="rounded-full bg-gray-600 px-4 py-2 text-white transition-colors duration-300 hover:bg-gray-700"
               >
                 Log in to save results

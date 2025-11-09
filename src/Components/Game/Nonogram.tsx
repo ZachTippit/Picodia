@@ -1,23 +1,19 @@
 import { useState } from 'react';
-import PuzzleGrid, { PuzzleCellState } from './PuzzleGrid';
+import PuzzleGrid from './PuzzleGrid';
 import {RulesRow, RulesCol } from './Rules';
 import GameSummary from './GameSummary';
 import Confetti from './Confetti';
-import { Puzzle } from '@hooks/useGetPuzzles';
-import { getColumnRules, getRowRules } from '@utils/ruleUtils';
+import { useDailyPuzzle } from '@/hooks/useDailyPuzzle';
 
-interface NonogramProps {
-  puzzle: Puzzle;
-  initialGrid?: PuzzleCellState[][] | null;
-}
-
-export const Nonogram = ({ puzzle, initialGrid = null }: NonogramProps) => {
-  const solution = puzzle.puzzle_array;
-  const rowRules = getRowRules(solution);
-  const colRules = getColumnRules(solution);
-
+export const Nonogram = () => {
+  const { data: dailyPuzzle } = useDailyPuzzle();
+  
   const [isAreaExpanded, setIsAreaExpanded] = useState(false);
   const [shouldShowSummary, setShouldShowSummary] = useState(false);
+  
+  if (!dailyPuzzle) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-col items-center gap-4 my-6">
@@ -31,11 +27,11 @@ export const Nonogram = ({ puzzle, initialGrid = null }: NonogramProps) => {
         {/* Top-left corner */}
         <div />
         {/* Column rules */}
-        <RulesCol rules={colRules} />
+        <RulesCol />
         {/* Row rules */}
-        <RulesRow rules={rowRules} />
+        <RulesRow />
         {/* Puzzle grid */}
-        <PuzzleGrid solution={solution} puzzleId={puzzle.id} initialGrid={initialGrid} />
+        <PuzzleGrid />
       </div>
     </div>
   );

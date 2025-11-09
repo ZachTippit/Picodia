@@ -1,16 +1,14 @@
-import React, { use, useEffect, useMemo, useRef, useState } from "react";
-import { GameContext } from "../../GameContext";
+import React, { use, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { GameContext } from "../../providers/GameContext";
 import { useSavePuzzleProgress } from "@hooks/useSavePuzzleProgress";
 import { useActiveSession } from "@hooks/useActiveSession";
-import { useFinishPuzzle } from "@hooks/useFinishPuzzle";
 import { createEmptyGrid, normalizeSavedGrid } from "@utils/gridHelpers";
 import { cn } from "@utils/cn";
+import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
+import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
+import { useFinishPuzzle } from "@/hooks/useFinishPuzzle";
 
-interface PuzzleGridProps {
-  solution: number[][];
-  puzzleId: number;
-  initialGrid?: PuzzleCellState[][] | null;
-}
+//initialGrid?: PuzzleCellState[][] | null;
 
 type CellSelectionResult = "ignored" | "correct" | "incorrect";
 
@@ -21,16 +19,25 @@ export interface PuzzleCellState {
   id: string;
 }
 
-const PuzzleGrid = ({ solution, initialGrid = null }: PuzzleGridProps) => {
+const PuzzleGrid = () => {
   const {
     state: { lives, elapsedSeconds },
     actions: { loseLife },
   } = use(GameContext);
   const { mutate: saveProgress } = useSavePuzzleProgress();
+  const { data: dailyPuzzle } = useDailyPuzzle();
   const { data: activeSession } = useActiveSession();
-  const finishPuzzle = useFinishPuzzle();
+  const { data: activeAttempt } = useCurrentPuzzleAttempt();
+  const { mutate: finishPuzzle } = useFinishPuzzle();
+
+  const solution = dailyPuzzle?.puzzle_array || [[]];
 
   const totalCorrect = solution.flat().filter((v) => v === 1).length;
+
+  const initialGrid = useMemo<PuzzleCellState[][] | null>(() => {
+
+    return null;
+  }, [activeSession?.active_puzzle_id, dailyPuzzle]);
 
   const deriveInitialGrid = useMemo(() => {
     const source = (initialGrid as PuzzleCellState[][] | string | null) ?? null;
@@ -52,7 +59,7 @@ const PuzzleGrid = ({ solution, initialGrid = null }: PuzzleGridProps) => {
   const draggedCellsRef = useRef<Set<string>>(new Set());
   const supportsPointerEvents = typeof window !== "undefined" && "PointerEvent" in window;
 
-  const isInteractionLocked = () => hasCompletedRef.current || lives <= 0;
+  const isInteractionLocked = () => activeAttempt?.status === "completed";
 
   useEffect(() => {
     setGrid(deriveInitialGrid);
@@ -132,7 +139,7 @@ const PuzzleGrid = ({ solution, initialGrid = null }: PuzzleGridProps) => {
 
       const attemptId = activeSession?.current_attempt_id ?? null;
       if (attemptId) {
-        finishPuzzle.mutate({
+        finishPuzzle({
           attemptId,
           wasSuccessful: outcome === "win",
           livesRemaining: nextLives,

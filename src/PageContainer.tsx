@@ -3,47 +3,25 @@ import { Footer, Game, Navbar, OtherPuzzles, Stats } from './Components';
 import LandingScreen from './Components/LandingScreen/LandingScreen';
 import HowToPlayView from './Components/LandingScreen/HowToPlayView';
 import LoginOverlay from './Components/LandingScreen/LoginOverlay';
-import { cn } from '@utils/cn';
+import { useUI } from './providers/UIProvider';
 
 const PageContainer = () => {
 
-  const [showLandingScreen, setShowLandingScreen] = useState(true);
-  const [showHowTo, setShowHowTo] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-
-  const handleLandingDismiss = () => {
-    setShowLandingScreen(false);
-  };
-
-  const openHowTo = () => {
-    setShowHowTo(true);
-  };
-
-  const closeHowTo = () => {
-    setShowHowTo(false);
-  };
-
-  const openLogin = () => {
-    setShowLogin(true);
-  };
-
-  const closeLogin = () => {
-    setShowLogin(false);
-  };
+  const { showLandingScreen, showHowTo } = useUI();
   
   return (
-    <div className={cn("absolute top-0 right-0 left-0 bottom-0")}>
+    <div className="absolute top-0 right-0 left-0 bottom-0">
       {showLandingScreen && (
-        <LandingScreen onPlay={handleLandingDismiss} onShowHowTo={openHowTo} onOpenLogin={openLogin} />
+        <LandingScreen />
       )}
-      {showHowTo && <HowToPlayView onClose={closeHowTo} onOpenLogin={openLogin} />}
-      <LoginOverlay isOpen={showLogin} onClose={closeLogin} />
-      <div className={cn("max-w-[450px] m-auto")}>
-        <Navbar onShowHowTo={openHowTo} onOpenLogin={openLogin} />
+      {showHowTo && <HowToPlayView />}
+      <LoginOverlay />
+      <div className="max-w-[450px] m-auto">
+        <Navbar />
         <Stats />
         <OtherPuzzles />
         <Game />
-        <Footer onOpenLogin={openLogin} />
+        <Footer />
       </div>
     </div>
   );

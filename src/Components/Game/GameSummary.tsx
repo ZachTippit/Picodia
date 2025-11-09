@@ -1,5 +1,5 @@
 import React, { CSSProperties, use, useMemo } from 'react';
-import { GameContext } from '../../GameContext';
+import { GameContext } from '../../providers/GameContext';
 // @ts-ignore
 import { default as Heart } from '../../assets/heart.png';
 // @ts-ignore

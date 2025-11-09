@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { GameProvider } from './GameContext';
+import { GameProvider } from './providers/GameContext';
 import PageContainer from './PageContainer';
+import { UIProvider } from './providers/UIProvider';
 
 // const analyticsId = import.meta.env.VITE_GOOGLE_ANALYTICS_ID;
 
@@ -18,7 +19,9 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <GameProvider>
-        <PageContainer />
+        <UIProvider>
+          <PageContainer />
+        </UIProvider>
       </GameProvider>
     </QueryClientProvider>
   );
