@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import HowToPlayGrid from './HowToPlayGrid';
-import { useSupabaseAuth } from '../../SupabaseProvider';
-import { cn } from '@utils/cn';
-import { useUI } from '@/providers/UIProvider';
+import { useEffect, useMemo, useRef, useState } from "react";
+import HowToPlayGrid from "./HowToPlayGrid";
+import { useSupabaseAuth } from "../../SupabaseProvider";
+import { cn } from "@utils/cn";
+import { useUI } from "@/providers/UIProvider";
 
 interface HowToPlayRule {
   id: string;
@@ -17,18 +17,18 @@ const GRID_FADE_DURATION = 200;
 
 const baseRules: HowToPlayRule[] = [
   {
-    id: 'rule-1',
-    text: 'Look at each row clue to see how many consecutive squares belong in that row.',
+    id: "rule-1",
+    text: "Look at each row clue to see how many consecutive squares belong in that row.",
     showGrid: true,
   },
   {
-    id: 'rule-2',
-    text: 'Line up matching row and column rules to lock in the cells where they overlap.',
+    id: "rule-2",
+    text: "Line up matching row and column rules to lock in the cells where they overlap.",
     showGrid: true,
   },
   {
-    id: 'rule-3',
-    text: 'Use temporary marks for blanks so you can track which cells must stay empty.',
+    id: "rule-3",
+    text: "Use temporary marks for blanks so you can track which cells must stay empty.",
     showGrid: true,
   },
 ];
@@ -46,7 +46,7 @@ const HowToPlayView = () => {
     return [
       ...baseRules,
       {
-        id: 'rule-login',
+        id: "rule-login",
         text: "Don't forget to log in to save and share results!",
         showGrid: false,
         showLoginButton: true,
@@ -123,8 +123,8 @@ const HowToPlayView = () => {
   return (
     <div
       className={cn(
-        'absolute top-0 right-0 left-0 bottom-0 z-30 flex flex-col items-center bg-gray-200 px-4 py-6 transition-opacity duration-500 ease-in-out',
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        "absolute top-0 right-0 left-0 bottom-0 z-30 flex flex-col items-center bg-gray-200 px-4 py-6 transition-opacity duration-500 ease-in-out",
+        isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       )}
     >
       <h1 className="mb-4 text-2xl">PICODIA</h1>
@@ -132,8 +132,8 @@ const HowToPlayView = () => {
         {rules[renderedRule]?.showGrid !== false && (
           <div
             className={cn(
-              'transition-opacity duration-200 ease-in-out',
-              gridVisible ? 'opacity-100' : 'opacity-0'
+              "transition-opacity duration-200 ease-in-out",
+              gridVisible ? "opacity-100" : "opacity-0"
             )}
           >
             <HowToPlayGrid activeRule={renderedRule} />
@@ -159,8 +159,8 @@ const HowToPlayView = () => {
             onClick={handlePrevRule}
             disabled={activeRule === 0}
             className={cn(
-              'flex h-8 w-8 items-center justify-center rounded-full border border-gray-400 text-gray-700 transition-all duration-300',
-              activeRule === 0 ? 'cursor-not-allowed opacity-40' : 'hover:bg-gray-200'
+              "flex h-8 w-8 items-center justify-center rounded-full border border-gray-400 text-gray-700 transition-all duration-300",
+              activeRule === 0 ? "cursor-not-allowed opacity-40" : "hover:bg-gray-200"
             )}
           >
             &larr;
@@ -173,10 +173,10 @@ const HowToPlayView = () => {
             onClick={handleNextRule}
             disabled={activeRule === rules.length - 1}
             className={cn(
-              'flex h-8 w-8 items-center justify-center rounded-full border border-gray-400 text-gray-700 transition-all duration-300',
+              "flex h-8 w-8 items-center justify-center rounded-full border border-gray-400 text-gray-700 transition-all duration-300",
               activeRule === rules.length - 1
-                ? 'cursor-not-allowed opacity-40'
-                : 'hover:bg-gray-200'
+                ? "cursor-not-allowed opacity-40"
+                : "hover:bg-gray-200"
             )}
           >
             &rarr;

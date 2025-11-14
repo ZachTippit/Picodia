@@ -2,18 +2,12 @@ import { use, useEffect, useState } from 'react';
 import { GameContext } from '../../providers/GameContext';
 import { Nonogram } from './Nonogram';
 import PreGameCountdown from './PreGameCountdown';
-import { useCurrentPuzzleAttempt } from '@hooks/useCurrentPuzzleAttempt';
 import { cn } from '@utils/cn';
 
 const Game = () => {
   const {
     state: { isGameStarted },
-    actions: {
-      setLives,
-      setElapsedSeconds,
-    },
   } = use(GameContext);
-  const { data: activeAttemptData } = useCurrentPuzzleAttempt();
 
   const [puzzleVisible, setPuzzleVisible] = useState(false);
 
@@ -27,13 +21,6 @@ const Game = () => {
 
     setPuzzleVisible(false);
   }, [isGameStarted]);
-
-  useEffect(() => {
-    if(activeAttemptData){
-      setLives(activeAttemptData.lives_remaining);
-      setElapsedSeconds(Math.max(0, activeAttemptData.metadata?.elapsedSeconds || 0));
-    }
-  }, [activeAttemptData])
 
   return (
     <div className="relative min-h-[450px] flex items-center justify-center">

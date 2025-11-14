@@ -1,5 +1,5 @@
-import React from 'react';
-import { cn } from '@utils/cn';
+import React from "react";
+import { cn } from "@utils/cn";
 
 interface MenuButtonProps {
   onClick: () => void;
@@ -15,7 +15,7 @@ const MenuButton = ({ onClick, className, children, disabled = false }: MenuButt
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'w-full rounded-md px-3 py-2 text-left text-sm font-medium transition',
+        "w-full rounded-md px-3 py-2 text-left text-sm font-medium transition bg-gray-600 hover:bg-gray-700",
         className
       )}
     >

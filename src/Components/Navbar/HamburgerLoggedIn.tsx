@@ -1,10 +1,10 @@
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { GameContext } from '../../providers/GameContext';
 import MenuButton from './MenuButton';
 import ResetPuzzleButton from './ResetPuzzleButton';
 import { useSupabase } from '../../SupabaseProvider';
 import { cn } from '@utils/cn';
+import { useUI } from '@/providers/UIProvider';
 
 interface HamburgerLoggedInProps {
   closeMenu: () => void;
@@ -12,9 +12,7 @@ interface HamburgerLoggedInProps {
 }
 
 const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) => {
-  const {
-    actions: { toggleStats, toggleOtherPuzzles },
-  } = use(GameContext);
+  const { toggleStats, toggleOtherPuzzles } = useUI();
 
   const supabase = useSupabase();
   const queryClient = useQueryClient();

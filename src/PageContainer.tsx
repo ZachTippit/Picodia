@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { Footer, Game, Navbar, OtherPuzzles, Stats } from './Components';
 import LandingScreen from './Components/LandingScreen/LandingScreen';
 import HowToPlayView from './Components/LandingScreen/HowToPlayView';
-import LoginOverlay from './Components/LandingScreen/LoginOverlay';
+import LoginOverlay from './Components/Auth/LoginOverlay';
 import { useUI } from './providers/UIProvider';
 
 const PageContainer = () => {

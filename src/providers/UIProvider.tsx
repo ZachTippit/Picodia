@@ -3,9 +3,12 @@ import { createContext, useState, useMemo, use } from "react";
 const UIContext = createContext(null);
 
 export const UIProvider = ({ children }) => {
-  const [showLogin, setShowLogin] = useState(false);
-  const [showLandingScreen, setShowLandingScreen] = useState(true);
-  const [showHowTo, setShowHowTo] = useState(false);
+  const [showLogin, setShowLogin] = useState<boolean>(false);
+  const [showLandingScreen, setShowLandingScreen] = useState<boolean>(true);
+  const [showHowTo, setShowHowTo] = useState<boolean>(false);
+  const [ showStats, setShowStats ] = useState<boolean>(false);
+  const [ showOtherPuzzles, setShowOtherPuzzles ] = useState<boolean>(false);
+  
 
   const closeLandingScreen = () => {
     setShowLandingScreen(false);
@@ -27,6 +30,15 @@ export const UIProvider = ({ children }) => {
     setShowLogin(false);
   };
 
+  const toggleStats = () => {
+    setShowStats(!showStats);
+    console.log('Toggling stats:', !showStats);
+  }
+
+  const toggleOtherPuzzles = () => {
+    setShowOtherPuzzles(!showOtherPuzzles);
+  };
+
   const value = useMemo(
     () => ({
       showLandingScreen,
@@ -37,8 +49,12 @@ export const UIProvider = ({ children }) => {
       showLogin,
       openLogin,
       closeLogin,
+      showStats,
+      toggleStats,
+      showOtherPuzzles,
+      toggleOtherPuzzles,
     }),
-    [showLandingScreen, showHowTo, showLogin]
+    [showLandingScreen, showHowTo, showLogin, showStats, showOtherPuzzles ]
   );
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
 };

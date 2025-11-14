@@ -1,22 +1,33 @@
-import './login-buttons.css';
-import { cn } from '@utils/cn';
+import useAppleSignIn from "@/hooks/auth/useAppleSignIn";
+import "./login-buttons.css";
+import { cn } from "@utils/cn";
+import useGoogleSignIn from "@/hooks/auth/useGoogleSignIn";
+import useEmailPasswordSignIn from "@/hooks/auth/useEmailPasswordSignIn";
 
-interface LoginAppleProps {
-  appleLoading?: boolean;
-  onClick: () => void;
-  disabled?: boolean;
-}
+const LoginApple = () => {
+  const { mutateAsync: signInWithApple, isPending: appleLoading } = useAppleSignIn();
+  const { isPending: isEmailSignInLoading } = useEmailPasswordSignIn();
+  const { isPending: googleLoading } = useGoogleSignIn();
 
-const LoginApple = ({ appleLoading, onClick, disabled }: LoginAppleProps) => {
+  const handleAppleSignIn = async () => {
+    try {
+      await signInWithApple();
+    } catch (error) {
+      console.error("Unable to start Apple sign-in.", error);
+    }
+  };
+
+  const disabled = appleLoading || googleLoading || isEmailSignInLoading;
+
   return (
     <button
-      onClick={onClick}
+      onClick={handleAppleSignIn}
       disabled={disabled}
       className={cn(
-        'gsi-material-button !w-full',
+        "gsi-material-button w-full!",
         appleLoading
-          ? 'cursor-not-allowed bg-gray-100 text-gray-400'
-          : 'text-gray-600 hover:border-gray-500 hover:text-gray-800'
+          ? "cursor-not-allowed bg-gray-100 text-gray-400"
+          : "text-gray-600 hover:border-gray-500 hover:text-gray-800"
       )}
     >
       <div className="gsi-material-button-state"></div>
