@@ -1,7 +1,7 @@
 import { useUI } from "@/providers/UIProvider";
 import { useEffect, useState } from "react";
 import Button from "./Button";
-import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
+import { useClientBootstrap } from "@/hooks/useClientBootstrap";
 
 const primaryActionLabelOptions = {
   pending: "Play",
@@ -12,11 +12,11 @@ const primaryActionLabelOptions = {
 const PlayButton = () => {
   const { closeLandingScreen, setShowCountdown } = useUI();
 
-  const { data: activeAttempt } = useCurrentPuzzleAttempt();
-
   const [primaryActionLabel, setPrimaryActionLabel] = useState("Play");
 
-  const puzzleStatus = activeAttempt?.status ?? null;
+  const { data: clientBootstrap } = useClientBootstrap();
+
+  const puzzleStatus = "pending";
 
   const handlePlay = () => {
     if(puzzleStatus === "pending" || puzzleStatus === null) {

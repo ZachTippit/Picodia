@@ -1,9 +1,10 @@
-import React, { CSSProperties, use, useMemo } from 'react';
-import { GameContext } from '../../providers/GameContext';
+import React, { CSSProperties, use, useMemo } from "react";
+import { GameContext } from "../../providers/GameContext";
 // @ts-ignore
-import { default as Heart } from '../../assets/heart.png';
+import { default as Heart } from "../../assets/heart.png";
 // @ts-ignore
-import { default as EmptyHeart } from '../../assets/empty-heart.png';
+import { default as EmptyHeart } from "../../assets/empty-heart.png";
+import { MAX_LIVES } from "@/utils/configs";
 
 const pad = (val: number) => {
   const value = Math.max(0, val);
@@ -23,28 +24,24 @@ interface GameSummaryProps {
   isWin: boolean;
 }
 
-const GameSummary = ({
-  isAreaExpanded,
-  shouldShowSummary,
-  isWin,
-}: GameSummaryProps) => {
-    const {
-    state: { lives, maxLives, elapsedSeconds },
-  } = use(GameContext);
+const GameSummary = ({ isAreaExpanded, shouldShowSummary, isWin }: GameSummaryProps) => {
+  const { lives, elapsedSeconds } = use(GameContext);
 
   const maxHeightStyle = useMemo<CSSProperties>(
     () => ({
-      maxHeight: isAreaExpanded ? '220px' : '0px',
+      maxHeight: isAreaExpanded ? "220px" : "0px",
     }),
     [isAreaExpanded]
   );
 
-    const sanitizedLives = Math.max(0, Math.min(maxLives, lives));
-    const resultHearts = useMemo(
-      () =>
-        Array.from({ length: maxLives }, (_, index) => (index < sanitizedLives ? Heart : EmptyHeart)),
-      [maxLives, sanitizedLives]
-    );
+  const sanitizedLives = Math.max(0, Math.min(MAX_LIVES, lives));
+  const resultHearts = useMemo(
+    () =>
+      Array.from({ length: MAX_LIVES }, (_, index) =>
+        index < sanitizedLives ? Heart : EmptyHeart
+      ),
+    [MAX_LIVES, sanitizedLives]
+  );
 
   return (
     <div
@@ -54,13 +51,13 @@ const GameSummary = ({
       <div
         className={
           shouldShowSummary
-            ? 'fade-in-fwd flex flex-col items-center gap-3 text-center'
-            : 'flex flex-col items-center gap-3 text-center opacity-0'
+            ? "fade-in-fwd flex flex-col items-center gap-3 text-center"
+            : "flex flex-col items-center gap-3 text-center opacity-0"
         }
         aria-hidden={!shouldShowSummary}
       >
         <p className="text-base font-bold uppercase tracking-wide">
-          {isWin ? 'You Won!' : 'You Lost'}
+          {isWin ? "You Won!" : "You Lost"}
         </p>
         <div className="flex flex-row items-center justify-center gap-8">
           <div>

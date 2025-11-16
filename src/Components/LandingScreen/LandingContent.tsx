@@ -2,8 +2,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Button from './Button';
 import Loading from './Loading';
 import { useSupabaseAuth } from '../../SupabaseProvider';
-import { useProfile } from '@hooks/useProfile';
-import { useCurrentPuzzleAttempt } from '@hooks/useCurrentPuzzleAttempt';
 import { useUI } from '@/providers/UIProvider';
 import WelcomeBackText from './WelcomeBackText';
 import PlayButton from './PlayButton';

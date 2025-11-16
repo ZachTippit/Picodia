@@ -1,16 +1,12 @@
-import { use } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { GameContext } from '../../providers/GameContext';
 import MenuButton from './MenuButton';
 import { AttemptMetadata } from '@hooks/useProfile';
 import { useActiveSession } from '@hooks/useActiveSession';
 import { useCurrentPuzzleAttempt } from '@hooks/useCurrentPuzzleAttempt';
 import { useSavePuzzleProgress } from '@hooks/useSavePuzzleProgress';
+import { MAX_LIVES } from '@/utils/configs';
 
 const ResetPuzzleButton = () => {
-  const {
-    state: { maxLives },
-  } = use(GameContext);
   const { data: activeSession } = useActiveSession();
   const { mutateAsync: saveProgress, isPending: saveProgressPending } = useSavePuzzleProgress();
 
@@ -27,7 +23,7 @@ const ResetPuzzleButton = () => {
       const defaultMetadata: AttemptMetadata = {
         puzzleId: activeAttempt?.puzzle_id,
         progress: null,
-        lives: maxLives,
+        lives: MAX_LIVES,
         elapsedSeconds: 0,
         completed: false,
         updatedAt: new Date().toISOString(),

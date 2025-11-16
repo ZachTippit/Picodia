@@ -1,17 +1,16 @@
 import { use } from "react";
 import { GameContext } from "@/providers/GameContext";
 // @ts-ignore
-import { default as Heart } from '../../assets/heart.png';
+import { default as Heart } from "../../assets/heart.png";
 // @ts-ignore
-import { default as EmptyHeart } from '../../assets/empty-heart.png';
+import { default as EmptyHeart } from "../../assets/empty-heart.png";
+import { MAX_LIVES } from "@/utils/configs";
 
 const LifeDisplay = () => {
-  const {
-    state: { maxLives, lives },
-  } = use(GameContext);
+  const { lives } = use(GameContext);
 
   const displayLives = () => {
-    let hearts = Array(maxLives).fill(EmptyHeart);
+    let hearts = Array(MAX_LIVES).fill(EmptyHeart);
     hearts = hearts.map((heart, index) => {
       if (index < lives) {
         heart = Heart;

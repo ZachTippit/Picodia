@@ -8,21 +8,11 @@ import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
 import { useFinishPuzzle } from "@/hooks/useFinishPuzzle";
 import { usePuzzleInteractions, CellSelectionResult } from "@/hooks/usePuzzleInteractions";
-
-type CellSelection = CellSelectionResult;
-
-export interface PuzzleCellState {
-  correct: boolean;
-  filled: boolean;
-  incorrect: boolean;
-  id: string;
-}
+import { motion } from "framer-motion";
+import { cellVariants, gridVariants } from "@/animations";
 
 const PuzzleGrid = () => {
-  const {
-    state: { lives, elapsedSeconds },
-    actions: { loseLife },
-  } = use(GameContext);
+  const { lives, elapsedSeconds, loseLife } = use(GameContext);
 
   const { mutate: saveProgress } = useSavePuzzleProgress();
   const { data: dailyPuzzle } = useDailyPuzzle();
@@ -56,7 +46,7 @@ const PuzzleGrid = () => {
 
   const isInteractionLocked = () => activeAttempt?.status === "completed";
 
-  const handleCellSelection = (r: number, c: number): CellSelection => {
+  const handleCellSelection = (r: number, c: number): CellSelectionResult => {
     if (isInteractionLocked()) {
       return "ignored";
     }
@@ -67,7 +57,7 @@ const PuzzleGrid = () => {
       completed: boolean;
       wasCorrect: boolean;
     } | null = null;
-    let result: CellSelection = "ignored";
+    let result: CellSelectionResult = "ignored";
 
     setGrid((prev) => {
       const next = prev.map((row) => row.map((cell) => ({ ...cell })));
@@ -114,6 +104,18 @@ const PuzzleGrid = () => {
       resetDragState();
     }
 
+    console.log("Active Session:", activeSession);
+
+    console.log("Saving progress:", {
+      attemptId: activeSession?.current_attempt_id ?? null,
+      data: {
+        progress: nextGrid,
+        lives: nextLives,
+        elapsedSeconds,
+        completed,
+      },
+    });
+
     saveProgress({
       attemptId: activeSession?.current_attempt_id ?? null,
       data: {
@@ -159,17 +161,22 @@ const PuzzleGrid = () => {
   });
 
   return (
-    <div
+    <motion.div
       {...gridInteractions}
       className="inline-block border-4 border-gray-800 rounded-md overflow-hidden 
                  shadow-[0_0_10px_rgba(0,0,0,0.2)]"
+      variants={gridVariants}
+      initial="hidden"
+      animate="visible"
+      layout
     >
       {grid.map((row, r) => (
         <div key={r} className="flex">
           {row.map((cell, c) => (
-            <button
+            <motion.button
               key={cell.id}
               {...cellInteractions(r, c)}
+              type="button"
               disabled={isInteractionLocked()}
               className={cn(
                 "size-10 border border-gray-600 flex items-center justify-center transition-all select-none",
@@ -179,11 +186,16 @@ const PuzzleGrid = () => {
                     ? "bg-red-200"
                     : "bg-white hover:bg-gray-200"
               )}
+              variants={cellVariants}
+              initial="idle"
+              animate={cell.filled ? "filled" : cell.incorrect ? "incorrect" : "idle"}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              whileTap={{ scale: 0.9 }}
             />
           ))}
         </div>
       ))}
-    </div>
+    </motion.div>
   );
 };
 

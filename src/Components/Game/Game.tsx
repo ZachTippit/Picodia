@@ -1,5 +1,4 @@
-import { use, useEffect, useState } from "react";
-import { GameContext } from "../../providers/GameContext";
+import { useEffect, useState } from "react";
 import { Nonogram } from "./Nonogram";
 import PreGameCountdown from "./PreGameCountdown";
 import { cn } from "@utils/cn";

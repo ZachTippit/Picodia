@@ -1,5 +1,5 @@
-import { use, useEffect } from 'react';
-import { GameContext } from '../../providers/GameContext';
+import { use, useEffect } from "react";
+import { GameContext } from "../../providers/GameContext";
 
 const pad = (val: number) => {
   const value = Math.max(0, val);
@@ -7,10 +7,7 @@ const pad = (val: number) => {
 };
 
 const GameClock = () => {
-  const {
-    state: { elapsedSeconds },
-    actions: { incrementElapsedSeconds },
-  } = use(GameContext);
+  const { elapsedSeconds, incrementElapsedSeconds } = use(GameContext);
 
   useEffect(() => {
     const interval = window.setInterval(() => {

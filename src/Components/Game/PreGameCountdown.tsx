@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useStartPuzzle } from '@hooks/useStartPuzzle';
-import { cn } from '@utils/cn';
 import { AnimatePresence, motion } from 'framer-motion';
 import { numberVariants, overlayVariants } from '@/animations';
 import { useUI } from '@/providers/UIProvider';
@@ -48,12 +47,9 @@ const PreGameCountdown = ({ setPuzzleVisible }: PreGameCountdownProps) => {
   return (
     <AnimatePresence>
       <motion.div
-        className={cn(
-          'absolute inset-0 z-10 flex items-center justify-center text-gray-900 bg-white/0'
-        )}
+        className="absolute inset-0 z-10 flex items-center justify-center text-gray-900 bg-white"
         variants={overlayVariants}
-        initial="hidden"
-        animate="visible"
+        initial="visible"
         exit="exit"
       >
         <AnimatePresence mode="wait">

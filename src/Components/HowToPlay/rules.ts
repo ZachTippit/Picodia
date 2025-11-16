@@ -1,14 +1,3 @@
-export type HowToPlayCellState = 0 | 1 | 2;
-
-export interface HowToPlayRule {
-  id: string;
-  text: string;
-  showLoginButton?: boolean;
-  board?: HowToPlayCellState[][];
-  rowRules?: (string | number)[][];
-  colRules?: (string | number)[][];
-}
-
 const rules: HowToPlayRule[] = [
   {
     id: "rule-1",

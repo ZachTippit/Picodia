@@ -1,13 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useSupabase } from '../SupabaseProvider';
 
-export interface PuzzleProgressInput {
-  progress: unknown;
-  completed?: boolean;
-  lives?: number | null;
-  elapsedSeconds?: number | null;
-}
-
 const sanitizeProgress = (progress: unknown) => {
   if (progress === null || progress === undefined) return null;
   try {

@@ -1,11 +1,6 @@
 import { useSupabase } from "@/SupabaseProvider";
 import { useMutation } from "@tanstack/react-query";
 
-interface EmailCredentials {
-  email: string;
-  password: string;
-}
-
 const useEmailPasswordSignIn = () => {
   const supabase = useSupabase();
 

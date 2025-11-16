@@ -1,7 +1,6 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useSupabase } from "../SupabaseProvider";
-import { PuzzleAttempt } from "./useProfile";
 
 interface FinishPuzzleInput {
   attemptId: string;

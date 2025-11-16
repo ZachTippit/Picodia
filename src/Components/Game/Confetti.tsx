@@ -1,5 +1,5 @@
-import { CSSProperties, useEffect, useState } from 'react';
-import { useActiveSession } from '@hooks/useActiveSession';
+import { CSSProperties, useEffect, useState } from "react";
+import { useActiveSession } from "@hooks/useActiveSession";
 
 type MutableCSSProperties = CSSProperties & Record<string, string | number>;
 
@@ -8,7 +8,7 @@ type CelebrationParticle = {
   style: MutableCSSProperties;
 };
 
-const CONFETTI_COLORS = ['#F87171', '#38BDF8', '#FBBF24', '#34D399', '#A78BFA', '#F97316'];
+const CONFETTI_COLORS = ["#F87171", "#38BDF8", "#FBBF24", "#34D399", "#A78BFA", "#F97316"];
 
 const createCelebrationParticles = (isWin: boolean): CelebrationParticle[] => {
   const count = isWin ? 45 : 30;
@@ -27,18 +27,18 @@ const createCelebrationParticles = (isWin: boolean): CelebrationParticle[] => {
       animationDuration: `${duration}ms`,
     };
 
-    style['--drift'] = `${drift}vw`;
-    style['--scale'] = `${scale}`;
+    style["--drift"] = `${drift}vw`;
+    style["--scale"] = `${scale}`;
 
     if (isWin) {
       style.backgroundColor = CONFETTI_COLORS[index % CONFETTI_COLORS.length];
-      style['--rotation'] = `${rotation}`;
+      style["--rotation"] = `${rotation}`;
     } else {
       style.fontSize = `${1.1 + Math.random() * 0.7}rem`;
     }
 
     return {
-      id: `${isWin ? 'win' : 'lose'}-${index}-${Math.random().toString(16).slice(2, 6)}`,
+      id: `${isWin ? "win" : "lose"}-${index}-${Math.random().toString(16).slice(2, 6)}`,
       style,
     };
   });
@@ -49,8 +49,13 @@ const RESULTS_SHOW_DELAY_MS = 750;
 const CELEBRATION_START_DELAY_MS = 450;
 const CELEBRATION_DURATION_MS = 4200;
 
-const Confetti = ({ setIsAreaExpanded, setShouldShowSummary }: { setIsAreaExpanded: (expanded: boolean) => void; setShouldShowSummary: (show: boolean) => void; }) => {
-
+const Confetti = ({
+  setIsAreaExpanded,
+  setShouldShowSummary,
+}: {
+  setIsAreaExpanded: (expanded: boolean) => void;
+  setShouldShowSummary: (show: boolean) => void;
+}) => {
   const [showCelebration, setShowCelebration] = useState(false);
   const [particles, setParticles] = useState<CelebrationParticle[]>([]);
 
@@ -62,7 +67,7 @@ const Confetti = ({ setIsAreaExpanded, setShouldShowSummary }: { setIsAreaExpand
     let celebrationStartTimer: number | null = null;
     let celebrationEndTimer: number | null = null;
 
-    if (activeSession?.puzzle_attempts?.status === 'completed') {
+    if (activeSession?.puzzle_attempts?.status === "completed") {
       setIsAreaExpanded(false);
       setShouldShowSummary(false);
       setShowCelebration(false);
@@ -109,7 +114,7 @@ const Confetti = ({ setIsAreaExpanded, setShouldShowSummary }: { setIsAreaExpand
     };
   }, []);
 
-  const celebrationClass = true ? 'confetti-piece' : 'smiley-piece';
+  const celebrationClass = true ? "confetti-piece" : "smiley-piece";
 
   if (!showCelebration) {
     return null;
@@ -124,7 +129,7 @@ const Confetti = ({ setIsAreaExpanded, setShouldShowSummary }: { setIsAreaExpand
           aria-hidden="true"
           style={particle.style}
         >
-          {true ? '' : ':('}
+          {true ? "" : ":("}
         </span>
       ))}
     </div>

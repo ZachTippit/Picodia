@@ -77,6 +77,21 @@ const numberVariants = {
   exit: { opacity: 0, y: -20, scale: 0.8, transition: { duration: 0.2, ease: "easeIn" } as const },
 };
 
+const gridVariants = {
+  hidden: { opacity: 0, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.35, ease: "easeOut" } as const,
+  },
+};
+
+const cellVariants = {
+  idle: { scale: 1, opacity: 1 },
+  filled: { scale: 0.94, opacity: 1 },
+  incorrect: { scale: 0.94, opacity: 0.8 },
+};
+
 export {
   overlayVariants,
   panelVariants,
@@ -86,4 +101,6 @@ export {
   previewVariants,
   contentSectionVariants,
   numberVariants,
+  gridVariants,
+  cellVariants,
 };

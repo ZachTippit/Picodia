@@ -1,26 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSupabase } from '../SupabaseProvider';
 import { useSupabaseAuth } from '../SupabaseProvider';
-import type { Puzzle } from './useGetPuzzles';
-
-export interface PuzzleAttempt {
-  id: string;
-  puzzle_id: number;
-  user_id: string;
-  attempt_date: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'voided';
-  outcome: 'win' | 'loss' | null;
-  started_at: string;
-  completed_at: string | null;
-  voided_at: string | null;
-  lives_remaining: number | null;
-  elapsed_seconds: number | null;
-  progress: Record<string, any> | null;
-  updated_at: string | null;
-  metadata: Record<string, any> | null;
-  mistakes_made: number | null;
-  was_successful: boolean | null;
-}
 
 /**
  * Ensures the user has today's attempt reserved.
