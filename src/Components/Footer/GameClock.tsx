@@ -8,21 +8,17 @@ const pad = (val: number) => {
 
 const GameClock = () => {
   const {
-    state: { isGameStarted, elapsedSeconds },
+    state: { elapsedSeconds },
     actions: { incrementElapsedSeconds },
   } = use(GameContext);
 
   useEffect(() => {
-    if (!isGameStarted) {
-      return;
-    }
-
     const interval = window.setInterval(() => {
       incrementElapsedSeconds();
     }, 1000);
 
     return () => window.clearInterval(interval);
-  }, [incrementElapsedSeconds, isGameStarted]);
+  }, [incrementElapsedSeconds]);
 
   const minutes = Math.floor(elapsedSeconds / 60);
   const seconds = elapsedSeconds % 60;

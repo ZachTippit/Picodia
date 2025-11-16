@@ -3,17 +3,12 @@ import { createContext, useState, ReactNode, useCallback } from "react";
 // 1️⃣ Define the shape of your context state
 interface GameContextProps {
   state: {
-    isGameStarted: boolean;
-    isCountdownActive: boolean;
     maxLives: number;
     lives: number;
     hasPlayedToday: boolean;
     elapsedSeconds: number;
   },
   actions: {
-    startGame: () => void;
-    beginCountdown: () => void;
-    endCountdown: () => void;
     setMaxLives: (value: number) => void;
     setLives: (value: number) => void;
     loseLife: () => void;
@@ -29,27 +24,12 @@ const GameContext = createContext<GameContextProps | undefined>(undefined);
 
 // 3️⃣ Define the provider
 export const GameProvider = ({ children }: { children: ReactNode }) => {
-
-  const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
-  const [isCountdownActive, setIsCountdownActive] = useState<boolean>(false);
   const [maxLives, setMaxLives] = useState<number>(3);
   const [lives, setLives] = useState<number>(3);
   const [hasPlayedToday, setHasPlayedToday] = useState<boolean>(false);
   const [elapsedSeconds, setElapsedSecondsState] = useState<number>(0);
 
   const toggleHasPlayedToday = () => setHasPlayedToday(!hasPlayedToday);
-
-  const beginCountdown = () => {
-    setIsCountdownActive(true);
-    setIsGameStarted(false);
-  };
-
-  const endCountdown = () => setIsCountdownActive(false);
-
-  const startGame = () => {
-    setIsGameStarted(true);
-    setIsCountdownActive(false);
-  };
 
   const loseLife = () => setLives(lives - 1);
 
@@ -67,17 +47,12 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
   const context = {
     state: {
-      isGameStarted,
-      isCountdownActive,
       maxLives,
       lives,
       hasPlayedToday,
       elapsedSeconds,
     },
     actions: {
-      startGame,
-      beginCountdown,
-      endCountdown,
       setMaxLives,
       setLives,
       loseLife,

@@ -1,6 +1,7 @@
 const overlayVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
+  exit: { opacity: 0 },
 };
 
 const panelVariants = {
@@ -19,4 +20,70 @@ const panelVariants = {
   },
 };
 
-export { overlayVariants, panelVariants };
+const textVariants = {
+  initial: (direction: 1 | -1) => ({
+    x: direction > 0 ? 40 : -40,
+    opacity: 0,
+  }),
+  animate: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: 1 | -1) => ({
+    x: direction > 0 ? -40 : 40,
+    opacity: 0,
+  }),
+};
+
+const landingScreenVariants = {
+  visible: { opacity: 1, transition: { duration: 0.5, ease: "easeInOut" } } as const,
+  exit: {
+    opacity: 0,
+    pointerEvents: "none",
+    transition: { duration: 0.5, ease: "easeInOut" },
+  } as const,
+};
+
+const titleVariants = {
+  hidden: { opacity: 0, y: -12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: "easeOut", delay: 0.25 } as const,
+  },
+};
+
+const previewVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut", delay: 0.625 } as const,
+  },
+};
+
+const contentSectionVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut", delay: 1 } as const,
+  },
+};
+
+const numberVariants = {
+  initial: { opacity: 0, y: 20, scale: 0.8 },
+  animate: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35, ease: "easeOut" } as const },
+  exit: { opacity: 0, y: -20, scale: 0.8, transition: { duration: 0.2, ease: "easeIn" } as const },
+};
+
+export {
+  overlayVariants,
+  panelVariants,
+  textVariants,
+  landingScreenVariants,
+  titleVariants,
+  previewVariants,
+  contentSectionVariants,
+  numberVariants,
+};

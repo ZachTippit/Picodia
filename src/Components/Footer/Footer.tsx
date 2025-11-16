@@ -1,20 +1,11 @@
-import { use } from "react";
-import { GameContext } from "../../providers/GameContext";
 import GameClock from "./GameClock";
-import { useActiveSession } from "@hooks/useActiveSession";
 import { cn } from "@utils/cn";
 import LifeDisplay from "./LifeDisplay";
 import ResultsActions from "./ResultsActions";
 
 const Footer = () => {
-  const {
-    state: { isGameStarted },
-  } = use(GameContext);
 
-  const { data: activeSession } = useActiveSession();
-  const isGameOver = activeSession?.puzzle_attempts?.status === "completed";
-
-  const showLiveStats = isGameStarted && !isGameOver;
+  const showLiveStats = true;
 
   return (
     <div className="w-full mb-8 pt-4 border border-b-0 border-x-0 border-t-gray-300">

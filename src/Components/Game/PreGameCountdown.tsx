@@ -1,96 +1,75 @@
-import { use, useEffect, useRef, useState } from 'react';
-import { GameContext } from '../../providers/GameContext';
+import { useEffect, useState } from 'react';
 import { useStartPuzzle } from '@hooks/useStartPuzzle';
 import { cn } from '@utils/cn';
+import { AnimatePresence, motion } from 'framer-motion';
+import { numberVariants, overlayVariants } from '@/animations';
+import { useUI } from '@/providers/UIProvider';
+
+const COUNTDOWN_STEP_DURATION = 1000;
+const GO_DISPLAY_DURATION = 1200;
+const COUNTDOWN_STEPS = ['3', '2', '1', 'GO!'] as const;
 
 interface PreGameCountdownProps {
   setPuzzleVisible: (visible: boolean) => void;
 }
 
 const PreGameCountdown = ({ setPuzzleVisible }: PreGameCountdownProps) => {
-  const COUNTDOWN_STEP_DURATION = 1000;
-  const GO_DISPLAY_DURATION = 1200;
-
-  const {
-    state: { isCountdownActive },
-    actions: { endCountdown, startGame },
-  } = use(GameContext);
-
+  const { setShowCountdown } = useUI();
+  const [activeStepIndex, setActiveStepIndex] = useState<number | null>(0);
+  const countdownValue = activeStepIndex !== null ? COUNTDOWN_STEPS[activeStepIndex] : null;
   
-  const [countdownValue, setCountdownValue] = useState<number>(3);
-  const [go, setShowGo] = useState(false);
-  const goTimeoutRef = useRef<number | null>(null);
-  
-  useStartPuzzle({ enabled: go});
+  useStartPuzzle({ enabled: countdownValue === 'GO!' });
   
   useEffect(() => {
-    return () => {
-      if (goTimeoutRef.current) {
-        clearTimeout(goTimeoutRef.current);
-      }
-    };
-  }, []);
+    setPuzzleVisible(false);
+  }, [setPuzzleVisible]);
 
   useEffect(() => {
-    if (isCountdownActive) {
-      setShowGo(false);
-      setPuzzleVisible(false);
-      setCountdownValue(3);
-    } else {
-      setShowGo(false);
-    }
-  }, [isCountdownActive]);
-
-  useEffect(() => {
-    if (countdownValue === null) {
+    if (activeStepIndex === null) {
       return;
     }
 
-    if (countdownValue === 0) {
-      setShowGo(true);
-      if (goTimeoutRef.current) {
-        clearTimeout(goTimeoutRef.current);
-      }
-      goTimeoutRef.current = window.setTimeout(() => {
-        setShowGo(false);
-        setCountdownValue(null);
-        endCountdown();
-        startGame();
-      }, GO_DISPLAY_DURATION);
-
-      return () => {
-        if (goTimeoutRef.current) {
-          clearTimeout(goTimeoutRef.current);
-          goTimeoutRef.current = null;
-        }
-      };
-    }
-
+    const isFinalStep = activeStepIndex === COUNTDOWN_STEPS.length - 1;
     const timeout = window.setTimeout(() => {
-      setCountdownValue((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
-    }, COUNTDOWN_STEP_DURATION);
-    return () => clearTimeout(timeout);
-  }, [countdownValue, endCountdown, startGame]);
+      if (isFinalStep) {
+        setActiveStepIndex(null);
+        setPuzzleVisible(true);
+        setShowCountdown(false);
+      } else {
+        setActiveStepIndex((prev) => (prev !== null ? prev + 1 : prev));
+      }
+    }, isFinalStep ? GO_DISPLAY_DURATION : COUNTDOWN_STEP_DURATION);
 
-  const shouldShowCountdown = Boolean(isCountdownActive || countdownValue !== null || go);
-
-  if (!shouldShowCountdown) {
-    return null;
-  }
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [activeStepIndex, setPuzzleVisible]);
 
   return (
-    <div
-      className={cn(
-        'absolute inset-0 z-10 flex items-center justify-center transition-opacity duration-300 text-gray-900'
-      )}
-    >
-      <span
-        key={go ? 'go' : countdownValue}
-        className="text-6xl font-bold tracking-widest countdown-number"
+    <AnimatePresence>
+      <motion.div
+        className={cn(
+          'absolute inset-0 z-10 flex items-center justify-center text-gray-900 bg-white/0'
+        )}
+        variants={overlayVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
       >
-        {go ? 'GO!' : countdownValue}
-      </span>
-    </div>
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={countdownValue}
+            variants={numberVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="text-6xl font-bold tracking-widest countdown-number"
+          >
+            {countdownValue}
+          </motion.span>
+        </AnimatePresence>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

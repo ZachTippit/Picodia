@@ -1,14 +1,9 @@
-import { use } from "react";
 import { useActiveSession } from "@/hooks/useActiveSession";
-import { GameContext } from "@/providers/GameContext";
 import { useUI } from "@/providers/UIProvider";
 import { useSupabaseAuth } from "@/SupabaseProvider";
 import { cn } from "@/utils/cn";
 
 const ResultsActions = () => {
-  const {
-    state: { isGameStarted },
-  } = use(GameContext);
   const { toggleStats } = useUI();
   const { user } = useSupabaseAuth();
   const isLoggedIn = Boolean(user);
@@ -19,7 +14,7 @@ const ResultsActions = () => {
 
   const isGameOver = activeSession?.puzzle_attempts?.status === "completed";
 
-  const showResultsActions = isGameStarted && isGameOver;
+  const showResultsActions = isGameOver;
 
   return (
     <div
