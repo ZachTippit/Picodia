@@ -1,7 +1,6 @@
 import PuzzleGrid from './PuzzleGrid';
 import {RulesRow, RulesCol } from './Rules';
 import GameEndEffects from './GameEndEffects';
-import { useDailyPuzzle } from '@/hooks/useDailyPuzzle';
 
 export const Nonogram = () => {
   

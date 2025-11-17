@@ -5,13 +5,19 @@ import HowToPlayView from "./Components/HowToPlay/HowToPlayView";
 import LoginOverlay from "./Components/Auth/LoginOverlay";
 import { useUI } from "./providers/UIProvider";
 import { useDailyPuzzle } from "./hooks/useDailyPuzzle";
+import { useClientBootstrap } from "./hooks/useClientBootstrap";
+import { useCurrentPuzzleAttempt } from "./hooks/useCurrentPuzzleAttempt";
 
 const PageContainer = () => {
   const { showLandingScreen, showHowTo } = useUI();
 
+  const { data: clientBootstrap } = useClientBootstrap();
+  const { data: puzzleAttempt } = useCurrentPuzzleAttempt();
   const { data: dailyPuzzle } = useDailyPuzzle();
 
-
+  console.log("Client Bootstrap:", clientBootstrap);
+  console.log("Current Puzzle Attempt:", puzzleAttempt);
+  
   return (
     <div className="absolute top-0 right-0 left-0 bottom-0">
       <AnimatePresence>{showLandingScreen && <LandingScreen />}</AnimatePresence>

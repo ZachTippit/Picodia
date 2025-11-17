@@ -1,5 +1,3 @@
-import { PuzzleCellState } from '../Components/Game/PuzzleGrid';
-
 const createEmptyGrid = (solution: number[][]) =>
   solution.map((row, r) =>
     row.map((value, c) => ({
@@ -20,11 +18,11 @@ const normalizeSavedGrid = (
 
   let parsed: PuzzleCellState[][];
 
-  if (typeof saved === 'string') {
+  if (typeof saved === "string") {
     try {
       parsed = JSON.parse(saved) as PuzzleCellState[][];
     } catch (error) {
-      console.error('Unable to parse saved puzzle grid.', error);
+      console.error("Unable to parse saved puzzle grid.", error);
       return null;
     }
   } else {
@@ -59,4 +57,10 @@ const normalizeSavedGrid = (
   return normalized;
 };
 
-export { createEmptyGrid, normalizeSavedGrid };
+const countFilledCorrect = (gridState: PuzzleCellState[][]) =>
+  gridState.reduce(
+    (count, row) => count + row.filter((cell) => cell.correct && cell.filled).length,
+    0
+  );
+
+export { createEmptyGrid, normalizeSavedGrid, countFilledCorrect };

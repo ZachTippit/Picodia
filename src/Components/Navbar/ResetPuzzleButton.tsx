@@ -1,27 +1,25 @@
 import { useQueryClient } from '@tanstack/react-query';
 import MenuButton from './MenuButton';
-import { AttemptMetadata } from '@hooks/useProfile';
-import { useActiveSession } from '@hooks/useActiveSession';
-import { useCurrentPuzzleAttempt } from '@hooks/useCurrentPuzzleAttempt';
 import { useSavePuzzleProgress } from '@hooks/useSavePuzzleProgress';
 import { MAX_LIVES } from '@/utils/configs';
+import { useCurrentPuzzleAttempt } from '@/hooks/useCurrentPuzzleAttempt';
 
 const ResetPuzzleButton = () => {
-  const { data: activeSession } = useActiveSession();
+  const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
   const { mutateAsync: saveProgress, isPending: saveProgressPending } = useSavePuzzleProgress();
 
+  const currentPuzzleAttemptId = currentPuzzleAttempt?.id || null;
+
   const queryClient = useQueryClient();
-  const { data: activeAttempt } = useCurrentPuzzleAttempt();
 
   const handleResetPuzzle = async () => {
-    const attemptId = activeSession?.current_attempt_id ?? null;
-    if (!attemptId) {
+    if (!currentPuzzleAttemptId) {
       return;
     }
 
     try {
       const defaultMetadata: AttemptMetadata = {
-        puzzleId: activeAttempt?.puzzle_id,
+        puzzleId: currentPuzzleAttemptId,
         progress: null,
         lives: MAX_LIVES,
         elapsedSeconds: 0,
@@ -30,7 +28,7 @@ const ResetPuzzleButton = () => {
       };
 
       await saveProgress({
-        attemptId,
+        attemptId: currentPuzzleAttemptId,
         data: { progress: defaultMetadata },
       });
       await queryClient.invalidateQueries({ queryKey: ['active-session'] });

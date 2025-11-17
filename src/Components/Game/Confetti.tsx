@@ -1,5 +1,6 @@
 import { CSSProperties, useEffect, useState } from "react";
-import { useActiveSession } from "@hooks/useActiveSession";
+import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
+import { GameStatus } from "@/types/enums";
 
 type MutableCSSProperties = CSSProperties & Record<string, string | number>;
 
@@ -59,7 +60,7 @@ const Confetti = ({
   const [showCelebration, setShowCelebration] = useState(false);
   const [particles, setParticles] = useState<CelebrationParticle[]>([]);
 
-  const { data: activeSession } = useActiveSession();
+  const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
 
   useEffect(() => {
     let areaTimer: number | null = null;
@@ -67,7 +68,7 @@ const Confetti = ({
     let celebrationStartTimer: number | null = null;
     let celebrationEndTimer: number | null = null;
 
-    if (activeSession?.puzzle_attempts?.status === "completed") {
+    if (currentPuzzleAttempt?.status === GameStatus.Completed) {
       setIsAreaExpanded(false);
       setShouldShowSummary(false);
       setShowCelebration(false);

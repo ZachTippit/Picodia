@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSupabase } from '../SupabaseProvider';
-import { useActiveSession } from './useActiveSession';
+import { useCurrentPuzzleAttempt } from './useCurrentPuzzleAttempt';
 
 interface UseStartPuzzleOptions {
   enabled?: boolean;
@@ -13,13 +13,15 @@ interface UseStartPuzzleOptions {
  */
 export const useStartPuzzle = ({ enabled = false, attemptId }: UseStartPuzzleOptions = {}) => {
   const supabase = useSupabase();
-  const { data: activeSession } = useActiveSession();
+  const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
+
+  const currentPuzzleAttemptId = currentPuzzleAttempt?.id ?? null;
 
   return useQuery({
-    queryKey: ['startPuzzle', attemptId ?? activeSession?.current_attempt_id],
+    queryKey: ['startPuzzle', attemptId ?? currentPuzzleAttemptId],
     enabled, // <-- only runs when enabled = true
     queryFn: async () => {
-      const targetId = attemptId ?? activeSession?.current_attempt_id;
+      const targetId = attemptId ?? currentPuzzleAttemptId;
       if (!targetId) return null;
 
       const { data, error } = await supabase

@@ -6,7 +6,7 @@ import { useUI } from "@/providers/UIProvider";
 
 const Game = () => {
   const { showCountdown } = useUI();
-  const [puzzleVisible, setPuzzleVisible] = useState(false);
+  const [ puzzleVisible, setPuzzleVisible ] = useState(false);
 
   useEffect(() => {
     if (showCountdown) {

@@ -1,6 +1,7 @@
-import { useActiveSession } from "@/hooks/useActiveSession";
+import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
 import { useUI } from "@/providers/UIProvider";
 import { useSupabaseAuth } from "@/SupabaseProvider";
+import { GameStatus } from "@/types/enums";
 import { cn } from "@/utils/cn";
 
 const ResultsActions = () => {
@@ -8,19 +9,17 @@ const ResultsActions = () => {
   const { user } = useSupabaseAuth();
   const isLoggedIn = Boolean(user);
 
-  const { data: activeSession } = useActiveSession();
+  const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
 
   const { openLogin } = useUI();
 
-  const isGameOver = activeSession?.puzzle_attempts?.status === "completed";
-
-  const showResultsActions = isGameOver;
+  const isGameOver = currentPuzzleAttempt?.status === GameStatus.Completed;
 
   return (
     <div
       className={cn(
         "absolute inset-0 flex flex-col items-center justify-center transition-all duration-500",
-        showResultsActions
+        isGameOver
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 -translate-y-2 pointer-events-none"
       )}
