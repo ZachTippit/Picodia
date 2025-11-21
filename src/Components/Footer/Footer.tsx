@@ -2,10 +2,17 @@ import GameClock from "./GameClock";
 import { cn } from "@utils/cn";
 import LifeDisplay from "./LifeDisplay";
 import ResultsActions from "./ResultsActions";
+import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
+import { GameStatus } from "@/types/enums";
 
 const Footer = () => {
 
-  const showLiveStats = true;
+  const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
+  const inProgress = currentPuzzleAttempt?.status === GameStatus.InProgress;
+  console.log("Footer - Puzzle Attempt Status:", currentPuzzleAttempt?.status);
+  const showLiveStats = inProgress;
+
+  if(!currentPuzzleAttempt) return null;
 
   return (
     <div className="w-full mb-8 pt-4 border border-b-0 border-x-0 border-t-gray-300">

@@ -46,7 +46,7 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
         onClick={handleSignOut}
         disabled={signingOut}
         className={cn(
-          'w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-60'
+          'w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-60 cursor-pointer'
         )}
       >
         {signingOut ? 'Logging out…' : 'Log Out'}
@@ -57,18 +57,20 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
             toggleStats();
             closeMenu();
           }}
-          className="bg-gray-100 text-gray-800 hover:bg-gray-200"
+          className="bg-gray-300 text-gray-800 not-disabled:hover:bg-gray-400 disabled:bg-gray-100 disabled:text-gray-600"
+          disabled
         >
-          Stats
+          Stats <span className="text-xxs">(coming soon!)</span>
         </MenuButton>
         <MenuButton
           onClick={() => {
             toggleOtherPuzzles();
             closeMenu();
           }}
-          className="bg-gray-100 text-gray-800 hover:bg-gray-200"
+          className="bg-gray-300 text-gray-800 not-disabled:hover:bg-gray-400 disabled:bg-gray-100 disabled:text-gray-600"
+          disabled
         >
-          Other Puzzles
+          Other Puzzles <span className="text-xxs">(coming soon!)</span>
         </MenuButton>
         <ResetPuzzleButton />
       </div>

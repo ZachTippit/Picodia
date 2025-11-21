@@ -1,50 +1,16 @@
-import { useQueryClient } from '@tanstack/react-query';
 import MenuButton from './MenuButton';
-import { useSavePuzzleProgress } from '@hooks/useSavePuzzleProgress';
-import { MAX_LIVES } from '@/utils/configs';
-import { useCurrentPuzzleAttempt } from '@/hooks/useCurrentPuzzleAttempt';
+import { useResetPuzzle } from '@/hooks/useResetPuzzle';
 
 const ResetPuzzleButton = () => {
-  const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
-  const { mutateAsync: saveProgress, isPending: saveProgressPending } = useSavePuzzleProgress();
-
-  const currentPuzzleAttemptId = currentPuzzleAttempt?.id || null;
-
-  const queryClient = useQueryClient();
-
-  const handleResetPuzzle = async () => {
-    if (!currentPuzzleAttemptId) {
-      return;
-    }
-
-    try {
-      const defaultMetadata: AttemptMetadata = {
-        puzzleId: currentPuzzleAttemptId,
-        progress: null,
-        lives: MAX_LIVES,
-        elapsedSeconds: 0,
-        completed: false,
-        updatedAt: new Date().toISOString(),
-      };
-
-      await saveProgress({
-        attemptId: currentPuzzleAttemptId,
-        data: { progress: defaultMetadata },
-      });
-      await queryClient.invalidateQueries({ queryKey: ['active-session'] });
-      window.location.reload();
-    } catch (error) {
-      console.error('Failed to reset puzzle', error);
-    }
-  };
+  const { resetPuzzle, isResetting } = useResetPuzzle();
 
   return (
     <MenuButton
-      onClick={handleResetPuzzle}
-      disabled={saveProgressPending}
+      onClick={() => resetPuzzle()}
+      disabled={isResetting}
       className="bg-red-500 text-white hover:bg-red-600 disabled:opacity-60"
     >
-      {saveProgressPending ? 'Resetting…' : 'Reset Puzzle'}
+      {isResetting ? 'Resetting…' : 'Reset Puzzle'}
     </MenuButton>
   );
 };

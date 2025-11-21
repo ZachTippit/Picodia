@@ -1,4 +1,4 @@
-const rules: HowToPlayRule[] = [
+export const rules: HowToPlayRule[] = [
   {
     id: "rule-1",
     text: "The goal is to fill in the correct shape.",
@@ -125,5 +125,3 @@ const rules: HowToPlayRule[] = [
     ],
   },
 ];
-
-export { rules };

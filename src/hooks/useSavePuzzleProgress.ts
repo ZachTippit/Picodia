@@ -1,41 +1,29 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSupabase } from '../SupabaseProvider';
-
-const sanitizeProgress = (progress: unknown) => {
-  if (progress === null || progress === undefined) return null;
-  try {
-    return JSON.parse(JSON.stringify(progress));
-  } catch (error) {
-    console.error('Failed to serialize puzzle progress for storage.', error);
-    return null;
-  }
-};
 
 export const useSavePuzzleProgress = () => {
   const supabase = useSupabase();
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ attemptId, data }: { attemptId: string; data: PuzzleProgressInput }) => {
-      const sanitized = sanitizeProgress(data.progress);
+    mutationFn: async ({ progress, elapsedSeconds }: { progress: any; elapsedSeconds: number }) => {
+      const sanitized = JSON.parse(JSON.stringify(progress));
+      const { data, error } = await supabase.rpc("save_progress", {
+        _progress: sanitized,
+        _elapsed_seconds: elapsedSeconds
+      });
 
-      const update: Record<string, any> = {
-        progress: sanitized,
-        lives_remaining: data.lives ?? null,
-        elapsed_seconds: data.elapsedSeconds ?? null,
-        updated_at: new Date().toISOString().slice(0, 10),
-      };
+      if (error) throw error;
 
-      if (data.completed) {
-        update.status = 'completed';
-        update.completed_at = new Date().toISOString();
-      }
-
-      const { error } = await supabase.from('puzzle_attempts').update(update).eq('id', attemptId);
-
-      if (error) {
-        console.error('Failed to save puzzle progress:', error);
-        throw error;
-      }
+      return data;
     },
+
+    onSuccess: (attempt) => {
+      // Update React Query cache with fresh attempt data
+      queryClient.setQueryData(
+        ["currentPuzzleAttempt", attempt.user_id],
+        attempt
+      );
+    }
   });
 };

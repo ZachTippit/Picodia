@@ -1,44 +1,34 @@
-import { PostgrestError } from "@supabase/supabase-js";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useSupabase } from "../SupabaseProvider";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface FinishPuzzleInput {
-  attemptId: string;
-  wasSuccessful: boolean;
-  livesRemaining?: number;
-  mistakesMade?: number;
+  progress: any;
+  elapsedSeconds: number;
 }
 
 export const useFinishPuzzle = () => {
   const supabase = useSupabase();
   const queryClient = useQueryClient();
 
-  return useMutation<PuzzleAttempt, PostgrestError, FinishPuzzleInput>({
-    mutationFn: async ({
-      attemptId,
-      wasSuccessful,
-      livesRemaining = 0,
-      mistakesMade = 0,
-    }) => {
-      const { data, error } = await supabase
-        .from('puzzle_attempts')
-        .update({
-          completed_at: new Date().toISOString(),
-          was_successful: wasSuccessful,
-          lives_remaining: livesRemaining,
-          mistakes_made: mistakesMade,
-          status: 'completed',
-        })
-        .eq('id', attemptId)
-        .select()
-        .single();
+  return useMutation({
+    mutationFn: async ({ progress, elapsedSeconds }: FinishPuzzleInput) => {
+      const { data, error } = await supabase.rpc("finish_current_attempt", {
+        _progress: progress,
+        _elapsed_seconds: elapsedSeconds,
+      });
 
       if (error) throw error;
-      return data as PuzzleAttempt;
+      return data; // fully updated puzzle_attempt row
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["active-session"] });
+
+    onSuccess: (attempt) => {
+      // Update only the correct query key
+      queryClient.setQueryData(["currentPuzzleAttempt", attempt.user_id], attempt);
+
+      // Invalidate any dependent views
       queryClient.invalidateQueries({ queryKey: ["profile-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["active-session"] });
+      queryClient.invalidateQueries({ queryKey: ["currentPuzzleAttempt"] });
     },
   });
 };

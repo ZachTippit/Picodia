@@ -11,13 +11,12 @@ import { useCurrentPuzzleAttempt } from "./hooks/useCurrentPuzzleAttempt";
 const PageContainer = () => {
   const { showLandingScreen, showHowTo } = useUI();
 
-  const { data: clientBootstrap } = useClientBootstrap();
-  const { data: puzzleAttempt } = useCurrentPuzzleAttempt();
-  const { data: dailyPuzzle } = useDailyPuzzle();
+  const {data} = useClientBootstrap();
+  useCurrentPuzzleAttempt();
+  useDailyPuzzle();
 
-  console.log("Client Bootstrap:", clientBootstrap);
-  console.log("Current Puzzle Attempt:", puzzleAttempt);
-  
+  console.log("Client bootstrap data:", data);
+
   return (
     <div className="absolute top-0 right-0 left-0 bottom-0">
       <AnimatePresence>{showLandingScreen && <LandingScreen />}</AnimatePresence>

@@ -1,5 +1,4 @@
 import { use, useEffect, useMemo, useRef, useState } from "react";
-import { GameContext } from "../../providers/GameContext";
 import { useSavePuzzleProgress } from "@hooks/useSavePuzzleProgress";
 import { countFilledCorrect, createEmptyGrid, normalizeSavedGrid } from "@utils/gridHelpers";
 import { cn } from "@utils/cn";
@@ -8,8 +7,10 @@ import { useFinishPuzzle } from "@/hooks/useFinishPuzzle";
 import { usePuzzleInteractions, CellSelectionResult } from "@/hooks/usePuzzleInteractions";
 import { motion } from "framer-motion";
 import { cellVariants, gridVariants } from "@/animations";
-import { PuzzleOutcome } from "@/types/enums";
+import { GameStatus } from "@/types/enums";
 import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
+import { useLoseLife } from "@/hooks/useLoseLife";
+import { useElapsedTime } from "@/hooks/useElapsedTime";
 
 interface PuzzleCellState {
   correct: boolean;
@@ -19,23 +20,17 @@ interface PuzzleCellState {
 }
 
 const PuzzleGrid = () => {
-  const { lives, elapsedSeconds, loseLife } = use(GameContext);
-
-  const { mutate: saveProgress } = useSavePuzzleProgress();
   const { data: dailyPuzzle } = useDailyPuzzle();
-  const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
+  const { data: currentAttempt } = useCurrentPuzzleAttempt();
+  const elapsedSeconds = useElapsedTime(currentAttempt);
+  const { mutateAsync: saveProgress } = useSavePuzzleProgress();
+  const { loseLife } = useLoseLife();
   const { mutate: finishPuzzle } = useFinishPuzzle();
 
-  const currentPuzzleAttemptId = currentPuzzleAttempt?.id ?? null;
-  const savedProgress = currentPuzzleAttempt?.progress ?? null;
-
-  // Solution grid for this puzzle (array of 1s and 0s)
+  const lives = currentAttempt?.lives_remaining ?? 0;
+  const savedProgress = currentAttempt?.progress ?? null;
   const solution = dailyPuzzle?.puzzle_array ?? [];
 
-  // -------------------------------
-  // 🧠 INITIAL GRID DERIVATION
-  // Load saved grid if it exists, else empty grid
-  // -------------------------------
   const deriveInitialGrid = useMemo(() => {
     const normalized = normalizeSavedGrid(savedProgress, solution);
     return normalized ?? createEmptyGrid(solution);
@@ -46,110 +41,77 @@ const PuzzleGrid = () => {
 
   const totalCorrect = solution.flat().filter((v) => v === 1).length;
 
-  const isInteractionLocked = () => false;
+  const isInteractionLocked = () => currentAttempt?.status === GameStatus.Completed || lives <= 0;
 
   const handleCellSelection = (r: number, c: number): CellSelectionResult => {
-    if (isInteractionLocked()) {
-      return "ignored";
+    if (isInteractionLocked()) return "ignored";
+
+    let wasCorrect = false;
+
+    // 1. Compute nextGrid manually (so it's fresh & not stale)
+    let nextGrid: PuzzleCellState[][] = grid.map((row) => row.map((cell) => ({ ...cell })));
+
+    const cell = nextGrid[r][c];
+
+    if (cell.filled || cell.incorrect) return "ignored";
+
+    if (cell.correct) {
+      cell.filled = true;
+      wasCorrect = true;
+    } else {
+      cell.incorrect = true;
     }
 
-    let pendingUpdate: {
-      grid: PuzzleCellState[][];
-      lives: number;
-      completed: boolean;
-      wasCorrect: boolean;
-    } | null = null;
+    // 2. Apply UI update immediately
+    setGrid(nextGrid);
 
-    let result: CellSelectionResult = "ignored";
-
-    setGrid((prev) => {
-      const next = prev.map((row) => row.map((cell) => ({ ...cell })));
-      const cell = next[r][c];
-
-      // Prevent re-filling or re-marking incorrect cells
-      if (cell.filled || cell.incorrect) {
-        return prev;
-      }
-
-      let nextLives = lives;
-      let completed = false;
-
-      // Correct move
-      if (cell.correct) {
-        cell.filled = true;
-        const filledCount = countFilledCorrect(next);
-        completed = filledCount === totalCorrect;
-        result = "correct";
-
-      // Incorrect move
-      } else {
-        cell.incorrect = true;
-        nextLives = Math.max(lives - 1, 0);
-        loseLife();
-        completed = nextLives <= 0;
-        result = "incorrect";
-      }
-
-      pendingUpdate = {
-        grid: next,
-        lives: nextLives,
-        completed,
-        wasCorrect: cell.correct,
-      };
-
-      return next;
-    });
-
-    if (!pendingUpdate) return result;
-
-    const { grid: nextGrid, lives: nextLives, completed, wasCorrect } = pendingUpdate;
-
-    // Save progress immediately
-    if (currentPuzzleAttemptId) {
-      saveProgress({
-        attemptId: currentPuzzleAttemptId,
-        data: {
-          progress: nextGrid,
-          lives: nextLives,
+    // 3. Fire backend updates (using NEXT GRID, not stale grid)
+    (async () => {
+      try {
+        await saveProgress({
+          progress: nextGrid, // IMPORTANT: fresh derived grid
           elapsedSeconds,
-          completed,
-        },
-      });
-    }
-
-    if (completed && !hasCompletedRef.current) {
-      hasCompletedRef.current = true;
-
-      const outcome = wasCorrect ? PuzzleOutcome.Win : PuzzleOutcome.Loss;
-
-      if (currentPuzzleAttemptId) {
-        finishPuzzle({
-          attemptId: currentPuzzleAttemptId,
-          wasSuccessful: outcome === PuzzleOutcome.Win,
-          livesRemaining: nextLives,
         });
-      }
-    }
 
-    return result;
+        if (!wasCorrect) {
+          const updatedAttempt = await loseLife();
+          if (updatedAttempt.status === "completed") {
+            hasCompletedRef.current = true;
+          }
+        } else {
+          const filledCount = countFilledCorrect(nextGrid);
+          const isComplete = filledCount === totalCorrect;
+
+          if (isComplete && !hasCompletedRef.current) {
+            hasCompletedRef.current = true;
+            finishPuzzle({ progress: nextGrid, elapsedSeconds });
+          }
+        }
+      } catch (err) {
+        console.error("Async puzzle update failed:", err);
+      }
+    })();
+
+    // 4. Return immediately for smooth UX
+    return wasCorrect ? "correct" : "incorrect";
   };
 
-  // 🔁 Reset grid when we get new data from React Query
   useEffect(() => {
     setGrid(deriveInitialGrid);
     hasCompletedRef.current = false;
   }, [deriveInitialGrid]);
 
-  // Hook for interactivity (drag-to-fill, etc.)
-  const {
-    grid: gridInteractions,
-    cell: cellInteractions,
-    resetDragState,
-  } = usePuzzleInteractions({
+  //
+  // Interaction utilities (drag-based)
+  //
+  const { grid: gridInteractions, cell: cellInteractions } = usePuzzleInteractions({
     isInteractionLocked,
     handleCellSelection,
   });
 
+  //
+  // Render
+  //
   return (
     <motion.div
       {...gridInteractions}

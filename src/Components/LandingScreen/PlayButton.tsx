@@ -2,7 +2,7 @@ import { useUI } from "@/providers/UIProvider";
 import { useEffect, useState } from "react";
 import Button from "./Button";
 import { GameStatus } from "@/types/enums";
-import { useClientBootstrap } from "@/hooks/useClientBootstrap";
+import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
 
 const primaryActionLabelOptions = {
   [GameStatus.Pending]: "Play",
@@ -12,12 +12,11 @@ const primaryActionLabelOptions = {
 
 const PlayButton = () => {
   const { closeLandingScreen, setShowCountdown } = useUI();
-  const { data: clientBootstrap } = useClientBootstrap();
+  const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
 
   const [primaryActionLabel, setPrimaryActionLabel] = useState("Play");
 
-  const puzzleStatus: GameStatus = clientBootstrap?.session?.latest_daily_attempt?.status;
-  console.log("Puzzle Status:", puzzleStatus);
+  const puzzleStatus: GameStatus = currentPuzzleAttempt?.status;
 
   const handlePlay = () => {
     if(puzzleStatus === GameStatus.Pending || puzzleStatus === null) {

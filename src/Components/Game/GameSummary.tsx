@@ -1,10 +1,10 @@
-import React, { CSSProperties, use, useMemo } from "react";
-import { GameContext } from "../../providers/GameContext";
+import { CSSProperties, use, useMemo } from "react";
+import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
 // @ts-ignore
 import { default as Heart } from "../../assets/heart.png";
 // @ts-ignore
 import { default as EmptyHeart } from "../../assets/empty-heart.png";
-import { MAX_LIVES } from "@/utils/configs";
+import { useElapsedTime } from "@/hooks/useElapsedTime";
 
 const pad = (val: number) => {
   const value = Math.max(0, val);
@@ -21,26 +21,26 @@ const formatElapsedTime = (totalSeconds: number) => {
 interface GameSummaryProps {
   isAreaExpanded: boolean;
   shouldShowSummary: boolean;
-  isWin: boolean;
 }
 
-const GameSummary = ({ isAreaExpanded, shouldShowSummary, isWin }: GameSummaryProps) => {
-  const { lives, elapsedSeconds } = use(GameContext);
+const GameSummary = ({ isAreaExpanded, shouldShowSummary }: GameSummaryProps) => {
+  const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
+  const elapsedSeconds = useElapsedTime(currentPuzzleAttempt);
+
+  const { lives_remaining: lives, max_lives, outcome } = currentPuzzleAttempt;
+
+  const isWin = outcome === "win";
+
+  const resultHearts = useMemo(
+    () => Array.from({ length: max_lives }, (_, index) => (index < lives ? Heart : EmptyHeart)),
+    [lives, max_lives]
+  );
 
   const maxHeightStyle = useMemo<CSSProperties>(
     () => ({
       maxHeight: isAreaExpanded ? "220px" : "0px",
     }),
     [isAreaExpanded]
-  );
-
-  const sanitizedLives = Math.max(0, Math.min(MAX_LIVES, lives));
-  const resultHearts = useMemo(
-    () =>
-      Array.from({ length: MAX_LIVES }, (_, index) =>
-        index < sanitizedLives ? Heart : EmptyHeart
-      ),
-    [MAX_LIVES, sanitizedLives]
   );
 
   return (

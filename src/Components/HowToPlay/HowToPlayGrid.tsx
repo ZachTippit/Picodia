@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { HowToPlayCellState, rules } from "./rules";
+import { rules } from "./rules";
 
 interface HowToPlayGridProps {
   activeRule: number;

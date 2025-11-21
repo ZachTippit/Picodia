@@ -4,13 +4,13 @@ import HowToPlayGrid from "./HowToPlayGrid";
 import { useSupabaseAuth } from "../../SupabaseProvider";
 import { cn } from "@utils/cn";
 import { useUI } from "@/providers/UIProvider";
-import { rules as baseRules, HowToPlayRule } from "./rules";
+import { rules as baseRules } from "./rules";
 import { overlayVariants, textVariants } from "@/animations";
 
 const HowToPlayView = () => {
   const { user } = useSupabaseAuth();
   const { openLogin, closeHowTo } = useUI();
-  const isLoggedIn = Boolean(user);
+  const isLoggedIn = Boolean(user && user.is_anonymous === false);
 
   const rules = useMemo<HowToPlayRule[]>(() => {
     if (isLoggedIn) {

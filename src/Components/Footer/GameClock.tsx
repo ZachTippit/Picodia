@@ -1,21 +1,9 @@
-import { use, useEffect } from "react";
-import { GameContext } from "../../providers/GameContext";
-
-const pad = (val: number) => {
-  const value = Math.max(0, val);
-  return value < 10 ? `0${value}` : `${value}`;
-};
+import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
+import { useElapsedTime } from "@/hooks/useElapsedTime";
 
 const GameClock = () => {
-  const { elapsedSeconds, incrementElapsedSeconds } = use(GameContext);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      incrementElapsedSeconds();
-    }, 1000);
-
-    return () => window.clearInterval(interval);
-  }, [incrementElapsedSeconds]);
+  const { data: attempt } = useCurrentPuzzleAttempt();
+  const elapsedSeconds = useElapsedTime(attempt);
 
   const minutes = Math.floor(elapsedSeconds / 60);
   const seconds = elapsedSeconds % 60;
@@ -24,9 +12,9 @@ const GameClock = () => {
     <div className="fade-in-fwd move-on-start-footer ">
       <p className="text-center mb-2 font-bold">TIME</p>
       <div className="m-auto text-center">
-        <label className="text-sm">{pad(minutes)}</label>
-        <label className="text-sm">:</label>
-        <label className="text-sm">{pad(seconds)}</label>
+        <label className="text-sm">{minutes.toString().padStart(2, "0")}</label>
+        :
+        <label className="text-sm">{seconds.toString().padStart(2, "0")}</label>
       </div>
     </div>
   );

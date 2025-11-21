@@ -1,7 +1,6 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { GameProvider } from './providers/GameContext';
-import PageContainer from './PageContainer';
-import { UIProvider } from './providers/UIProvider';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import PageContainer from "./PageContainer";
+import { UIProvider } from "./providers/UIProvider";
 
 // const analyticsId = import.meta.env.VITE_GOOGLE_ANALYTICS_ID;
 
@@ -14,15 +13,13 @@ import { UIProvider } from './providers/UIProvider';
 // }
 
 const App = () => {
-  const queryClient = new QueryClient()
-  
+  const queryClient = new QueryClient();
+
   return (
     <QueryClientProvider client={queryClient}>
-      <GameProvider>
-        <UIProvider>
-          <PageContainer />
-        </UIProvider>
-      </GameProvider>
+      <UIProvider>
+        <PageContainer />
+      </UIProvider>
     </QueryClientProvider>
   );
 };

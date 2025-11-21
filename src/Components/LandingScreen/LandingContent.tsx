@@ -20,6 +20,8 @@ const LandingContent = () => {
   const { openLogin, openHowTo } = useUI();
   const { user, loading: userLoading } = useSupabaseAuth();
 
+  const isUserAnonymous = user?.is_anonymous ?? true;
+
   const isContentLoading = userLoading;
 
   return (
@@ -41,7 +43,7 @@ const LandingContent = () => {
             <p className="text-sm text-gray-700">Click play to start your day with a new puzzle!</p>
           </div>
           <PlayButton />
-          {!user && (
+          {isUserAnonymous && (
             <Button onClick={openLogin} className="bg-blue-600 hover:bg-blue-700">
               Log In
             </Button>

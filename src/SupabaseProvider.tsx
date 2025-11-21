@@ -41,31 +41,46 @@ export const SupabaseProvider = ({ children }: SupabaseProviderProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
+  let isMounted = true;
 
-    const init = async () => {
-      const { data } = await client.auth.getSession();
-      if (!isMounted) return;
-      setSession(data.session ?? null);
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    };
+  const init = async () => {
+    const { data: initial } = await client.auth.getSession();
+    const existingSession = initial.session;
 
-    void init();
+    if (!isMounted) return;
 
-    const {
-      data: { subscription },
-    } = client.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setUser(nextSession?.user ?? null);
-      setLoading(false);
-    });
+    if (!existingSession) {
+      // 👇 Perform anonymous sign-in
+      const { data: anonData, error: anonError } = await client.auth.signInAnonymously();
 
-    return () => {
-      isMounted = false;
-      subscription.unsubscribe();
-    };
-  }, [client]);
+      if (anonError) {
+        console.error("Anonymous sign-in failed:", anonError);
+      } else {
+        setSession(anonData.session);
+        setUser(anonData.session?.user ?? null);
+      }
+    } else {
+      setSession(existingSession);
+      setUser(existingSession.user ?? null);
+    }
+
+    setLoading(false);
+  };
+
+  void init();
+
+  const { data: { subscription } } = client.auth.onAuthStateChange((_event, nextSession) => {
+    setSession(nextSession);
+    setUser(nextSession?.user ?? null);
+    setLoading(false);
+  });
+
+  return () => {
+    isMounted = false;
+    subscription.unsubscribe();
+  };
+}, [client]);
+
 
   const value = useMemo<SupabaseContextValue>(
     () => ({
