@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "noEmit": false,
+    "types": ["node", "vitest"]
+  },
+  "include": ["vite.config.ts", "tailwind.config.ts"]
+}

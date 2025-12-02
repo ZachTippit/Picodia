@@ -1,24 +1,30 @@
-#   Picodia Game
+# Picodia Game
 
-Picodia is a web-based game based on a combination between Picross puzzles and the daily nature of Wordle. The tech stack is JS/React, MUI for styling and utilizes local storage for the caching of user play data. The backend is deployed in separate repo and is hosted in Google Cloud Functions with Cloud Firestore as the database.
+Picodia is a web-based game based on a combination between Picross puzzles and the daily nature of Wordle. The tech stack is JS/React, MUI for styling and utilizes local storage for the caching of user play data.
 
-##  Current Works-in-Progress
+## Development
+
+Install dependencies with `npm install`, start a local dev server with `npm run dev`, and launch the production preview via `npm run preview`. Run the Vite-powered build with `npm run build` and execute unit tests through `npm test`. The project now uses TypeScript via Vite, so any new environment variables should use the `VITE_` prefix (e.g. `VITE_GOOGLE_ANALYTICS_ID`, `VITE_SPREADSHEET_ID`, `VITE_SHEETS_API_KEY`). Tailwind CSS 4 is configured through the official Vite plugin, so utility classes are available once dependencies are installed. To keep formatting consistent, run Prettier with `npm run format` (or check-only via `npm run format:check`).
+
+## Current Works-in-Progress
 
 The current version of the project is missing some key features, which will be added as development continues:
 
+    -   Ability to "mark" squares for ease of play
     -   Replayability of previous levels (still need to figure out implementation)
-    -   Strike out clues in correctly completed rows
-    -   Add color to post-game pixel picture
-    -   Improved analytics and game tracking on back-end
-    
-##  External Integrations
+    -   Re-do tutorial for greater clarity of the rules
+    -   Change cookies storage to local storage
+    -   Re-implement state management into Redux
+    -   Refactor css into variables for ease of editing
+
+## External Integrations
 
 There are a few external platforms that this app communicates with.
 
-Presently, the app is connected to Google Cloud Functions and Firestore which communicates with the database and holds all of the puzzles, respectively. It would be relatively trivial to add game tracking stats, however that is not the focus of the initial release. Writing to Firestore would limit the very generous free tier for both Functions and Firestore, however that would require 10k+ active daily players.
+Presently, the app is connected into a spreadsheet holding all of the puzzles (using the Google Sheets API). This is restrictive from a scale perspective (~20k reads/daily), and is not a programmatically secure solution.
 
-In the next phase of development, the hope is to containerize the front end components (probably just this game) to allow greater scalability and practice with implementing Docker/K8s.
+In the next phase of development, the app will connect into a Node/Express backend hosted on GCP to read puzzles. This will be managed by an admin/backend app built in Golang. The hope is to containerize the front end components (probably just this game) to allow greater scalability and practice with implementing Docker/K8s.
 
-##  Testing Framework
+## Testing Framework
 
-Picodia uses Jasmine on the backend and does not currently have a front end testing framework, but includes catch statements and error logging to nail down any errant bugs.
+Picodia does not currently have a testing framework. This should change.
