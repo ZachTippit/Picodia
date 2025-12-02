@@ -1,5 +1,5 @@
 import { AnimatePresence } from "framer-motion";
-import { Footer, Game, Navbar, OtherPuzzles, Stats } from "./Components";
+import { Footer, Game, Navbar, Stats } from "./Components";
 import LandingScreen from "./Components/LandingScreen/LandingScreen";
 import HowToPlayView from "./Components/HowToPlay/HowToPlayView";
 import LoginOverlay from "./Components/Auth/LoginOverlay";

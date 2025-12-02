@@ -18,5 +18,3 @@ root.render(
     <App />
   </SupabaseProvider>
 );
-
-reportWebVitals();
