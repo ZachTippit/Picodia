@@ -7,6 +7,7 @@ import { useUI } from "./providers/UIProvider";
 import { useDailyPuzzle } from "./hooks/useDailyPuzzle";
 import { useClientBootstrap } from "./hooks/useClientBootstrap";
 import { useCurrentPuzzleAttempt } from "./hooks/useCurrentPuzzleAttempt";
+import { useMergeAnonymousUser } from "./hooks/auth/useMergeAnonymousUser";
 
 const PageContainer = () => {
   const { showLandingScreen, showHowTo } = useUI();
@@ -14,6 +15,7 @@ const PageContainer = () => {
   useClientBootstrap();
   useCurrentPuzzleAttempt();
   useDailyPuzzle();
+  useMergeAnonymousUser();
 
   // console.log("Client bootstrap data:", data);
   // console.log("Current Puzzle Attempt:", currentPuzzleAttempt);

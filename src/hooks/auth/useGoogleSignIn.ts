@@ -1,6 +1,8 @@
-import { useSupabase } from "@/SupabaseProvider";
-import { useSupabaseAuth } from "@/SupabaseProvider";
+// src/hooks/auth/useGoogleSignIn.ts
+import { useSupabase, useSupabaseAuth } from "@/SupabaseProvider";
 import { useMutation } from "@tanstack/react-query";
+
+const ANON_USER_KEY = "anon_user_id";
 
 const useGoogleSignIn = () => {
   const supabase = useSupabase();
@@ -8,34 +10,29 @@ const useGoogleSignIn = () => {
 
   return useMutation({
     mutationFn: async () => {
-      // If user is logged in anonymously, link Google to existing account
-      if (user && user.is_anonymous) {
-        const { data, error } = await supabase.auth.linkIdentity({
-          provider: "google",
-          options: {
-            redirectTo: window.location.origin,
-          },
-        });
+      const redirectTo = window.location.origin;
 
-        if (error) throw error;
-
-        // Mark in DB
-        const { error: rpcError } = await supabase.rpc("upgrade_anonymous_user");
-        if (rpcError) throw rpcError;
-
-        return { linked: true, upgraded: true, data };
+      // If we're currently anonymous, remember who we were on THIS device
+      if (user?.is_anonymous) {
+        try {
+          localStorage.setItem(ANON_USER_KEY, user.id);
+        } catch {
+          // non-fatal, merge just won't happen
+        }
       }
 
-      // If user is logged out or already registered, perform normal sign-in
+      // 🔑 Normal Google OAuth — let Supabase decide whether to reuse or create
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin,
+          redirectTo,
+          // no should_link_identity, no linkIdentity here
         },
       });
 
       if (error) throw error;
-      return { linked: false };
+      // redirect happens, nothing after this matters in practice
+      return { started: true };
     },
   });
 };
