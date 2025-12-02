@@ -20,7 +20,7 @@ const LandingContent = () => {
   const { openLogin, openHowTo } = useUI();
   const { user, loading: userLoading } = useSupabaseAuth();
 
-  const isUserAnonymous = user?.is_anonymous ?? true;
+  const isUserAnonymous = user?.is_anonymous;
 
   const isContentLoading = userLoading;
 

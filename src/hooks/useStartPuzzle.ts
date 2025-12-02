@@ -1,28 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSupabase } from '../SupabaseProvider';
 import { useCurrentPuzzleAttempt } from './useCurrentPuzzleAttempt';
 
-interface UseStartPuzzleOptions {
-  enabled?: boolean;
-  attemptId?: string | null;
-}
-
-/**
- * Marks the current or provided attempt as 'in_progress'.
- * Use with `enabled: isGameStarted` to auto-run when gameplay begins.
- */
-export const useStartPuzzle = ({ enabled = false, attemptId }: UseStartPuzzleOptions = {}) => {
+export const useStartPuzzle = () => {
+  const queryClient = useQueryClient();
   const supabase = useSupabase();
-  const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
+  const { data: currentAttempt } = useCurrentPuzzleAttempt();
 
-  const currentPuzzleAttemptId = currentPuzzleAttempt?.id ?? null;
-
-  return useQuery({
-    queryKey: ['startPuzzle', attemptId ?? currentPuzzleAttemptId],
-    enabled, // <-- only runs when enabled = true
-    queryFn: async () => {
-      const targetId = attemptId ?? currentPuzzleAttemptId;
-      if (!targetId) return null;
+  return useMutation<void, Error, void>({
+    mutationFn: async () => {
+      const id = currentAttempt?.id;
+      if (!id) return;
 
       const { data, error } = await supabase
         .from('puzzle_attempts')
@@ -30,18 +18,15 @@ export const useStartPuzzle = ({ enabled = false, attemptId }: UseStartPuzzleOpt
           status: 'in_progress',
           started_at: new Date().toISOString(),
         })
-        .eq('id', targetId)
+        .eq('id', id)
         .select('*')
         .single();
 
-      if (error) {
-        console.error('Failed to mark attempt as in_progress:', error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data;
     },
-    staleTime: Infinity,
-    gcTime: 0,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['currentPuzzleAttempt'] });
+    },
   });
 };

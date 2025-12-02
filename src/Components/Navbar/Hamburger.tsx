@@ -14,9 +14,7 @@ interface HamburgerProps {
 
 const Hamburger = ({ onOpenLogin }: HamburgerProps) => {
   const { user } = useSupabaseAuth();
-
-  console.log('Hamburger render, user:', user);
-
+  
   const [menuValue, setMenuValue] = useState<string>('');
 
   const isMenuOpen = menuValue === MENU;

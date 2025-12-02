@@ -11,11 +11,12 @@ import { useCurrentPuzzleAttempt } from "./hooks/useCurrentPuzzleAttempt";
 const PageContainer = () => {
   const { showLandingScreen, showHowTo } = useUI();
 
-  const {data} = useClientBootstrap();
+  useClientBootstrap();
   useCurrentPuzzleAttempt();
   useDailyPuzzle();
 
-  console.log("Client bootstrap data:", data);
+  // console.log("Client bootstrap data:", data);
+  // console.log("Current Puzzle Attempt:", currentPuzzleAttempt);
 
   return (
     <div className="absolute top-0 right-0 left-0 bottom-0">

@@ -15,13 +15,18 @@ interface PreGameCountdownProps {
 const PreGameCountdown = ({ setPuzzleVisible }: PreGameCountdownProps) => {
   const { setShowCountdown } = useUI();
   const [activeStepIndex, setActiveStepIndex] = useState<number | null>(0);
+  const { mutate: startPuzzle } = useStartPuzzle();
   const countdownValue = activeStepIndex !== null ? COUNTDOWN_STEPS[activeStepIndex] : null;
-  
-  useStartPuzzle({ enabled: countdownValue === 'GO!' });
   
   useEffect(() => {
     setPuzzleVisible(false);
   }, [setPuzzleVisible]);
+
+  useEffect(() => {
+  if (countdownValue === 'GO!') {
+    startPuzzle();   // <-- triggers DB update + invalidation
+  }
+}, [countdownValue]);
 
   useEffect(() => {
     if (activeStepIndex === null) {

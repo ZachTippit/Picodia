@@ -1,17 +1,24 @@
+import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
 import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
-import { getColumnRules, getRowRules } from "@/utils/ruleUtils";
+import { getColumnRules, getColumnRuleStatuses, getRowRules, getRowRuleStatuses } from "@/utils/ruleUtils";
 
 const RulesRow = () => {
   const { data: dailyPuzzle } = useDailyPuzzle();
-  const solution = dailyPuzzle.puzzle_array;
-  const rules = getRowRules(solution);
+  const { data: currentAttempt } = useCurrentPuzzleAttempt();
+
+  const rulesSource = currentAttempt?.progress ?? dailyPuzzle?.puzzle_array ?? [];
+  const rules = getRowRules(rulesSource);
+  const statuses = getRowRuleStatuses(rulesSource);
   
   return (
     <div className="grid grid-rows-7 gap-y-0.5 mr-2">
       {rules.map((rule, r) => (
         <div key={r} className="flex justify-end items-center h-10 gap-x-2">
           {rule.map((num, i) => (
-            <span key={i} className="text-xs leading-none mr-1">
+            <span
+              key={i}
+              className={`text-xs leading-none mr-1 ${statuses[r]?.[i]?.satisfied ? "line-through opacity-60" : ""}`}
+            >
               {num}
             </span>
           ))}
@@ -23,8 +30,11 @@ const RulesRow = () => {
 
 const RulesCol = () => {
   const { data: dailyPuzzle } = useDailyPuzzle();
-  const solution = dailyPuzzle.puzzle_array;
-  const rules = getColumnRules(solution);
+  const { data: currentAttempt } = useCurrentPuzzleAttempt();
+
+  const rulesSource = currentAttempt?.progress ?? dailyPuzzle?.puzzle_array ?? [];
+  const rules = getColumnRules(rulesSource);
+  const statuses = getColumnRuleStatuses(rulesSource);
 
   return (
     <div className="grid grid-cols-7 gap-x-0.5 mb-2">
@@ -34,7 +44,10 @@ const RulesCol = () => {
           {rule
             .slice()
             .map((num, i) => (
-              <span key={i} className="text-xs leading-none">
+              <span
+                key={i}
+                className={`text-xs leading-none ${statuses[c]?.[i]?.satisfied ? "line-through opacity-60" : ""}`}
+              >
                 {num}
               </span>
             ))}
