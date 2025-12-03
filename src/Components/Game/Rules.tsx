@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
 import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { cn } from "@/utils/cn";
@@ -7,6 +8,21 @@ import {
   getRowRules,
   getRowRuleStatuses,
 } from "@/utils/ruleUtils";
+
+const RuleNumber = ({ value, done }: { value: number; done?: boolean }) => (
+  <div className="relative mr-1 flex items-center justify-center min-w-[0.75rem]">
+    <span className={cn("text-base font-bold leading-none", done ? "text-gray-500" : "")}>
+      {value}
+    </span>
+    <motion.div
+      className="absolute left-0 right-0 top-1/2 h-[2px] bg-current"
+      style={{ transformOrigin: "left center" }}
+      initial={false}
+      animate={{ scaleX: done ? 1 : 0, opacity: done ? 0.85 : 0 }}
+      transition={{ duration: 0.18, ease: "easeOut" }}
+    />
+  </div>
+);
 
 const RulesRow = () => {
   const { data: dailyPuzzle } = useDailyPuzzle();
@@ -21,15 +37,7 @@ const RulesRow = () => {
       {rules.map((rule, r) => (
         <div key={r} className="flex justify-end items-center h-10 gap-x-2">
           {rule.map((num, i) => (
-            <span
-              key={i}
-              className={cn(
-                "text-base font-bold leading-none mr-1",
-                statuses[r]?.[i]?.satisfied ? "line-through decoration-3" : ""
-              )}
-            >
-              {num}
-            </span>
+            <RuleNumber key={i} value={num} done={statuses[r]?.[i]?.satisfied} />
           ))}
         </div>
       ))}
@@ -51,15 +59,7 @@ const RulesCol = () => {
         <div key={c} className="flex flex-col items-center justify-end h-12 gap-y-2">
           {/* 👇 reverse order so top aligns with top of grid */}
           {rule.slice().map((num, i) => (
-            <span
-              key={i}
-              className={cn(
-                "text-base leading-none font-bold",
-                statuses[c]?.[i]?.satisfied ? "line-through decoration-3" : ""
-              )}
-            >
-              {num}
-            </span>
+            <RuleNumber key={i} value={num} done={statuses[c]?.[i]?.satisfied} />
           ))}
         </div>
       ))}
