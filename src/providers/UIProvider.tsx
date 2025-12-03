@@ -1,4 +1,5 @@
 import { createContext, useState, useMemo, use } from "react";
+import posthog from "posthog-js";
 
 const UIContext = createContext(null);
 
@@ -15,6 +16,7 @@ export const UIProvider = ({ children }) => {
   };
 
   const openHowTo = () => {
+    posthog.capture("open_how_to", { property: "opened"});
     setShowHowTo(true);
   };
 
