@@ -54,7 +54,7 @@ type HowToPlayCellState = 0 | 1 | 2;
 
 interface HowToPlayRule {
   id: string;
-  text: string;
+  description: React.ReactNode;
   showLoginButton?: boolean;
   board?: HowToPlayCellState[][];
   rowRules?: (string | number)[][];

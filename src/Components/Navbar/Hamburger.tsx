@@ -36,6 +36,7 @@ const Hamburger = ({ onOpenLogin }: HamburgerProps) => {
           <HamburgerButton
             onClick={() => setMenuValue(isMenuOpen ? '' : MENU)}
             isMenuOpen={isMenuOpen}
+            className="cursor-pointer"
           />
           <NavigationMenu.Content
             className={cn(

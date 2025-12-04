@@ -40,7 +40,7 @@ const landingScreenVariants = {
   exit: {
     opacity: 0,
     pointerEvents: "none",
-    transition: { duration: 0.5, ease: "easeInOut" },
+    transition: { duration: 0.5, ease: "easeInOut", when: "afterChildren" },
   } as const,
 };
 
@@ -60,6 +60,12 @@ const previewVariants = {
     y: 0,
     transition: { duration: 0.5, ease: "easeOut", delay: 0.625 } as const,
   },
+  exit: {
+    opacity: 0,
+    y: -12,
+    scale: 0.96,
+    transition: { duration: 0.28, ease: "easeInOut" } as const,
+  },
 };
 
 const contentSectionVariants = {
@@ -68,6 +74,11 @@ const contentSectionVariants = {
     opacity: 1,
     y: 0,
     transition: { duration: 0.5, ease: "easeOut", delay: 1 } as const,
+  },
+  exit: {
+    opacity: 0,
+    y: 10,
+    transition: { duration: 0.3, ease: "easeInOut", delay: 0.12 } as const,
   },
 };
 

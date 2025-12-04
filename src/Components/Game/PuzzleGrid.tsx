@@ -1,4 +1,4 @@
-import { use, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSavePuzzleProgress } from "@hooks/useSavePuzzleProgress";
 import { countFilledCorrect, createEmptyGrid, normalizeSavedGrid } from "@utils/gridHelpers";
 import { cn } from "@utils/cn";
@@ -41,6 +41,19 @@ const PuzzleGrid = () => {
 
   const totalCorrect = solution.flat().filter((v) => v === 1).length;
 
+  const rowComplete = useMemo(
+    () => grid.map((row) => row.every((cell) => !cell.correct || cell.filled)),
+    [grid]
+  );
+
+  const colComplete = useMemo(() => {
+    if (grid.length === 0) return [];
+    const cols = grid[0].length;
+    return Array.from({ length: cols }, (_, c) =>
+      grid.every((row) => !row[c].correct || row[c].filled)
+    );
+  }, [grid]);
+
   const isInteractionLocked = () => currentAttempt?.status === GameStatus.Completed || lives <= 0;
 
   const handleCellSelection = (r: number, c: number): CellSelectionResult => {
@@ -53,7 +66,8 @@ const PuzzleGrid = () => {
 
     const cell = nextGrid[r][c];
 
-    if (cell.filled || cell.incorrect) return "ignored";
+    const cellMarked = rowComplete[r] || colComplete[c];
+    if (cell.filled || cell.incorrect || cellMarked) return "ignored";
 
     if (cell.correct) {
       cell.filled = true;
@@ -130,12 +144,15 @@ const PuzzleGrid = () => {
               type="button"
               disabled={isInteractionLocked()}
               className={cn(
-                "size-10 border border-gray-600 flex items-center justify-center transition-all select-none",
-                cell.filled
-                  ? "bg-gray-800"
-                  : cell.incorrect
-                    ? "bg-red-200"
-                    : "bg-white hover:bg-gray-200"
+                "size-10 border border-gray-600 flex items-center justify-center transition-all bg-white",
+                {
+                  "bg-gray-800": cell.filled,
+                  "bg-red-200": cell.incorrect,
+                  "bg-gray-200": !cell.filled && !cell.incorrect && (rowComplete[r] || colComplete[c]),
+                  "select-none": cell.filled || cell.incorrect || (rowComplete[r] || colComplete[c]),
+                  "cursor-pointer hover:bg-gray-200":
+                    !cell.filled && !cell.incorrect && !(rowComplete[r] || colComplete[c]),
+                }
               )}
               variants={cellVariants}
               initial="idle"

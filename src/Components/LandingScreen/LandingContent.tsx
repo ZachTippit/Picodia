@@ -31,28 +31,35 @@ const LandingContent = () => {
       ) : (
         <motion.div
           key="content"
-          className="flex w-full flex-col items-center gap-3 text-center"
+          className="flex w-full max-w-[440px] flex-col items-center gap-4 text-center md:max-w-[520px] md:gap-6"
           variants={contentVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
         >
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2 text-base text-gray-800 md:text-lg md:leading-relaxed">
             <WelcomeBackText />
-            <p className="text-sm text-gray-700">Solve the Nonogram</p>
-            <p className="text-sm text-gray-700">Click play to start your day with a new puzzle!</p>
+            <p className="text-gray-700">Solve the Nonogram</p>
+            <p className="text-gray-700">Click play to start your day with a new puzzle!</p>
           </div>
+          {
+            isUserAnonymous && (
+                        <Button onClick={openHowTo} className="bg-gray-600 hover:bg-gray-700">
+            How to Play
+          </Button>
+            )
+          }
           <PlayButton />
           {isUserAnonymous && (
             <Button onClick={openLogin} className="bg-blue-600 hover:bg-blue-700">
               Log In
             </Button>
           )}
-          <Button onClick={openHowTo} className="bg-gray-600 hover:bg-gray-700">
-            How to Play
-          </Button>
-
-          {/* <QuickStats /> */}
+          {!isUserAnonymous && (
+            <Button onClick={openHowTo} className="bg-gray-600 hover:bg-gray-700">
+              How to Play
+            </Button>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

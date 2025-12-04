@@ -21,7 +21,7 @@ const HowToPlayView = () => {
       ...baseRules,
       {
         id: "rule-login",
-        text: "Don't forget to log in to save and share results!",
+        description: (<p>Don't forget to <strong>log in</strong> to save and share results!</p>),
         showLoginButton: true,
       },
     ];
@@ -90,7 +90,7 @@ const HowToPlayView = () => {
               exit="exit"
               transition={{ duration: 0.35, ease: "easeInOut" }}
             >
-              {activeRuleData?.text}
+              {activeRuleData?.description}
             </motion.p>
           </AnimatePresence>
         </div>
@@ -101,7 +101,7 @@ const HowToPlayView = () => {
             disabled={activeRule === 0}
             className={cn(
               "flex h-8 w-8 items-center justify-center rounded-full border border-gray-400 text-gray-700 transition-all duration-300",
-              activeRule === 0 ? "cursor-not-allowed opacity-40" : "hover:bg-gray-200"
+              activeRule === 0 ? "cursor-not-allowed opacity-40" : "hover:bg-gray-200 cursor-pointer"
             )}
           >
             &larr;
@@ -117,7 +117,7 @@ const HowToPlayView = () => {
               "flex h-8 w-8 items-center justify-center rounded-full border border-gray-400 text-gray-700 transition-all duration-300",
               activeRule === rules.length - 1
                 ? "cursor-not-allowed opacity-40"
-                : "hover:bg-gray-200"
+                : "cursor-pointer hover:bg-gray-200"
             )}
           >
             &rarr;
@@ -126,7 +126,7 @@ const HowToPlayView = () => {
         <button
           type="button"
           onClick={handleClose}
-          className="mt-6 w-32 rounded-full bg-gray-500 px-4 py-2 text-white transition hover:bg-gray-600"
+          className="mt-6 w-32 rounded-full bg-gray-500 px-4 py-2 text-white transition hover:bg-gray-600 cursor-pointer"
         >
           Close
         </button>

@@ -1,6 +1,5 @@
 import { useUI } from "@/providers/UIProvider";
 import Hamburger from "./Hamburger";
-import { cn } from "@utils/cn";
 
 const Navbar = () => {
   const { openLogin, openHowTo } = useUI();
@@ -11,11 +10,11 @@ const Navbar = () => {
         type="button"
         onClick={openHowTo}
         aria-label="How to play"
-        className="flex h-10 w-10 items-center justify-center rounded-full border text-2xl font-semibold transition border-gray-300 bg-white text-gray-800 hover:border-gray-400"
+        className="flex h-10 w-10 items-center justify-center rounded-full border text-2xl font-semibold transition border-gray-300 bg-white text-gray-800 hover:border-gray-400 cursor-pointer"
       >
         ?
       </button>
-      <h1 className="tracking-widest">PICODIA</h1>
+      <div className="w-24" aria-hidden />
       <Hamburger onOpenLogin={openLogin} />
     </div>
   );

@@ -2,11 +2,13 @@ import { useMemo } from 'react';
 import { cn } from '@utils/cn';
 
 const answer = [
-  [1, 1, 1, 1, 1],
-  [1, 0, 0, 0, 1],
-  [1, 1, 1, 1, 1],
-  [1, 0, 0, 0, 0],
-  [1, 0, 0, 0, 0],
+  [1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 0],
+  [1, 0, 0, 0, 0, 0, 0],
+  [1, 0, 0, 0, 0, 0, 0],
 ];
 
 const PreviewGrid = () => {
@@ -22,7 +24,7 @@ const PreviewGrid = () => {
   );
 
   return (
-    <div className="flex w-full flex-1 items-center justify-center max-h-32">
+    <div className="flex w-full flex-1 items-center justify-center">
       <div
         className={cn('grid grid-cols-1 grid-rows-1 transition-transform duration-700 ease-out')}
       >
