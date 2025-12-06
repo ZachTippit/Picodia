@@ -10,8 +10,8 @@ import {
 } from "@/utils/ruleUtils";
 
 const RuleNumber = ({ value, done }: { value: number; done?: boolean }) => (
-  <div className="relative mr-1 flex items-center justify-center min-w-[0.75rem]">
-    <span className={cn("text-base font-bold leading-none", done ? "text-gray-500" : "")}>
+  <div className="relative flex items-center justify-center min-w-[0.75rem] mr-0 sm:mr-1">
+    <span className={cn("text-sm sm:text-base font-bold leading-none", done ? "text-gray-500" : "")}>
       {value}
     </span>
     <motion.div
@@ -27,8 +27,6 @@ const RuleNumber = ({ value, done }: { value: number; done?: boolean }) => (
 const RulesRow = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   const { data: currentAttempt } = useCurrentPuzzleAttempt();
 
-  console.log("RulesRow - Puzzle Attempt Data:", currentAttempt);
-
   const rulesSource = currentAttempt?.solution ?? [];
   const rules = getRowRules(rulesSource);
   const statuses = getRowRuleStatuses(rulesSource);
@@ -36,7 +34,7 @@ const RulesRow = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   return (
     <div className={cn("grid grid-rows-7 gap-y-0.5", className)} {...props}>
       {rules.map((rule, r) => (
-        <div key={r} className="flex justify-end items-center h-10 gap-x-2">
+        <div key={r} className="flex justify-end items-center h-10 gap-x-1 sm:gap-x-2">
           {rule.map((num, i) => (
             <RuleNumber key={i} value={num} done={statuses[r]?.[i]?.satisfied} />
           ))}

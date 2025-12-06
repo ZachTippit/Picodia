@@ -9,7 +9,6 @@ const Footer = () => {
 
   const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
   const inProgress = currentPuzzleAttempt?.status === GameStatus.InProgress;
-  console.log("Footer - Puzzle Attempt Status:", currentPuzzleAttempt?.status);
   const showLiveStats = inProgress;
 
   if(!currentPuzzleAttempt) return null;

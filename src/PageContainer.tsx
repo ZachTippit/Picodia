@@ -17,9 +17,6 @@ const PageContainer = () => {
   useDailyPuzzle();
   useMergeAnonymousUser();
 
-  // console.log("Client bootstrap data:", data);
-  // console.log("Current Puzzle Attempt:", currentPuzzleAttempt);
-
   return (
     <LayoutGroup>
       <div className="absolute top-0 right-0 left-0 bottom-0">
