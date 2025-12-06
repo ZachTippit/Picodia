@@ -1,20 +1,19 @@
-// src/hooks/auth/useMergeAnonymousUser.ts
 import { useEffect } from "react";
-import { useSupabase } from "@/SupabaseProvider";
-import { useClientBootstrap } from "@/hooks/useClientBootstrap";
+import { useSupabase, useSupabaseAuth } from "@/SupabaseProvider";
 
 const ANON_USER_KEY = "anon_user_id";
 
 export const useMergeAnonymousUser = () => {
   const supabase = useSupabase();
-  const { data, isLoading } = useClientBootstrap();
+  const { user, loading } = useSupabaseAuth();
 
   useEffect(() => {
-    if (isLoading) return;
+    if (loading) return;
 
     const runMerge = async () => {
       const anonUserId = localStorage.getItem(ANON_USER_KEY);
-      const realUserId: string | undefined = data?.auth?.user_id ?? undefined;
+      
+      const realUserId = user?.id;
 
       if (!anonUserId || !realUserId || anonUserId === realUserId) return;
 
@@ -34,5 +33,5 @@ export const useMergeAnonymousUser = () => {
     };
 
     void runMerge();
-  }, [isLoading, data, supabase]);
+  }, [loading, user, supabase]);
 };

@@ -35,7 +35,7 @@ const PreviewGrid = () => {
                 <span
                   key={`${rIdx}-${cIdx}`}
                   className={cn(
-                    'flex h-5 w-5 select-none items-center justify-center border border-gray-600 transition-all',
+                    'flex size-3 select-none items-center justify-center border border-gray-600 transition-all',
                     cell.filled ? 'bg-gray-800' : 'bg-white'
                   )}
                 />

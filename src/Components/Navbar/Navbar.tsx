@@ -14,7 +14,7 @@ const Navbar = () => {
       >
         ?
       </button>
-      <div className="w-24" aria-hidden />
+      <h1 className="font-display text-3xl font-bold tracking-wider text-gray-900 md:text-4xl">PICODIA</h1>
       <Hamburger onOpenLogin={openLogin} />
     </div>
   );

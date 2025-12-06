@@ -14,7 +14,7 @@ const Button = ({ onClick, children, className, disabled = false }: ButtonProps)
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={cn("w-32 rounded-full px-4 py-2 text-white transition-opacity duration-500", className)}
+      className={cn("font-display tracking-wider w-36 rounded-full px-4 py-3 transition-opacity duration-500 cursor-pointer", className)}
     >
       {children}
     </button>

@@ -6,10 +6,12 @@ import { cn } from "@utils/cn";
 import { useUI } from "@/providers/UIProvider";
 import { rules as baseRules } from "./rules";
 import { overlayVariants, textVariants } from "@/animations";
+import Button from "../LandingScreen/Button";
+import LoginButton from "./LoginButton";
 
 const HowToPlayView = () => {
   const { user } = useSupabaseAuth();
-  const { openLogin, closeHowTo } = useUI();
+  const { closeHowTo } = useUI();
   const isLoggedIn = Boolean(user && user.is_anonymous === false);
 
   const rules = useMemo<HowToPlayRule[]>(() => {
@@ -21,7 +23,11 @@ const HowToPlayView = () => {
       ...baseRules,
       {
         id: "rule-login",
-        description: (<p>Don't forget to <strong>log in</strong> to save and share results!</p>),
+        description: (
+          <p>
+            Don't forget to <strong>log in</strong> to save and share results!
+          </p>
+        ),
         showLoginButton: true,
       },
     ];
@@ -63,26 +69,29 @@ const HowToPlayView = () => {
     >
       <h1 className="mb-4 text-2xl">PICODIA</h1>
       <div className="flex w-full flex-1 flex-col items-center justify-center gap-6 text-center">
-        {activeRuleData?.showLoginButton ? (
-          <button
-          type="button"
-          className="relative w-32 rounded-full bg-white px-4 py-2 text-gray-800 transition hover:bg-gray-300 border border-gray-800"
-          onClick={openLogin}
-          >
-            Log In
-            <span
-              aria-hidden="true"
-              className="absolute top-0.5 right-0.5 block size-2 rounded-full bg-red-600 animate-pulse"
-            />
-          </button>
-        ) : (
-          <HowToPlayGrid activeRule={activeRule} />
-        )}
-        <div className="relative flex min-h-12 w-full max-w-xs items-center justify-center">
+        <div className="relative flex w-full max-w-xs items-center justify-center h-[220px]">
+          <AnimatePresence mode="wait" initial={false}>
+            {activeRuleData?.showLoginButton ? (
+              <LoginButton />
+            ) : (
+              <motion.div
+                key={activeRuleData?.id ?? activeRule}
+                className="absolute inset-0 flex items-center justify-center"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+              >
+                <HowToPlayGrid activeRule={activeRule} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        <div className="relative flex h-24 w-full max-w-xs items-center justify-center overflow-hidden">
           <AnimatePresence mode="wait" initial={false} custom={direction}>
-            <motion.p
+            <motion.div
               key={activeRuleData?.id ?? activeRule}
-              className="max-w-xs text-sm leading-snug text-gray-700"
+              className="max-w-xs text-sm leading-snug text-gray-700 absolute inset-x-0 mx-auto"
               custom={direction}
               variants={textVariants}
               initial="initial"
@@ -91,7 +100,7 @@ const HowToPlayView = () => {
               transition={{ duration: 0.35, ease: "easeInOut" }}
             >
               {activeRuleData?.description}
-            </motion.p>
+            </motion.div>
           </AnimatePresence>
         </div>
         <div className="flex items-center gap-4">
@@ -101,12 +110,14 @@ const HowToPlayView = () => {
             disabled={activeRule === 0}
             className={cn(
               "flex h-8 w-8 items-center justify-center rounded-full border border-gray-400 text-gray-700 transition-all duration-300",
-              activeRule === 0 ? "cursor-not-allowed opacity-40" : "hover:bg-gray-200 cursor-pointer"
+              activeRule === 0
+                ? "cursor-not-allowed opacity-40"
+                : "hover:bg-gray-200 cursor-pointer"
             )}
           >
             &larr;
           </button>
-          <span className="text-xs uppercase tracking-[0.3em] text-gray-500">
+          <span className="text-xs font-display uppercase tracking-[0.3em] text-gray-600">
             Hint {activeRule + 1}/{rules.length}
           </span>
           <button
@@ -123,13 +134,9 @@ const HowToPlayView = () => {
             &rarr;
           </button>
         </div>
-        <button
-          type="button"
-          onClick={handleClose}
-          className="mt-6 w-32 rounded-full bg-gray-500 px-4 py-2 text-white transition hover:bg-gray-600 cursor-pointer"
-        >
+        <Button onClick={handleClose} className="border border-gray-900 text-gray-900">
           Close
-        </button>
+        </Button>
       </div>
     </motion.div>
   );

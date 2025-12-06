@@ -32,7 +32,7 @@ const PlayButton = () => {
   }, [puzzleStatus]);
 
   return (
-    <Button onClick={handlePlay} className="bg-green-600 hover:bg-green-700">
+    <Button onClick={handlePlay} className="bg-gray-900 text-white">
       {primaryActionLabel}
     </Button>
   );
