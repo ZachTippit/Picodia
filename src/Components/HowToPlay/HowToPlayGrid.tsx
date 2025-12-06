@@ -40,6 +40,8 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
   const colRules = rules[activeRule]?.colRules ?? createEmptyClues();
   const board = rules[activeRule]?.board ?? createEmptyBoard();
 
+  const maxRuleLength = Math.max(...colRules.map((col) => col.length), 0);
+
   const renderRowRules = (className?: string, isGhost?: boolean) => (
     <div
       className={cn("grid grid-rows-5 gap-y-1", className, {
@@ -62,11 +64,14 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
   return (
     <div className="flex items-center justify-center h-40">
       <div className="flex items-start justify-center gap-1">
-        {renderRowRules("mr-3")}
+        <div className="flex flex-col items-end gap-1">
+          <div style={{ height: `${maxRuleLength * 24}px` }}/>
+          {renderRowRules("mr-3")}
+        </div>
         <div className="flex flex-col items-start gap-1">
-          <div className="grid grid-cols-5 gap-x-2 mb-3 w-full">
+          <div className="grid grid-cols-5 gap-x-2 mb-2 w-full">
             {colRules.map((clue, idx) => (
-              <div key={idx} className="flex min-h-[1.75rem] flex-col items-center justify-end gap-y-1">
+              <div key={idx} className="flex flex-col items-center justify-end gap-y-2">
                 {clue
                   .slice()
                   .reverse()
@@ -86,7 +91,7 @@ const HowToPlayGrid = ({ activeRule }: HowToPlayGridProps) => {
                   return (
                     <motion.span
                       key={cIdx}
-                      className="h-5 w-5 border border-gray-400"
+                      className="size-8 border border-gray-400"
                       style={{ backgroundColor: cellColor }}
                       initial={false}
                       animate={{ backgroundColor: cellColor }}

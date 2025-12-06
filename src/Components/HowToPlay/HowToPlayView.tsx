@@ -67,7 +67,9 @@ const HowToPlayView = () => {
       exit="exit"
       transition={{ duration: 0.4, ease: "easeInOut" }}
     >
-      <h1 className="mb-4 text-2xl">PICODIA</h1>
+      <h1 className="mt-6.5 font-display text-3xl font-bold tracking-wider text-gray-900 md:text-4xl">
+        PICODIA
+      </h1>
       <div className="flex w-full flex-1 flex-col items-center justify-center gap-6 text-center">
         <div className="relative flex w-full max-w-xs items-center justify-center h-[220px]">
           <AnimatePresence mode="wait" initial={false}>
