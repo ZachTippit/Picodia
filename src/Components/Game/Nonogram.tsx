@@ -11,15 +11,14 @@ export const Nonogram = () => {
   const rulesSource = currentAttempt?.solution ?? [];
   const rules = getColumnRules(rulesSource);
   const maxRuleLength = Math.max(...rules.map((col) => col.length), 0);
-  const rulesColHeightSpacer = `${"h-" + maxRuleLength * 6}`;
   
   return (
     <div className="flex flex-col items-center gap-4 my-6">
       <GameEndEffects />
       <div className="flex items-start justify-center gap-0.5">
         {/* Row rules */}
-        <div className="flex flex-col items-end gap-0.5">
-          <div className={cn("mb-2", rulesColHeightSpacer)} aria-hidden />
+        <div className="flex flex-col items-end">
+          <div className="mb-2" style={{ height: `${maxRuleLength * 16}px` }} />
           <RulesRow className="mr-2" />
         </div>
         <div className="flex flex-col items-start gap-0.5">
