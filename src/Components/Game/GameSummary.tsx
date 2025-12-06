@@ -25,7 +25,7 @@ interface GameSummaryProps {
 
 const GameSummary = ({ isAreaExpanded, shouldShowSummary }: GameSummaryProps) => {
   const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
-  const elapsedSeconds = useElapsedTime(currentPuzzleAttempt);
+  const elapsedSeconds = useElapsedTime();
 
   const { lives_remaining: lives, max_lives, outcome } = currentPuzzleAttempt;
 

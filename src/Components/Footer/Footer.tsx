@@ -15,7 +15,7 @@ const Footer = () => {
   if(!currentPuzzleAttempt) return null;
 
   return (
-    <div className="w-full mb-8 pt-4 border border-b-0 border-x-0 border-t-gray-300">
+    <div className="w-full pt-6 pb-12 border border-b-0 border-x-0 border-t-gray-300 bg-gray-200">
       <div className="relative flex min-h-16 w-full items-center justify-center">
         <div
           className={cn(

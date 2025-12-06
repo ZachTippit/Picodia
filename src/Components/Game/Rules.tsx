@@ -1,6 +1,6 @@
+import type { HTMLAttributes } from "react";
 import { motion } from "framer-motion";
 import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
-import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { cn } from "@/utils/cn";
 import {
   getColumnRules,
@@ -24,16 +24,15 @@ const RuleNumber = ({ value, done }: { value: number; done?: boolean }) => (
   </div>
 );
 
-const RulesRow = () => {
-  const { data: dailyPuzzle } = useDailyPuzzle();
+const RulesRow = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   const { data: currentAttempt } = useCurrentPuzzleAttempt();
 
-  const rulesSource = currentAttempt?.progress ?? dailyPuzzle?.puzzle_array ?? [];
+  const rulesSource = currentAttempt?.progress ?? [];
   const rules = getRowRules(rulesSource);
   const statuses = getRowRuleStatuses(rulesSource);
 
   return (
-    <div className="grid grid-rows-7 gap-y-0.5 mr-2">
+    <div className={cn("grid grid-rows-7 gap-y-0.5", className)} {...props}>
       {rules.map((rule, r) => (
         <div key={r} className="flex justify-end items-center h-10 gap-x-2">
           {rule.map((num, i) => (
@@ -45,16 +44,15 @@ const RulesRow = () => {
   );
 };
 
-const RulesCol = () => {
-  const { data: dailyPuzzle } = useDailyPuzzle();
+const RulesCol = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   const { data: currentAttempt } = useCurrentPuzzleAttempt();
 
-  const rulesSource = currentAttempt?.progress ?? dailyPuzzle?.puzzle_array ?? [];
+  const rulesSource = currentAttempt?.progress ?? [];
   const rules = getColumnRules(rulesSource);
   const statuses = getColumnRuleStatuses(rulesSource);
 
   return (
-    <div className="grid grid-cols-7 gap-x-0.5 mb-2">
+    <div className={cn("grid grid-cols-7 gap-x-0.5", className)} {...props}>
       {rules.map((rule, c) => (
         <div key={c} className="flex flex-col items-center justify-end h-12 gap-y-2">
           {/* 👇 reverse order so top aligns with top of grid */}

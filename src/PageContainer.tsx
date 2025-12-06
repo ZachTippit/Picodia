@@ -7,10 +7,12 @@ import { useUI } from "./providers/UIProvider";
 import { useDailyPuzzle } from "./hooks/useDailyPuzzle";
 import { useCurrentPuzzleAttempt } from "./hooks/useCurrentPuzzleAttempt";
 import { useMergeAnonymousUser } from "./hooks/auth/useMergeAnonymousUser";
+import { useClientBootstrap } from "./hooks/useClientBootstrap";
 
 const PageContainer = () => {
   const { showLandingScreen, showHowTo } = useUI();
 
+  useClientBootstrap();
   useCurrentPuzzleAttempt();
   useDailyPuzzle();
   useMergeAnonymousUser();
@@ -24,11 +26,11 @@ const PageContainer = () => {
         <AnimatePresence>{showLandingScreen && <LandingScreen />}</AnimatePresence>
         <AnimatePresence>{showHowTo && <HowToPlayView />}</AnimatePresence>
         <LoginOverlay />
+        <Stats />
+        <OtherPuzzles />
         {!showLandingScreen && (
-          <div className="max-w-[450px] m-auto">
+          <div className="m-auto flex flex-col h-full">
             <Navbar />
-            <Stats />
-            <OtherPuzzles />
             <Game />
             <Footer />
           </div>

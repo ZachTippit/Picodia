@@ -22,7 +22,7 @@ interface PuzzleCellState {
 const PuzzleGrid = () => {
   const { data: dailyPuzzle } = useDailyPuzzle();
   const { data: currentAttempt } = useCurrentPuzzleAttempt();
-  const elapsedSeconds = useElapsedTime(currentAttempt);
+  const elapsedSeconds = useElapsedTime();
   const { mutateAsync: saveProgress } = useSavePuzzleProgress();
   const { loseLife } = useLoseLife();
   const { mutate: finishPuzzle } = useFinishPuzzle();

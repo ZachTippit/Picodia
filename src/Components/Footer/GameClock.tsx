@@ -1,9 +1,7 @@
-import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
 import { useElapsedTime } from "@/hooks/useElapsedTime";
 
 const GameClock = () => {
-  const { data: attempt } = useCurrentPuzzleAttempt();
-  const elapsedSeconds = useElapsedTime(attempt);
+  const elapsedSeconds = useElapsedTime();
 
   const minutes = Math.floor(elapsedSeconds / 60);
   const seconds = elapsedSeconds % 60;

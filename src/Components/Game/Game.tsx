@@ -21,7 +21,7 @@ const Game = () => {
   }, [showCountdown]);
 
   return (
-    <div className="relative min-h-[450px] flex items-center justify-center">
+    <div className="relative min-h-[450px] flex items-center justify-center flex-1">
       {showCountdown && <PreGameCountdown setPuzzleVisible={setPuzzleVisible} />}
       <div
         className={cn(
