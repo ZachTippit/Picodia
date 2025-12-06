@@ -8,9 +8,7 @@ import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
 export const Nonogram = () => {
   const { data: currentAttempt } = useCurrentPuzzleAttempt();
 
-  console.log("Nonogram - Puzzle Attempt Data:", currentAttempt);
-
-  const rulesSource = currentAttempt?.progress ?? [];
+  const rulesSource = currentAttempt?.solution ?? [];
   const rules = getColumnRules(rulesSource);
   const maxRuleLength = Math.max(...rules.map((col) => col.length), 0);
   const rulesColHeightSpacer = `${"h-" + maxRuleLength * 6}`;

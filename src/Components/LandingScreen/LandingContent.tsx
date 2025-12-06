@@ -42,6 +42,7 @@ const LandingContent = () => {
   const { openLogin, openHowTo } = useUI();
   const { user, loading: userLoading } = useSupabaseAuth();
   const { data: dailyPuzzle } = useDailyPuzzle();
+  console.log("User: ", user);
 
   const isUserAnonymous = user?.is_anonymous;
   const isContentLoading = userLoading;

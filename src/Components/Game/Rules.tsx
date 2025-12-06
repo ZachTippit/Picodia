@@ -27,7 +27,9 @@ const RuleNumber = ({ value, done }: { value: number; done?: boolean }) => (
 const RulesRow = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   const { data: currentAttempt } = useCurrentPuzzleAttempt();
 
-  const rulesSource = currentAttempt?.progress ?? [];
+  console.log("RulesRow - Puzzle Attempt Data:", currentAttempt);
+
+  const rulesSource = currentAttempt?.solution ?? [];
   const rules = getRowRules(rulesSource);
   const statuses = getRowRuleStatuses(rulesSource);
 
@@ -47,7 +49,7 @@ const RulesRow = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => {
 const RulesCol = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   const { data: currentAttempt } = useCurrentPuzzleAttempt();
 
-  const rulesSource = currentAttempt?.progress ?? [];
+  const rulesSource = currentAttempt?.solution ?? [];
   const rules = getColumnRules(rulesSource);
   const statuses = getColumnRuleStatuses(rulesSource);
 
