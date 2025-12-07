@@ -18,7 +18,7 @@ export const Nonogram = () => {
       <div className="flex items-start justify-center gap-0.5">
         {/* Row rules */}
         <div className="flex flex-col items-end">
-          <div className="mb-2" style={{ height: `${maxRuleLength * 16}px` }} />
+          <div className="mb-2" style={{ height: `${maxRuleLength * 24}px` }} />
           <RulesRow className="mr-2" />
         </div>
         <div className="flex flex-col items-start gap-0.5">

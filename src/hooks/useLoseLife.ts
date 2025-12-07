@@ -12,7 +12,7 @@ export const useLoseLife = () => {
       return data;
     },
     onSuccess: (attempt) => {
-      queryClient.setQueryData(["currentPuzzleAttempt", attempt.user_id], attempt);
+      queryClient.invalidateQueries({ queryKey: ["currentPuzzleAttempt"] });
     },
   });
 
