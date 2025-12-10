@@ -57,22 +57,19 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
             toggleStats();
             closeMenu();
           }}
-          className="bg-gray-300 text-gray-800 not-disabled:hover:bg-gray-400 disabled:bg-gray-100 disabled:text-gray-600"
-          disabled
+          className="bg-gray-300 text-gray-800 not-disabled:hover:bg-gray-400"
         >
-          Stats <span className="text-xxs">(coming soon!)</span>
+          Stats
         </MenuButton>
         <MenuButton
           onClick={() => {
             toggleOtherPuzzles();
             closeMenu();
           }}
-          className="bg-gray-300 text-gray-800 not-disabled:hover:bg-gray-400 disabled:bg-gray-100 disabled:text-gray-600"
-          disabled
+          className="bg-gray-300 text-gray-800 not-disabled:hover:bg-gray-400"
         >
-          Other Puzzles <span className="text-xxs">(coming soon!)</span>
+          Other Puzzles
         </MenuButton>
-        <ResetPuzzleButton />
       </div>
     </div>
   );
