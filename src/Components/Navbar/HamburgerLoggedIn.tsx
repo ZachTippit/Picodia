@@ -12,7 +12,7 @@ interface HamburgerLoggedInProps {
 }
 
 const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) => {
-  const { toggleStats, toggleOtherPuzzles } = useUI();
+  const { toggleStats, toggleOtherPuzzles, toggleReportBug } = useUI();
 
   const supabase = useSupabase();
   const queryClient = useQueryClient();
@@ -69,6 +69,15 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
           className="bg-gray-300 text-gray-800 not-disabled:hover:bg-gray-400"
         >
           Other Puzzles
+        </MenuButton>
+        <MenuButton
+          onClick={() => {
+            toggleReportBug();
+            closeMenu();
+          }}
+          className="bg-gray-100 text-gray-800 not-disabled:hover:bg-gray-200"
+        >
+          Report a Bug
         </MenuButton>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { Footer, Game, Navbar, OtherPuzzles, Stats } from "./Components";
 import LandingScreen from "./Components/LandingScreen/LandingScreen";
 import HowToPlayView from "./Components/HowToPlay/HowToPlayView";
 import LoginOverlay from "./Components/Auth/LoginOverlay";
+import ReportBugModal from "./Components/ReportBugModal";
 import { useUI } from "./providers/UIProvider";
 import { useDailyPuzzle } from "./hooks/useDailyPuzzle";
 import { useCurrentPuzzleAttempt } from "./hooks/useCurrentPuzzleAttempt";
@@ -25,6 +26,7 @@ const PageContainer = () => {
         <LoginOverlay />
         <Stats />
         <OtherPuzzles />
+        <ReportBugModal />
         {!showLandingScreen && (
           <div className="m-auto flex flex-col h-full">
             <Navbar />

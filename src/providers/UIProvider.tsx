@@ -9,6 +9,7 @@ export const UIProvider = ({ children }) => {
   const [showHowTo, setShowHowTo] = useState<boolean>(false);
   const [ showStats, setShowStats ] = useState<boolean>(false);
   const [ showOtherPuzzles, setShowOtherPuzzles ] = useState<boolean>(false);
+  const [ showReportBug, setShowReportBug ] = useState<boolean>(false);
   const [ showCountdown, setShowCountdown ] = useState<boolean>(false);
 
   const closeLandingScreen = () => {
@@ -41,6 +42,10 @@ export const UIProvider = ({ children }) => {
     setShowOtherPuzzles(!showOtherPuzzles);
   };
 
+  const toggleReportBug = () => {
+    setShowReportBug(!showReportBug);
+  };
+
   const value = useMemo(
     () => ({
       showLandingScreen,
@@ -55,10 +60,12 @@ export const UIProvider = ({ children }) => {
       toggleStats,
       showOtherPuzzles,
       toggleOtherPuzzles,
+      showReportBug,
+      toggleReportBug,
       showCountdown,
       setShowCountdown,
     }),
-    [showLandingScreen, showHowTo, showLogin, showStats, showOtherPuzzles, showCountdown]
+    [showLandingScreen, showHowTo, showLogin, showStats, showOtherPuzzles, showReportBug, showCountdown]
   );
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
 };

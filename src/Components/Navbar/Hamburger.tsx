@@ -46,7 +46,7 @@ const Hamburger = ({ onOpenLogin }: HamburgerProps) => {
             {!user?.is_anonymous ? (
               <HamburgerLoggedIn closeMenu={closeMenu} onOpenLogin={onOpenLogin} />
             ) : (
-              <HamburgerLoggedOut handleOpenLogin={handleOpenLogin} />
+              <HamburgerLoggedOut handleOpenLogin={handleOpenLogin} closeMenu={closeMenu} />
             )}
           </NavigationMenu.Content>
         </NavigationMenu.Item>
