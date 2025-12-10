@@ -1,6 +1,6 @@
 import { CSSProperties, useEffect, useState } from "react";
 import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
-import { GameStatus } from "@/types/enums";
+import { GameStatus, PuzzleOutcome } from "@/types/enums";
 
 type MutableCSSProperties = CSSProperties & Record<string, string | number>;
 
@@ -74,7 +74,8 @@ const Confetti = ({
       setShowCelebration(false);
 
       // TODO: determine win/loss based on attempt metadata
-      setParticles(createCelebrationParticles(true));
+      const isWin = currentPuzzleAttempt?.outcome === PuzzleOutcome.Win;
+      setParticles(createCelebrationParticles(isWin));
 
       areaTimer = window.setTimeout(() => {
         setIsAreaExpanded(true);
@@ -113,7 +114,7 @@ const Confetti = ({
         window.clearTimeout(celebrationEndTimer);
       }
     };
-  }, []);
+  }, [currentPuzzleAttempt?.status, currentPuzzleAttempt?.outcome]);
 
   const celebrationClass = true ? "confetti-piece" : "smiley-piece";
 

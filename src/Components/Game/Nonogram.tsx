@@ -4,6 +4,8 @@ import GameEndEffects from "./GameEndEffects";
 import { cn } from "@/utils/cn";
 import { getColumnRules } from "@/utils/ruleUtils";
 import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
+import { GameStatus } from "@/types/enums";
+import { AnimatePresence, motion } from "framer-motion";
 
 export const Nonogram = () => {
   const { data: currentAttempt } = useCurrentPuzzleAttempt();
@@ -11,26 +13,48 @@ export const Nonogram = () => {
   const rulesSource = currentAttempt?.solution ?? [];
   const rules = getColumnRules(rulesSource);
   const maxRuleLength = Math.max(...rules.map((col) => col.length), 0);
+  const colRuleHeightPx = maxRuleLength * 24;
+  const isGameOver = currentAttempt?.status === GameStatus.Completed;
   
   return (
     <div className="flex flex-col items-center gap-4 my-6">
       <GameEndEffects />
-      <div className="flex items-start justify-center gap-0.5">
-        {/* Row rules */}
-        <div className="flex flex-col items-end">
-          <div className="mb-2" style={{ height: `${maxRuleLength * 24}px` }} />
-          <RulesRow className="mr-2" />
-        </div>
-        <div className="flex flex-col items-start gap-0.5">
-          {/* Column rules */}
-          <RulesCol className="mb-2 w-full" />
-          {/* Puzzle grid */}
-          <PuzzleGrid />
-        </div>
-        {/* Spacer to mirror row rules width so the grid centers horizontally */}
-        <div className="flex flex-col items-start gap-0.5" aria-hidden>
-          <div className="h-12 mb-2" />
-          <RulesRow className="ml-2 invisible pointer-events-none select-none" />
+      <div className="flex items-start justify-center gap-0.5 w-full">
+        <AnimatePresence>
+          {!isGameOver && (
+            <motion.div
+              key="row-rules-left"
+              className="flex flex-col items-end"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+            >
+              <div className="mb-2" style={{ height: `${maxRuleLength * 24}px` }} />
+              <RulesRow className="mr-2" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className={cn("flex flex-col items-start gap-0.5", isGameOver ? "items-center" : "")}>
+          <div className="mb-2 w-full" style={{ minHeight: `${colRuleHeightPx}px` }}>
+            <AnimatePresence>
+              {!isGameOver && (
+                <motion.div
+                  key="col-rules"
+                  className="w-full"
+                  initial={{ opacity: 1, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                >
+                  <RulesCol className="w-full" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <motion.div layout>
+            <PuzzleGrid />
+          </motion.div>
         </div>
       </div>
     </div>

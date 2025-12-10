@@ -9,13 +9,19 @@ const Footer = () => {
 
   const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
   const inProgress = currentPuzzleAttempt?.status === GameStatus.InProgress;
-  const showLiveStats = inProgress;
+  const isGameOver = currentPuzzleAttempt?.status === GameStatus.Completed;
+  const showLiveStats = inProgress || isGameOver;
 
   if(!currentPuzzleAttempt) return null;
 
   return (
-    <div className="w-full pt-6 pb-12 border border-b-0 border-x-0 border-t-gray-300 bg-gray-200">
-      <div className="relative flex min-h-16 w-full items-center justify-center">
+    <div
+      className={cn(
+        "w-full border border-b-0 border-x-0 border-t-gray-300 bg-gray-200 transition-all duration-500",
+        isGameOver ? "pt-6 pb-12" : "pt-6 pb-10"
+      )}
+    >
+      <div className="flex flex-col w-full items-center justify-center gap-4">
         <div
           className={cn(
             "flex w-full flex-row items-center justify-center transition-all duration-500",
@@ -29,7 +35,7 @@ const Footer = () => {
             <GameClock />
           </div>
         </div>
-        <ResultsActions />
+        <ResultsActions isGameOver={isGameOver} />
       </div>
     </div>
   );

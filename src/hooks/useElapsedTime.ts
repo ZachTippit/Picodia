@@ -6,25 +6,42 @@ export const useElapsedTime = () => {
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
-    if (!attempt) return;
+    // No attempt? Nothing to track.
+    if (!attempt) {
+      setElapsed(0);
+      return;
+    }
 
-    const startAt = new Date(attempt.started_at).getTime();
-    const isDone = attempt.status === "completed";
+    const startAtMs = new Date(attempt.started_at).getTime();
+    const baseElapsed = attempt.elapsed_seconds ?? 0;
+
+    // If it's already completed, just lock in the final time
+    if (attempt.status === "completed") {
+      setElapsed(baseElapsed);
+      return;
+    }
 
     const tick = () => {
-      if (isDone) {
-        return;
-      }
-
       const now = Date.now();
-      const delta = Math.floor((now - startAt) / 1000);
-
-      setElapsed(delta);
-      requestAnimationFrame(tick);
+      const delta = Math.floor((now - startAtMs) / 1000);
+      setElapsed(baseElapsed + delta);
     };
 
-    requestAnimationFrame(tick);
-  }, [attempt]);
+    // Do an immediate tick so UI updates without waiting 1s
+    tick();
+
+    const id = window.setInterval(tick, 1000);
+
+    // Cleanup whenever attempt changes or component unmounts
+    return () => {
+      clearInterval(id);
+    };
+  }, [
+    attempt?.id,
+    attempt?.started_at,
+    attempt?.status,
+    attempt?.elapsed_seconds,
+  ]);
 
   return elapsed;
 };
