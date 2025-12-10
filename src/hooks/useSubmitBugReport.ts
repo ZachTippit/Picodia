@@ -39,6 +39,9 @@ const sendBugReport = async (input: BugReportInput) => {
   const response = await fetch(FORMSPREE_ENDPOINT, {
     method: "POST",
     body: formData,
+    headers: {
+      Accept: "application/json",
+    },
   });
 
   const data = await response.json().catch(() => null);
