@@ -1,7 +1,9 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Nonogram } from "./Nonogram";
 import PreGameCountdown from "./PreGameCountdown";
 import { cn } from "@utils/cn";
+import LiveStats from "./LiveStats";
 import { useUI } from "@/providers/UIProvider";
 import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
 import { GameStatus, PuzzleOutcome } from "@/types/enums";
@@ -37,21 +39,39 @@ const Game = () => {
       >
         <Nonogram />
       </div>
-      {
-        isGameOver &&
-        <div className="flex items-center justify-center w-full min-h-[56px]">
-          <div
-            className={cn(
-              "text-center transition-all duration-500",
-              isGameOver ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
-            )}
+      <AnimatePresence>
+        {isGameOver && (
+          <motion.div
+            key="game-over-banner"
+            initial={{ opacity: 0, y: -8, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -8, height: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex w-full justify-center overflow-hidden h-32!"
           >
-            <p className="text-xl font-bold uppercase tracking-wide">
-              {isWin ? "You Win!" : "You Lose"}
-            </p>
-          </div>
-        </div>
-      }
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.35, delay: 0.05 }}
+              className="text-center"
+            >
+              <p className="text-xl font-bold uppercase tracking-wide">
+                {isWin ? "You Win!" : "You Lose"}
+              </p>
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.35, delay: 0.1 }}
+                className="mt-4"
+              >
+                <LiveStats />
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

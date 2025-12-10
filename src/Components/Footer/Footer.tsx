@@ -1,16 +1,16 @@
-import GameClock from "./GameClock";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@utils/cn";
-import LifeDisplay from "./LifeDisplay";
 import ResultsActions from "./ResultsActions";
 import { useCurrentPuzzleAttempt } from "@/hooks/useCurrentPuzzleAttempt";
 import { GameStatus } from "@/types/enums";
+import LiveStats from "../Game/LiveStats";
 
 const Footer = () => {
 
   const { data: currentPuzzleAttempt } = useCurrentPuzzleAttempt();
   const inProgress = currentPuzzleAttempt?.status === GameStatus.InProgress;
   const isGameOver = currentPuzzleAttempt?.status === GameStatus.Completed;
-  const showLiveStats = inProgress || isGameOver;
+  const showLiveStats = inProgress;
 
   if(!currentPuzzleAttempt) return null;
 
@@ -22,19 +22,23 @@ const Footer = () => {
       )}
     >
       <div className="flex flex-col w-full items-center justify-center gap-4">
-        <div
-          className={cn(
-            "flex w-full flex-row items-center justify-center transition-all duration-500",
-            showLiveStats
-              ? "opacity-100 translate-y-0 pointer-events-auto"
-              : "opacity-0 translate-y-2 pointer-events-none"
+        <AnimatePresence initial={false}>
+          {showLiveStats && (
+            <motion.div
+              key="footer-live-stats"
+              initial={{ opacity: 0, y: 8, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: "auto" }}
+              exit={{ opacity: 0, y: 8, height: 0 }}
+              transition={{ duration: 0.35 }}
+              className="w-full overflow-hidden"
+              aria-hidden={!showLiveStats}
+            >
+              <div className="flex w-full items-center justify-center">
+                <LiveStats />
+              </div>
+            </motion.div>
           )}
-        >
-          <div className="flex flex-row items-center gap-y-4 sm:flex-row sm:items-start sm:justify-center gap-x-24">
-            <LifeDisplay />
-            <GameClock />
-          </div>
-        </div>
+        </AnimatePresence>
         <ResultsActions isGameOver={isGameOver} />
       </div>
     </div>
