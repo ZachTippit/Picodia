@@ -97,7 +97,7 @@ const ReportBugModal = () => {
               <button
                 type="button"
                 onClick={closeModal}
-                className="rounded-full border border-gray-200 px-3 py-1 text-sm font-medium text-gray-600 transition hover:bg-gray-100"
+                className="rounded-full border border-gray-200 px-3 py-1 text-sm font-medium text-gray-600 transition hover:bg-gray-100 cursor-pointer"
               >
                 Close
               </button>
@@ -156,7 +156,7 @@ const ReportBugModal = () => {
               <button
                 type="button"
                 onClick={closeModal}
-                className="w-full rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 sm:w-32"
+                className="w-full rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 sm:w-32 cursor-pointer"
               >
                 Cancel
               </button>
@@ -164,8 +164,7 @@ const ReportBugModal = () => {
                 type="submit"
                 disabled={isPending || !description.trim()}
                 className={cn(
-                  "w-full rounded-full px-4 py-2 text-sm font-semibold text-white transition sm:w-36",
-                  "bg-gray-800 hover:bg-gray-700",
+                  "w-full rounded-full px-4 py-2 text-sm font-semibold text-white transition sm:w-36 bg-gray-800 hover:bg-gray-700 cursor-pointer",
                   isPending || !description.trim() ? "opacity-70 cursor-not-allowed" : ""
                 )}
               >

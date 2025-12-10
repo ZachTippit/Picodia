@@ -91,7 +91,7 @@ const OtherPuzzlesModal = () => {
               <button
                 type="button"
                 onClick={toggleOtherPuzzles}
-                className="w-32 rounded-full bg-gray-500 px-4 py-2 text-white transition-colors duration-300 hover:bg-gray-600"
+                className="w-32 rounded-full bg-gray-500 px-4 py-2 text-white transition-colors duration-300 hover:bg-gray-600 cursor-pointer"
               >
                 Close
               </button>

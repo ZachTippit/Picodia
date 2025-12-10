@@ -17,7 +17,7 @@ const HamburgerLoggedOut = ({ handleOpenLogin, closeMenu }: HamburgerLoggedOutPr
         type="button"
         onClick={handleOpenLogin}
         className={cn(
-          'relative w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition bg-gray-100 text-gray-800 hover:bg-gray-200'
+          'relative w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition bg-gray-100 text-gray-800 hover:bg-gray-200 cursor-pointer'
         )}
       >
         Log In / Register
@@ -31,7 +31,7 @@ const HamburgerLoggedOut = ({ handleOpenLogin, closeMenu }: HamburgerLoggedOutPr
           toggleReportBug();
           closeMenu();
         }}
-        className="bg-gray-100 text-gray-800 not-disabled:hover:bg-gray-200"
+        className="bg-gray-100 text-gray-800 not-disabled:hover:bg-gray-200 cursor-pointer"
       >
         Report a Bug
       </MenuButton>
