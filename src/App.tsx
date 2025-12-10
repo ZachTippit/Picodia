@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import PageContainer from "./PageContainer";
-import { UIProvider } from "./providers/UIProvider";
 import { PostHogProvider } from "posthog-js/react";
+import { UIProvider } from "./providers/UIProvider";
+import { AppRouterProvider } from "./router";
 
 // const analyticsId = import.meta.env.VITE_GOOGLE_ANALYTICS_ID;
 
@@ -18,14 +18,14 @@ const options = {
   defaults: "2025-11-30",
 } as const;
 
-const App = () => {
-  const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
+const App = () => {
   return (
     <PostHogProvider apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY} options={options}>
       <QueryClientProvider client={queryClient}>
         <UIProvider>
-          <PageContainer />
+          <AppRouterProvider />
         </UIProvider>
       </QueryClientProvider>
     </PostHogProvider>
