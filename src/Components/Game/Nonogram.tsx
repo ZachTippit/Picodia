@@ -13,8 +13,8 @@ export const Nonogram = () => {
   const rulesSource = currentAttempt?.solution ?? [];
   const rules = getColumnRules(rulesSource);
   const maxRuleLength = Math.max(...rules.map((col) => col.length), 0);
-  const colRuleHeightPx = maxRuleLength * 24;
   const isGameOver = currentAttempt?.status === GameStatus.Completed;
+  const colRuleHeightPx = !isGameOver ? maxRuleLength * 24 : 0;
   
   return (
     <div className="flex flex-col items-center gap-4 my-6">

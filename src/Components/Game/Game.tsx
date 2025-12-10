@@ -27,11 +27,11 @@ const Game = () => {
   const isWin = currentAttempt?.outcome === PuzzleOutcome.Win;
 
   return (
-    <div className="relative min-h-[450px] flex flex-col items-center justify-start flex-1">
+    <div className="relative h-full flex flex-col items-center justify-start flex-1">
       {showCountdown && <PreGameCountdown setPuzzleVisible={setPuzzleVisible} />}
       <div
         className={cn(
-          "w-full transition-opacity duration-500 flex flex-col items-center",
+          "w-full transition-opacity duration-500 flex flex-col items-center justify-center grow",
           puzzleVisible ? "opacity-100" : "opacity-0"
         )}
       >
@@ -39,7 +39,7 @@ const Game = () => {
       </div>
       {
         isGameOver &&
-        <div className="flex items-center justify-center w-full mt-6 min-h-[56px]">
+        <div className="flex items-center justify-center w-full min-h-[56px]">
           <div
             className={cn(
               "text-center transition-all duration-500",
