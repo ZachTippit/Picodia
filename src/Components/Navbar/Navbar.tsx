@@ -5,7 +5,7 @@ const Navbar = () => {
   const { openLogin, openHowTo } = useUI();
 
   return (
-    <div className="flex pb-4 pt-12 w-full border border-t-0 border-x-0 border-b-gray-300 justify-between overflow-y-none bg-gray-200">
+    <div className="flex pb-4 pt-4 w-full border border-t-0 border-x-0 border-b-gray-300 justify-between overflow-y-none bg-gray-200">
       <div className="px-4 max-w-[450px] w-full flex items-center justify-between mx-auto">
         <button
           type="button"
