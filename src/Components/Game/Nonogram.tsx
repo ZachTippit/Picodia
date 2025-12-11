@@ -30,7 +30,7 @@ export const Nonogram = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: "easeInOut" }}
             >
-              <div className="mb-2" style={{ height: `${maxRuleLength * 24}px` }} />
+              <div className="mb-2" style={{ height: `${maxRuleLength * 24 + 24}px` }} />
               <RulesRow className="mr-2" />
             </motion.div>
           )}

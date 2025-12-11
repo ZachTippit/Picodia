@@ -57,7 +57,7 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
             toggleStats();
             closeMenu();
           }}
-          className="bg-gray-300 text-gray-800 not-disabled:hover:bg-gray-400"
+          className="bg-gray-100 text-gray-800"
         >
           Stats
         </MenuButton>
@@ -66,7 +66,7 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
             toggleOtherPuzzles();
             closeMenu();
           }}
-          className="bg-gray-300 text-gray-800 not-disabled:hover:bg-gray-400"
+          className="bg-gray-100 text-gray-800"
         >
           Other Puzzles
         </MenuButton>
@@ -75,7 +75,7 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
             toggleReportBug();
             closeMenu();
           }}
-          className="bg-gray-100 text-gray-800 not-disabled:hover:bg-gray-200"
+          className="bg-gray-100 text-gray-800"
         >
           Report a Bug
         </MenuButton>

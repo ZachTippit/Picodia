@@ -15,7 +15,7 @@ const MenuButton = ({ onClick, className, children, disabled = false }: MenuButt
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "w-full rounded-md px-3 py-2 text-left text-sm font-medium transition bg-gray-600 hover:bg-gray-700 cursor-pointer",
+        "w-full rounded-md px-3 py-2 text-left text-sm font-medium transition hover:bg-gray-300 cursor-pointer",
         className
       )}
     >
