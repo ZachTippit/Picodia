@@ -23,7 +23,7 @@ const LoginOverlay = () => {
       >
         <div className="mt-16 flex w-full max-w-md flex-col bg-white text-gray-900 shadow-xl">
           <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-            <h2 className="text-base font-semibold uppercase tracking-wide">Picodia</h2>
+            <h2 className="text-base font-display font-semibold uppercase tracking-wide">Picodia</h2>
             <button
               type="button"
               onClick={closeLogin}
