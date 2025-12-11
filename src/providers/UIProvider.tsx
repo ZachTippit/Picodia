@@ -7,10 +7,11 @@ export const UIProvider = ({ children }) => {
   const [showLogin, setShowLogin] = useState<boolean>(false);
   const [showLandingScreen, setShowLandingScreen] = useState<boolean>(true);
   const [showHowTo, setShowHowTo] = useState<boolean>(false);
-  const [ showStats, setShowStats ] = useState<boolean>(false);
-  const [ showOtherPuzzles, setShowOtherPuzzles ] = useState<boolean>(false);
-  const [ showReportBug, setShowReportBug ] = useState<boolean>(false);
-  const [ showCountdown, setShowCountdown ] = useState<boolean>(false);
+  const [showStats, setShowStats] = useState<boolean>(false);
+  const [showOtherPuzzles, setShowOtherPuzzles] = useState<boolean>(false);
+  const [showReportBug, setShowReportBug] = useState<boolean>(false);
+  const [showCountdown, setShowCountdown] = useState<boolean>(false);
+  const [showProfile, setShowProfile] = useState<boolean>(false);
 
   const closeLandingScreen = () => {
     setShowLandingScreen(false);
@@ -35,8 +36,8 @@ export const UIProvider = ({ children }) => {
 
   const toggleStats = () => {
     setShowStats(!showStats);
-    console.log('Toggling stats:', !showStats);
-  }
+    console.log("Toggling stats:", !showStats);
+  };
 
   const toggleOtherPuzzles = () => {
     setShowOtherPuzzles(!showOtherPuzzles);
@@ -44,6 +45,10 @@ export const UIProvider = ({ children }) => {
 
   const toggleReportBug = () => {
     setShowReportBug(!showReportBug);
+  };
+
+  const toggleProfile = () => {
+    setShowProfile(!showProfile);
   };
 
   const value = useMemo(
@@ -64,8 +69,10 @@ export const UIProvider = ({ children }) => {
       toggleReportBug,
       showCountdown,
       setShowCountdown,
+      showProfile,
+      toggleProfile,
     }),
-    [showLandingScreen, showHowTo, showLogin, showStats, showOtherPuzzles, showReportBug, showCountdown]
+    [showLandingScreen, showHowTo, showLogin, showStats, showOtherPuzzles, showReportBug, showCountdown, showProfile]
   );
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
 };

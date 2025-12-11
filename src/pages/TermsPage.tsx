@@ -1,6 +1,8 @@
+import InfoPageLayout from "./InfoPageLayout";
+
 const TermsPage = () => {
   return (
-    <main className="mx-auto flex max-w-3xl flex-col gap-8 px-6 py-10 text-gray-900">
+    <InfoPageLayout>
       <header className="space-y-2">
         <h1 className="text-3xl font-semibold">Terms of Service</h1>
         <p>
@@ -79,7 +81,7 @@ const TermsPage = () => {
           <strong>support@picodia.com</strong>
         </p>
       </section>
-    </main>
+    </InfoPageLayout>
   );
 };
 

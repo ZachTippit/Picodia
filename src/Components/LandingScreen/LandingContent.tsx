@@ -7,6 +7,7 @@ import { useUI } from "@/providers/UIProvider";
 import PlayButton from "./PlayButton";
 import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { format } from "date-fns";
+import StreakDisplay from "./StreakDisplay";
 
 const contentVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -33,7 +34,7 @@ const infoGroupVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.35, ease: "easeOut", delay: 0.45 } as const,
+    transition: { duration: 0.35, ease: "easeOut", delay: 0.6 } as const,
   },
   exit: { opacity: 0, y: -6, transition: { duration: 0.2, ease: "easeIn" } as const },
 };
@@ -87,6 +88,8 @@ const LandingContent = () => {
               How to Play
             </Button>
           </motion.div>
+
+          <StreakDisplay />
 
           <motion.div
             className="flex flex-col items-center gap-0.5 text-xs text-gray-900 mt-8"

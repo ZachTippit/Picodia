@@ -1,5 +1,5 @@
 import { AnimatePresence, LayoutGroup } from "framer-motion";
-import { Footer, Game, Navbar, OtherPuzzles, Stats } from "./Components";
+import { Footer, Game, Navbar, OtherPuzzles, ProfileModal, Stats } from "./Components";
 import LandingScreen from "./Components/LandingScreen/LandingScreen";
 import HowToPlayView from "./Components/HowToPlay/HowToPlayView";
 import LoginOverlay from "./Components/Auth/LoginOverlay";
@@ -25,6 +25,7 @@ const PageContainer = () => {
         <AnimatePresence>{showHowTo && <HowToPlayView />}</AnimatePresence>
         <LoginOverlay />
         <Stats />
+        <ProfileModal />
         <OtherPuzzles />
         <ReportBugModal />
         {!showLandingScreen && (

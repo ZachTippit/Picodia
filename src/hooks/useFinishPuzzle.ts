@@ -26,6 +26,7 @@ export const useFinishPuzzle = () => {
       queryClient.setQueryData(["currentPuzzleAttempt", attempt.user_id], attempt);
 
       // Invalidate any dependent views
+      queryClient.invalidateQueries({ queryKey: ["profileStats"] });
       queryClient.invalidateQueries({ queryKey: ["profile-stats"] });
       queryClient.invalidateQueries({ queryKey: ["active-session"] });
       queryClient.invalidateQueries({ queryKey: ["currentPuzzleAttempt"] });

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import MenuButton from "./MenuButton";
-import ResetPuzzleButton from "./ResetPuzzleButton";
+import MenuLink from "./MenuLink";
 import { useSupabase } from "../../SupabaseProvider";
 import { cn } from "@utils/cn";
 import { useUI } from "@/providers/UIProvider";
-import { Bug, ChartNoAxesCombined, Joystick, LogIn, LogOut } from "lucide-react";
+import { Bug, ChartNoAxesCombined, Info, Joystick, LogOut, UserRound } from "lucide-react";
 
 interface HamburgerLoggedInProps {
   closeMenu: () => void;
@@ -13,7 +13,7 @@ interface HamburgerLoggedInProps {
 }
 
 const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) => {
-  const { toggleStats, toggleOtherPuzzles, toggleReportBug } = useUI();
+  const { toggleStats, toggleOtherPuzzles, toggleReportBug, toggleProfile } = useUI();
 
   const supabase = useSupabase();
   const queryClient = useQueryClient();
@@ -31,8 +31,10 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
     } finally {
       if (didSignOut) {
         queryClient.removeQueries({ queryKey: ["profile"] });
+        queryClient.removeQueries({ queryKey: ["profileStats"] });
         queryClient.removeQueries({ queryKey: ["profile-stats"] });
         queryClient.removeQueries({ queryKey: ["active-session"] });
+        queryClient.removeQueries({ queryKey: ["recent-activity"] });
       }
       setSigningOut(false);
       onOpenLogin();
@@ -42,16 +44,29 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
 
   return (
     <div className="flex flex-col gap-3">
-      <MenuButton
-        onClick={handleSignOut}
-        disabled={signingOut}
-        className={cn(signingOut && "opacity-50 cursor-not-allowed")}
-      >
-        <LogOut size={14} className="text-gray-800" />
-        {signingOut ? "Logging out…" : "Log Out"}
-      </MenuButton>
-      <div className="border-t border-gray-300" />
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-y-1.5">
+        <MenuLink to="/about" onClick={closeMenu}>
+          <Info size={14} className="text-gray-800" />
+          About Picodia
+        </MenuLink>
+        <MenuButton
+          onClick={() => {
+            toggleReportBug();
+            closeMenu();
+          }}
+        >
+          <Bug size={14} className="text-gray-800" />
+          Report a Bug
+        </MenuButton>
+        <MenuButton
+          onClick={() => {
+            toggleProfile();
+            closeMenu();
+          }}
+        >
+          <UserRound size={14} className="text-gray-800" />
+          Profile
+        </MenuButton>
         <MenuButton
           onClick={() => {
             toggleStats();
@@ -70,16 +85,16 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
           <Joystick size={14} className="text-gray-800" />
           Other Puzzles
         </MenuButton>
-        <MenuButton
-          onClick={() => {
-            toggleReportBug();
-            closeMenu();
-          }}
-        >
-          <Bug size={14} className="text-gray-800" />
-          Report a Bug
-        </MenuButton>
       </div>
+      <div className="border-t border-gray-300" />
+      <MenuButton
+        onClick={handleSignOut}
+        disabled={signingOut}
+        className={cn(signingOut && "opacity-50 cursor-not-allowed")}
+      >
+        <LogOut size={14} className="text-gray-800" />
+        {signingOut ? "Logging out…" : "Log Out"}
+      </MenuButton>
     </div>
   );
 };

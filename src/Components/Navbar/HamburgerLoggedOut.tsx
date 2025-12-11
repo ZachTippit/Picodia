@@ -1,7 +1,8 @@
 import { cn } from "@utils/cn";
 import { useUI } from "@/providers/UIProvider";
 import MenuButton from "./MenuButton";
-import { Bug, LogIn } from "lucide-react";
+import MenuLink from "./MenuLink";
+import { Bug, Info, LogIn } from "lucide-react";
 
 interface HamburgerLoggedOutProps {
   handleOpenLogin: () => void;
@@ -13,8 +14,23 @@ const HamburgerLoggedOut = ({ handleOpenLogin, closeMenu }: HamburgerLoggedOutPr
 
   return (
     <div className="flex flex-col gap-3">
-      <p className={cn("text-sm text-gray-600")}>Log in to save and share your results!</p>
-
+      <div className="flex flex-col gap-y-1.5">
+        <MenuLink to="/about" onClick={closeMenu}>
+          <Info size={14} className="text-gray-800" />
+          About Picodia
+        </MenuLink>
+        <MenuButton
+          onClick={() => {
+            toggleReportBug();
+            closeMenu();
+          }}
+        >
+          <Bug size={14} className="text-gray-800" />
+          Report a Bug
+        </MenuButton>
+      </div>
+      <div className="border-t border-gray-300" />
+      <p className={cn("text-xs italic text-gray-600")}>Log in to save and share your results!</p>
       <MenuButton onClick={handleOpenLogin} className="relative">
         <LogIn size={14} className="text-gray-800" />
         <span>Log In / Register</span>
@@ -22,16 +38,6 @@ const HamburgerLoggedOut = ({ handleOpenLogin, closeMenu }: HamburgerLoggedOutPr
           aria-hidden="true"
           className="absolute -top-0.5 -right-0.5 block size-2 rounded-full bg-red-600 animate-pulse duration-10000"
         />
-      </MenuButton>
-      <div className="border-t border-gray-300" />
-      <MenuButton
-        onClick={() => {
-          toggleReportBug();
-          closeMenu();
-        }}
-      >
-        <Bug size={14} className="text-gray-800" />
-        Report a Bug
       </MenuButton>
     </div>
   );

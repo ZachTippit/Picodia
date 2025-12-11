@@ -16,6 +16,7 @@ export interface ProfileStats {
   win_rate: number | null;
   completion_rate: number | null;
   updated_at: string | null; // timestamptz -> ISO string
+  leaderboard_rank?: number | null;
 }
 
 interface UseProfileStatsOptions {

@@ -1,6 +1,8 @@
+import InfoPageLayout from "./InfoPageLayout";
+
 const PrivacyPolicyPage = () => {
   return (
-    <main className="mx-auto flex max-w-3xl flex-col gap-8 px-6 py-10 text-gray-900">
+    <InfoPageLayout>
       <header className="space-y-2">
         <h1 className="text-3xl font-semibold">Privacy Policy</h1>
         <p>
@@ -115,7 +117,7 @@ const PrivacyPolicyPage = () => {
           <strong>support@picodia.com</strong>
         </p>
       </section>
-    </main>
+    </InfoPageLayout>
   );
 };
 

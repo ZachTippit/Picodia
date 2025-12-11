@@ -1,5 +1,6 @@
 import { Outlet, RouterProvider, createRootRoute, createRoute, createRouter } from "@tanstack/react-router";
 import PageContainer from "./PageContainer";
+import AboutPage from "./pages/AboutPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 
@@ -25,7 +26,13 @@ const termsRoute = createRoute({
   component: TermsPage,
 });
 
-const routeTree = rootRoute.addChildren([homeRoute, privacyRoute, termsRoute]);
+const aboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/about",
+  component: AboutPage,
+});
+
+const routeTree = rootRoute.addChildren([homeRoute, privacyRoute, termsRoute, aboutRoute]);
 
 export const router = createRouter({ routeTree });
 
