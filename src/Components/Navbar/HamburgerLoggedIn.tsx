@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import MenuButton from './MenuButton';
-import ResetPuzzleButton from './ResetPuzzleButton';
-import { useSupabase } from '../../SupabaseProvider';
-import { cn } from '@utils/cn';
-import { useUI } from '@/providers/UIProvider';
-import { Bug, ChartNoAxesCombined, Joystick, LogIn, LogOut } from 'lucide-react';
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import MenuButton from "./MenuButton";
+import ResetPuzzleButton from "./ResetPuzzleButton";
+import { useSupabase } from "../../SupabaseProvider";
+import { cn } from "@utils/cn";
+import { useUI } from "@/providers/UIProvider";
+import { Bug, ChartNoAxesCombined, Joystick, LogIn, LogOut } from "lucide-react";
 
 interface HamburgerLoggedInProps {
   closeMenu: () => void;
@@ -27,12 +27,12 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
       await supabase.auth.signOut();
       didSignOut = true;
     } catch (error) {
-      console.error('Failed to sign out', error);
+      console.error("Failed to sign out", error);
     } finally {
       if (didSignOut) {
-        queryClient.removeQueries({ queryKey: ['profile'] });
-        queryClient.removeQueries({ queryKey: ['profile-stats'] });
-        queryClient.removeQueries({ queryKey: ['active-session'] });
+        queryClient.removeQueries({ queryKey: ["profile"] });
+        queryClient.removeQueries({ queryKey: ["profile-stats"] });
+        queryClient.removeQueries({ queryKey: ["active-session"] });
       }
       setSigningOut(false);
       onOpenLogin();
@@ -45,13 +45,10 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
       <MenuButton
         onClick={handleSignOut}
         disabled={signingOut}
-        className={cn(
-          "bg-gray-100 text-gray-800",
-          signingOut && "opacity-50 cursor-not-allowed"
-        )}
+        className={cn(signingOut && "opacity-50 cursor-not-allowed")}
       >
         <LogOut size={14} className="text-gray-800" />
-        {signingOut ? 'Logging out…' : 'Log Out'}
+        {signingOut ? "Logging out…" : "Log Out"}
       </MenuButton>
       <div className="border-t border-gray-300" />
       <div className="flex flex-col gap-1">
@@ -60,7 +57,6 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
             toggleStats();
             closeMenu();
           }}
-          className="bg-gray-100 text-gray-800"
         >
           <ChartNoAxesCombined size={14} className="text-gray-800" />
           <span>Stats</span>
@@ -70,7 +66,6 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
             toggleOtherPuzzles();
             closeMenu();
           }}
-          className="bg-gray-100 text-gray-800"
         >
           <Joystick size={14} className="text-gray-800" />
           Other Puzzles
@@ -80,7 +75,6 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
             toggleReportBug();
             closeMenu();
           }}
-          className="bg-gray-100 text-gray-800"
         >
           <Bug size={14} className="text-gray-800" />
           Report a Bug
