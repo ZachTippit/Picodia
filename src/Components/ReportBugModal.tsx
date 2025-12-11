@@ -84,7 +84,7 @@ const ReportBugModal = () => {
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+                <p className="text-sm font-display font-semibold uppercase tracking-wide text-gray-700">
                   Picodia
                 </p>
                 <h2 id="report-bug-title" className="text-xl font-semibold leading-tight">

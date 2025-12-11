@@ -5,6 +5,7 @@ import ResetPuzzleButton from './ResetPuzzleButton';
 import { useSupabase } from '../../SupabaseProvider';
 import { cn } from '@utils/cn';
 import { useUI } from '@/providers/UIProvider';
+import { Bug, ChartNoAxesCombined, Joystick, LogIn, LogOut } from 'lucide-react';
 
 interface HamburgerLoggedInProps {
   closeMenu: () => void;
@@ -41,16 +42,18 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
 
   return (
     <div className="flex flex-col gap-3">
-      <button
-        type="button"
+      <MenuButton
         onClick={handleSignOut}
         disabled={signingOut}
         className={cn(
-          'w-full rounded-md px-3 py-2 text-left text-sm font-semibold transition bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-60 cursor-pointer'
+          "bg-gray-100 text-gray-800",
+          signingOut && "opacity-50 cursor-not-allowed"
         )}
       >
+        <LogOut size={14} className="text-gray-800" />
         {signingOut ? 'Logging out…' : 'Log Out'}
-      </button>
+      </MenuButton>
+      <div className="border-t border-gray-300" />
       <div className="flex flex-col gap-1">
         <MenuButton
           onClick={() => {
@@ -59,7 +62,8 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
           }}
           className="bg-gray-100 text-gray-800"
         >
-          Stats
+          <ChartNoAxesCombined size={14} className="text-gray-800" />
+          <span>Stats</span>
         </MenuButton>
         <MenuButton
           onClick={() => {
@@ -68,6 +72,7 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
           }}
           className="bg-gray-100 text-gray-800"
         >
+          <Joystick size={14} className="text-gray-800" />
           Other Puzzles
         </MenuButton>
         <MenuButton
@@ -77,6 +82,7 @@ const HamburgerLoggedIn = ({ closeMenu, onOpenLogin }: HamburgerLoggedInProps) =
           }}
           className="bg-gray-100 text-gray-800"
         >
+          <Bug size={14} className="text-gray-800" />
           Report a Bug
         </MenuButton>
       </div>
